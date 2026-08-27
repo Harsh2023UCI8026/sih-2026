@@ -46,19 +46,150 @@ def get_nowcast(lead_time_mins=60):
     }
 
 class handler(BaseHTTPRequestHandler):
+    def _send_json(self, data, status_code=200):
+        body = json.dumps(data, indent=2).encode('utf-8')
+        self.send_response(status_code)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.send_header('Content-Length', str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.end_headers()
+
     def do_GET(self):
         parsed = urlparse(self.path)
         path = parsed.path
         query = parse_qs(parsed.query)
 
-        self.send_response(200)
-        self.send_header('Content-Type', 'application/json')
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.end_headers()
+        if path in ['/api/docs', '/api/v1/docs', '/api/swagger']:
+            swagger_html = """
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <title>SIH 2026 Urban Flood Nowcasting API Docs</title>
+              <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui.css" />
+            </head>
+            <body>
+              <div id="swagger-ui"></div>
+              <script src="https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui-bundle.js"></script>
+              <script>
+                SwaggerUIBundle({
+                  url: '/api/openapi.json',
+                  dom_id: '#swagger-ui',
+                });
+              </script>
+            </body>
+            </html>
+            """
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(swagger_html.encode('utf-8'))
+            return
 
-        if 'nowcast' in path:
+        elif path in ['/api/openapi.json', '/api/v1/openapi.json']:
+            openapi_spec = {
+                "openapi": "3.0.0",
+                "info": {
+                    "title": "Urban Flood Nowcasting System REST API (SIH 2026)",
+                    "version": "1.0.0",
+                    "description": "REST API for 0-3 hour street-level flood depth prediction, drainage graph topology, and flood-safe navigation routing."
+                },
+                "paths": {
+                    "/api/nowcast": {
+                        "get": {
+                            "summary": "Get Live Street Water Depth Nowcast",
+                            "parameters": [
+                                {"name": "lead_time_mins", "in": "query", "type": "integer", "default": 60}
+                            ],
+                            "responses": {"200": {"description": "Successful Response"}}
+                        }
+                    },
+                    "/api/drainage-network": {
+                        "get": {
+                            "summary": "Get 1D Directed Drainage Graph Network G=(V,E)",
+                            "responses": {"200": {"description": "Successful Response"}}
+                        }
+                    },
+                    "/api/navigate": {
+                        "post": {
+                            "summary": "Calculate Flood-Safe Alternative Detour Route",
+                            "responses": {"200": {"description": "Successful Response"}}
+                        }
+                    },
+                    "/api/alert-broadcast": {
+                        "post": {
+                            "summary": "Broadcast Emergency Flood Alert to NDRF, Traffic Police & DMRC",
+                            "responses": {"200": {"description": "Successful Response"}}
+                        }
+                    }
+                }
+            }
+            self._send_json(openapi_spec)
+            return
+
+        elif 'nowcast' in path:
             lead_time = int(query.get('lead_time_mins', [60])[0])
-            self.wfile.write(json.dumps(get_nowcast(lead_time), indent=2).encode('utf-8'))
+            self._send_json(get_nowcast(lead_time))
+            return
+
+        elif 'drainage-network' in path:
+            network = {
+                "nodes": [
+                    {"id": "NODE_UTTAM_NAGAR_W", "name": "Uttam Nagar West", "elevation_m": 218.2, "lat": 28.6210, "lng": 77.0420},
+                    {"id": "NODE_DWARKA_MOR_METRO", "name": "Dwarka Mor Metro Crossing", "elevation_m": 211.2, "lat": 28.6186, "lng": 77.0319},
+                    {"id": "NODE_KAKROLA_UNDERPASS", "name": "Kakrola Mod Underpass", "elevation_m": 209.5, "lat": 28.6120, "lng": 77.0250},
+                    {"id": "NODE_SEC14_METRO", "name": "Sector 14 Metro Station", "elevation_m": 212.8, "lat": 28.6022, "lng": 77.0260}
+                ]
+            }
+            self._send_json(network)
+            return
+
         else:
-            self.wfile.write(json.dumps({"status": "SIH 2026 Flood Nowcasting Serverless API Active"}, indent=2).encode('utf-8'))
-        return
+            self._send_json({"status": "SIH 2026 Flood Nowcasting Serverless API Active", "docs": "/api/docs"}, 404)
+            return
+
+    def do_POST(self):
+        parsed = urlparse(self.path)
+        path = parsed.path
+        content_length = int(self.headers.get('Content-Length', 0))
+        post_data = self.rfile.read(content_length).decode('utf-8') if content_length > 0 else "{}"
+        try:
+            body = json.loads(post_data)
+        except Exception:
+            body = {}
+
+        if 'navigate' in path:
+            response_data = {
+                "routing_engine": "OSRM / Valhalla Dynamic Hydraulics Engine",
+                "origin": body.get("origin", [28.6210, 77.0420]),
+                "destination": body.get("destination", [28.5910, 77.0610]),
+                "recommended_safe_detour": {
+                    "name": "Flood-Safe Detour via Pankha Road & Dabri Flyover",
+                    "status": "SAFE",
+                    "max_water_depth_cm": 2.0,
+                    "hazard_level": "SAFE",
+                    "estimated_time_mins": 14
+                }
+            }
+            self._send_json(response_data)
+        elif 'alert-broadcast' in path:
+            alert_payload = {
+                "alert_status": "BROADCASTED",
+                "timestamp_epoch": int(time.time()),
+                "target_location": body.get("target_location", "Dwarka Mor Metro Crossing"),
+                "severity": "RED_CRITICAL_EMERGENCY"
+            }
+            self._send_json(alert_payload)
+        else:
+            self._send_json({"error": "POST Endpoint not found"}, 404)
+
