@@ -2,7 +2,7 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Urban Flood Nowcasting System | Dwarka Mor (SIH 2026)</title>
   
   <!-- Favicon -->
@@ -78,6 +78,7 @@
       background-color: var(--bg-body);
       color: var(--text-title);
       height: 100vh;
+      width: 100vw;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -88,7 +89,7 @@
     .alert-banner {
       background: linear-gradient(90deg, #dc2626, #b91c1c);
       color: #ffffff;
-      padding: 6px 20px;
+      padding: 6px 16px;
       font-size: 12px;
       font-weight: 700;
       display: flex;
@@ -101,69 +102,69 @@
       background: #ffffff;
       color: #dc2626;
       border: none;
-      padding: 4px 12px;
+      padding: 4px 10px;
       border-radius: 4px;
       font-size: 11px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .alert-btn:hover {
-      background: #fef2f2;
+      white-space: nowrap;
     }
 
     /* Header Navbar */
     header {
-      height: 60px;
+      min-height: 60px;
       background: var(--bg-header);
       border-bottom: 1px solid var(--panel-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 20px;
+      padding: 8px 16px;
       z-index: 1000;
       box-shadow: var(--shadow-sm);
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .brand-logo-img {
-      width: 42px;
-      height: 42px;
-      border-radius: 10px;
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
       object-fit: cover;
       border: 2px solid var(--brand-blue);
-      box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
     }
 
     .brand-title h1 {
       font-family: 'Outfit', sans-serif;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 800;
       color: var(--text-title);
+      line-height: 1.2;
     }
 
     .brand-title p {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--text-muted);
       font-weight: 600;
+      line-height: 1.2;
     }
 
     .header-right {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .status-badge {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      padding: 5px 12px;
+      padding: 4px 10px;
       border-radius: 20px;
       font-size: 11px;
       font-weight: 600;
@@ -171,6 +172,7 @@
       align-items: center;
       gap: 6px;
       color: var(--text-sub);
+      white-space: nowrap;
     }
 
     .dot-live {
@@ -180,25 +182,48 @@
       border-radius: 50%;
     }
 
-    /* Light/Dark Mode Toggle Button */
     .theme-toggle-btn {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       color: var(--text-title);
-      padding: 6px 14px;
+      padding: 5px 12px;
       border-radius: 20px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
+      gap: 4px;
+      white-space: nowrap;
     }
 
-    .theme-toggle-btn:hover {
+    /* Mobile Segmented Tab Bar (Hidden on Desktop) */
+    .mobile-tab-bar {
+      display: none;
+      background: var(--panel-bg);
+      border-bottom: 1px solid var(--panel-border);
+      padding: 6px 12px;
+      gap: 8px;
+      z-index: 1000;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 1px solid var(--panel-border);
+      background: var(--card-bg);
+      color: var(--text-muted);
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .tab-btn.active {
+      background: var(--brand-blue);
+      color: #ffffff;
       border-color: var(--brand-blue);
-      color: var(--brand-blue);
     }
 
     /* Main App Layout */
@@ -206,18 +231,18 @@
       flex: 1;
       display: flex;
       position: relative;
-      height: calc(100vh - 90px);
+      overflow: hidden;
     }
 
-    /* Compact Sidebar Panel (Prevents Cutout) */
+    /* Compact Sidebar Panel */
     .sidebar {
       width: 360px;
       background: var(--panel-bg);
       border-right: 1px solid var(--panel-border);
       display: flex;
       flex-direction: column;
-      padding: 14px;
-      gap: 12px;
+      padding: 12px;
+      gap: 10px;
       z-index: 900;
       overflow-y: auto;
       height: 100%;
@@ -226,8 +251,8 @@
     .explainer-box {
       background: rgba(37, 99, 235, 0.08);
       border: 1px solid rgba(37, 99, 235, 0.2);
-      border-radius: 10px;
-      padding: 10px 12px;
+      border-radius: 8px;
+      padding: 8px 10px;
       font-size: 11px;
       line-height: 1.4;
       color: var(--text-sub);
@@ -236,30 +261,21 @@
     .card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 12px;
-    }
-
-    .card-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
+      border-radius: 10px;
+      padding: 10px;
     }
 
     .card-head h3 {
       font-family: 'Outfit', sans-serif;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--text-sub);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
-    /* Slider styling */
     .time-val {
       font-family: 'Outfit', sans-serif;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 800;
       color: var(--brand-blue);
     }
@@ -269,103 +285,142 @@
       height: 5px;
       accent-color: var(--brand-blue);
       cursor: pointer;
-      margin: 8px 0;
+      margin: 6px 0;
     }
 
-    /* Metric Grid 2x2 Compact */
     .metrics-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 6px;
     }
 
     .metric-item {
       background: var(--panel-bg);
       border: 1px solid var(--panel-border);
-      border-radius: 8px;
-      padding: 8px 10px;
+      border-radius: 6px;
+      padding: 6px 8px;
     }
 
-    .metric-lbl {
-      font-size: 10px;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
+    .metric-lbl { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+    .metric-num { font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 800; color: var(--text-title); margin-top: 2px; }
 
-    .metric-num {
-      font-family: 'Outfit', sans-serif;
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--text-title);
-      margin-top: 2px;
-    }
-
-    /* Navigation Route Box */
     .route-item {
       background: var(--panel-bg);
       border: 1px solid var(--panel-border);
-      border-radius: 8px;
-      padding: 10px;
+      border-radius: 6px;
+      padding: 8px;
       cursor: pointer;
       margin-bottom: 6px;
-      transition: all 0.2s;
     }
 
     .route-item.selected {
       border-color: var(--brand-blue);
-      box-shadow: 0 0 10px rgba(37, 99, 235, 0.15);
     }
 
-    .route-title {
-      font-size: 12px;
-      font-weight: 700;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .badge-blocked { background: #fee2e2; color: #dc2626; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; }
-    .badge-safe { background: #d1fae5; color: #059669; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+    .route-title { font-size: 11px; font-weight: 700; display: flex; justify-content: space-between; }
+    .badge-blocked { background: #fee2e2; color: #dc2626; padding: 2px 4px; border-radius: 4px; font-size: 9px; font-weight: 700; }
+    .badge-safe { background: #d1fae5; color: #059669; padding: 2px 4px; border-radius: 4px; font-size: 9px; font-weight: 700; }
 
     /* Map Box */
-    #map {
+    .map-container {
       flex: 1;
+      position: relative;
+      height: 100%;
+      width: 100%;
+    }
+
+    #map {
+      width: 100%;
       height: 100%;
     }
 
-    /* Compact Legend Floating */
+    /* Floating Legend Inside Map Container */
     .map-legend {
       position: absolute;
       bottom: 20px;
       right: 20px;
       background: var(--panel-bg);
       border: 1px solid var(--panel-border);
-      border-radius: 10px;
-      padding: 10px 14px;
+      border-radius: 8px;
+      padding: 8px 12px;
       z-index: 1000;
-      font-size: 11px;
+      font-size: 10px;
       box-shadow: var(--shadow-md);
     }
 
     .legend-line {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-top: 4px;
+      gap: 6px;
+      margin-top: 3px;
     }
 
     .color-box {
-      width: 12px;
-      height: 12px;
-      border-radius: 3px;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+    }
+
+    /* ========================================================= */
+    /* 📱 100% MOBILE RESPONSIVE TABBED UX (Max-Width 768px) */
+    /* ========================================================= */
+    @media (max-width: 768px) {
+      .mobile-tab-bar {
+        display: flex;
+      }
+
+      .app-main {
+        position: relative;
+      }
+
+      /* Mobile Mode 1: Map Tab Selected */
+      body.mobile-view-map .sidebar {
+        display: none !important;
+      }
+
+      body.mobile-view-map .map-container {
+        display: block !important;
+        height: 100%;
+      }
+
+      /* Mobile Mode 2: Controls Tab Selected */
+      body.mobile-view-controls .map-container {
+        display: none !important;
+      }
+
+      body.mobile-view-controls .sidebar {
+        display: flex !important;
+        width: 100%;
+        height: 100%;
+        border-right: none;
+      }
+
+      .alert-banner {
+        font-size: 11px;
+      }
+
+      .brand-title h1 {
+        font-size: 14px;
+      }
+
+      .status-badge span {
+        display: none;
+      }
+
+      .map-legend {
+        bottom: 15px;
+        right: 15px;
+        padding: 6px 10px;
+      }
     }
   </style>
 </head>
-<body>
+<body class="mobile-view-map">
 
   <!-- Top Alert Banner -->
   <div class="alert-banner">
-    <span>⚠️ <b>FLOOD ALERT (DWARKA MOR):</b> Water depth predicted to reach <b>40.3 cm</b> in next 60 minutes.</span>
-    <button class="alert-btn" onclick="toggleRoute('detour')">SHOW SAFE ROUTE</button>
+    <span>⚠️ <b>FLOOD ALERT:</b> Dwarka Mor predicted depth <b>40.3 cm</b> in 60 mins.</span>
+    <button class="alert-btn" onclick="showDetourOnMobile()">SHOW DETOUR</button>
   </div>
 
   <!-- Header Navbar -->
@@ -373,32 +428,38 @@
     <div class="brand">
       <img src="logo.jpeg" alt="Urban Flood Nowcasting Logo" class="brand-logo-img">
       <div class="brand-title">
-        <h1>Urban Flood Nowcasting System</h1>
-        <p>Dwarka Mor Micro-Catchment & Drainage Coupling | SIH 2026</p>
+        <h1>Urban Flood Nowcasting</h1>
+        <p>Dwarka Mor Catchment | SIH 2026</p>
       </div>
     </div>
     
     <div class="header-right">
       <div class="status-badge">
         <div class="dot-live"></div>
-        <span>IMD Radar: Live</span>
+        <span id="liveClockDisplay">Live</span>
       </div>
       <!-- Light / Dark Mode Toggle Button (Sun / Moon) -->
       <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">
-        <span id="themeIcon">☀️</span> <span id="themeText">Light Mode</span>
+        <span id="themeIcon">☀️</span> <span id="themeText">Light</span>
       </button>
     </div>
   </header>
 
-  <!-- Main Body -->
+  <!-- Mobile Segmented View Switcher -->
+  <div class="mobile-tab-bar">
+    <button class="tab-btn active" id="tabBtnMap" onclick="switchMobileTab('map')">🗺️ Interactive Map</button>
+    <button class="tab-btn" id="tabBtnControls" onclick="switchMobileTab('controls')">📊 Dashboard & Controls</button>
+  </div>
+
+  <!-- Main App Container -->
   <div class="app-main">
     
-    <!-- Left Compact Sidebar (No Cutout) -->
+    <!-- Left Sidebar Control Panel -->
     <div class="sidebar">
       
       <div class="explainer-box">
-        <b>💡 System Overview:</b><br>
-        Predicts street water depth (cm) for 0–3 hours. Red circles on the map indicate flooded roads. Slide the timeline to inspect future flooding!
+        <b>💡 System Mode:</b><br>
+        Predicts street water depth (cm) for 0–3 hours from RIGHT NOW. Red circles indicate flooded roads.
       </div>
 
       <!-- Forecast Slider -->
@@ -407,12 +468,15 @@
           <h3>0–3 Hour Forecast Timeline</h3>
         </div>
         <div>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
             <span style="font-size:11px; color:var(--text-muted);">Lead Time:</span>
             <span class="time-val" id="timeDisplay">+60 Mins</span>
           </div>
+          <div style="font-size:11px; font-weight:800; color:var(--brand-purple); margin:2px 0;" id="targetClockTime">
+            Calculating...
+          </div>
           <input type="range" id="timeSlider" min="0" max="180" step="15" value="60">
-          <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-muted); font-weight:700;">
+          <div style="display:flex; justify-content:space-between; font-size:9px; color:var(--text-muted); font-weight:700;">
             <span>NOW</span>
             <span>+30m</span>
             <span>+60m</span>
@@ -430,19 +494,19 @@
         <div class="metrics-grid">
           <div class="metric-item">
             <div class="metric-lbl">Radar Reflectivity</div>
-            <div class="metric-num" id="valRadar">48.5 <span style="font-size:11px; color:var(--text-muted)">dBZ</span></div>
+            <div class="metric-num" id="valRadar">48.5 <span style="font-size:10px; color:var(--text-muted)">dBZ</span></div>
           </div>
           <div class="metric-item">
             <div class="metric-lbl">Forecast Rain (3h)</div>
-            <div class="metric-num" id="valRain">65.0 <span style="font-size:11px; color:var(--text-muted)">mm</span></div>
+            <div class="metric-num" id="valRain">65.0 <span style="font-size:10px; color:var(--text-muted)">mm</span></div>
           </div>
           <div class="metric-item">
             <div class="metric-lbl">Surface Runoff</div>
-            <div class="metric-num" id="valRunoff">59.8 <span style="font-size:11px; color:var(--text-muted)">mm</span></div>
+            <div class="metric-num" id="valRunoff">59.8 <span style="font-size:10px; color:var(--text-muted)">mm</span></div>
           </div>
           <div class="metric-item">
             <div class="metric-lbl">Dwarka Mor Depth</div>
-            <div class="metric-num" id="valDepth" style="color: var(--severe-red)">40.3 <span style="font-size:11px; color:var(--text-muted)">cm</span></div>
+            <div class="metric-num" id="valDepth" style="color: var(--severe-red)">40.3 <span style="font-size:10px; color:var(--text-muted)">cm</span></div>
           </div>
         </div>
       </div>
@@ -452,14 +516,14 @@
         <div class="card-head">
           <h3>Flood-Safe Navigation API</h3>
         </div>
-        <div class="route-selector">
+        <div class="route-selector" style="margin-top:6px;">
           
           <div class="route-item selected" id="btnNormal" onclick="toggleRoute('normal')">
             <div class="route-title">
               <span>Standard Route (Najafgarh Rd)</span>
               <span class="badge-blocked">BLOCKED</span>
             </div>
-            <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">
+            <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">
               Dwarka Mor Crossing (Water Depth: 40.3 cm)
             </div>
           </div>
@@ -469,7 +533,7 @@
               <span>Safe Detour (Recommended)</span>
               <span class="badge-safe">SAFE (2.0 cm)</span>
             </div>
-            <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">
+            <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">
               Via Pankha Road & Dabri Flyover
             </div>
           </div>
@@ -482,7 +546,7 @@
         <div class="card-head">
           <h3>Drainage System Status</h3>
         </div>
-        <div style="font-size:11px; display:flex; flex-direction:column; gap:6px;">
+        <div style="font-size:10px; display:flex; flex-direction:column; gap:4px; margin-top:4px;">
           <div style="display:flex; justify-content:space-between;">
             <span>PWD Box Drain 2:</span>
             <span style="font-weight:700; color:var(--severe-red);">OVER CAPACITY (144%)</span>
@@ -496,28 +560,50 @@
 
     </div>
 
-    <!-- Map Canvas -->
-    <div id="map"></div>
+    <!-- Right GIS Map Container -->
+    <div class="map-container">
+      <div id="map"></div>
 
-    <!-- Compact Floating Legend -->
-    <div class="map-legend">
-      <div style="font-weight:800; font-size:12px; margin-bottom:4px; color:var(--text-title);">Water Depth Legend (cm)</div>
-      <div class="legend-line"><div class="color-box" style="background:var(--safe-green);"></div><span>Safe (&lt; 5 cm)</span></div>
-      <div class="legend-line"><div class="color-box" style="background:var(--caution-yellow);"></div><span>Caution (5 – 15 cm)</span></div>
-      <div class="legend-line"><div class="color-box" style="background:var(--moderate-orange);"></div><span>Moderate (15 – 30 cm)</span></div>
-      <div class="legend-line"><div class="color-box" style="background:var(--severe-red);"></div><span>Severe Hazard (30 – 50 cm)</span></div>
-      <div class="legend-line"><div class="color-box" style="background:var(--critical-dark);"></div><span>Critical (&gt; 50 cm)</span></div>
+      <!-- Compact Floating Legend Inside Map -->
+      <div class="map-legend">
+        <div style="font-weight:800; font-size:11px; margin-bottom:2px; color:var(--text-title);">Depth Legend (cm)</div>
+        <div class="legend-line"><div class="color-box" style="background:var(--safe-green);"></div><span>Safe (&lt; 5 cm)</span></div>
+        <div class="legend-line"><div class="color-box" style="background:var(--caution-yellow);"></div><span>Caution (5–15 cm)</span></div>
+        <div class="legend-line"><div class="color-box" style="background:var(--moderate-orange);"></div><span>Moderate (15–30 cm)</span></div>
+        <div class="legend-line"><div class="color-box" style="background:var(--severe-red);"></div><span>Severe (30–50 cm)</span></div>
+        <div class="legend-line"><div class="color-box" style="background:var(--critical-dark);"></div><span>Critical (&gt; 50 cm)</span></div>
+      </div>
     </div>
 
   </div>
 
-  <!-- Leaflet & Script -->
+  <!-- Leaflet JS & Script -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    // Initialize Map
+    // Mobile Tab Switcher Logic
+    function switchMobileTab(tab) {
+      document.body.classList.remove('mobile-view-map', 'mobile-view-controls');
+      document.getElementById('tabBtnMap').classList.remove('active');
+      document.getElementById('tabBtnControls').classList.remove('active');
+
+      if (tab === 'map') {
+        document.body.classList.add('mobile-view-map');
+        document.getElementById('tabBtnMap').classList.add('active');
+        setTimeout(() => map.invalidateSize(), 200);
+      } else {
+        document.body.classList.add('mobile-view-controls');
+        document.getElementById('tabBtnControls').classList.add('active');
+      }
+    }
+
+    function showDetourOnMobile() {
+      switchMobileTab('map');
+      toggleRoute('detour');
+    }
+
+    // Initialize Leaflet Map
     const map = L.map('map').setView([28.6186, 77.0319], 14);
 
-    // High Clarity Map Tile Layers
     const lightTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors | SIH 2026',
       maxZoom: 19
@@ -528,11 +614,8 @@
       maxZoom: 16
     });
 
-    // Default: Light tiles
     lightTiles.addTo(map);
     let currentTileLayer = lightTiles;
-
-    // Light / Dark Theme Toggle Logic
     let currentTheme = 'light';
 
     function toggleTheme() {
@@ -540,7 +623,7 @@
         currentTheme = 'dark';
         document.documentElement.setAttribute('data-theme', 'dark');
         document.getElementById('themeIcon').innerText = '🌙';
-        document.getElementById('themeText').innerText = 'Dark Mode';
+        document.getElementById('themeText').innerText = 'Dark';
 
         map.removeLayer(lightTiles);
         darkTiles.addTo(map);
@@ -549,7 +632,7 @@
         currentTheme = 'light';
         document.documentElement.setAttribute('data-theme', 'light');
         document.getElementById('themeIcon').innerText = '☀️';
-        document.getElementById('themeText').innerText = 'Light Mode';
+        document.getElementById('themeText').innerText = 'Light';
 
         map.removeLayer(darkTiles);
         lightTiles.addTo(map);
@@ -559,7 +642,7 @@
 
     // Dwarka Nodes
     const nodes = [
-      { name: "Dwarka Mor Metro Crossing", lat: 28.6186, lng: 77.0319, elev: 211.2, baseDepth: 40.3, desc: "Critical low-lying junction. High surcharge." },
+      { name: "Dwarka Mor Metro Crossing", lat: 28.6186, lng: 77.0319, elev: 211.2, baseDepth: 40.3, desc: "Critical low-lying junction." },
       { name: "Kakrola Mod Underpass", lat: 28.6120, lng: 77.0250, elev: 209.5, baseDepth: 85.0, desc: "Submerged underpass depression." },
       { name: "Sector 14 Metro Station", lat: 28.6022, lng: 77.0260, elev: 212.8, baseDepth: 22.0, desc: "Vegas Mall side waterlogging." },
       { name: "Uttam Nagar West Metro", lat: 28.6210, lng: 77.0420, elev: 218.2, baseDepth: 4.0, desc: "High elevation ridge." },
@@ -584,7 +667,7 @@
       nodes.forEach(n => {
         const depth = Math.round(n.baseDepth * multiplier * 10) / 10;
         const color = getColor(depth);
-        const radius = Math.max(10, Math.min(32, depth * 0.4 + 10));
+        const radius = Math.max(10, Math.min(30, depth * 0.4 + 10));
 
         const circle = L.circleMarker([n.lat, n.lng], {
           radius: radius,
@@ -596,12 +679,12 @@
         }).addTo(map);
 
         circle.bindPopup(`
-          <div style="font-family:'Plus Jakarta Sans',sans-serif; padding:4px; max-width:200px;">
-            <h4 style="margin-bottom:4px; font-family:'Outfit'; font-size:15px;">${n.name}</h4>
-            <div style="font-size:11px; line-height:1.5;">
-              <b>Predicted Depth:</b> <span style="color:${color}; font-size:13px; font-weight:800;">${depth} cm</span><br>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; padding:4px; max-width:190px;">
+            <h4 style="margin-bottom:4px; font-family:'Outfit'; font-size:14px;">${n.name}</h4>
+            <div style="font-size:11px; line-height:1.4;">
+              <b>Predicted Depth:</b> <span style="color:${color}; font-weight:800;">${depth} cm</span><br>
               <b>Elevation:</b> ${n.elev} m MSL<br>
-              <b>Status:</b> ${depth > 30 ? '🔴 IMPASSABLE' : (depth > 15 ? '🟠 MODERATE FLOOD' : '🟢 SAFE')}
+              <b>Status:</b> ${depth > 30 ? '🔴 IMPASSABLE' : (depth > 15 ? '🟠 MODERATE' : '🟢 SAFE')}
             </div>
           </div>
         `);
@@ -610,11 +693,10 @@
       });
     }
 
-    // Direct Route (Red Dashed)
+    // Polyline Routes
     const normalCoords = [[28.6210, 77.0420], [28.6186, 77.0319], [28.6022, 77.0260]];
     const normalPolyline = L.polyline(normalCoords, { color: '#dc2626', weight: 6, opacity: 0.9, dashArray: '8, 8' }).addTo(map);
 
-    // Safe Detour Polyline (Blue)
     const detourCoords = [[28.6210, 77.0420], [28.6110, 77.0520], [28.5980, 77.0580], [28.5910, 77.0610]];
     const detourPolyline = L.polyline(detourCoords, { color: '#2563eb', weight: 6, opacity: 0.95 }).addTo(map);
 
@@ -626,22 +708,39 @@
         document.getElementById('btnNormal').classList.add('selected');
         normalPolyline.setStyle({ opacity: 1, weight: 7 });
         detourPolyline.setStyle({ opacity: 0.2, weight: 3 });
-        map.fitBounds(normalPolyline.getBounds(), { padding: [50, 50] });
+        map.fitBounds(normalPolyline.getBounds(), { padding: [40, 40] });
       } else {
         document.getElementById('btnDetour').classList.add('selected');
         detourPolyline.setStyle({ opacity: 1, weight: 7 });
         normalPolyline.setStyle({ opacity: 0.2, weight: 3 });
-        map.fitBounds(detourPolyline.getBounds(), { padding: [50, 50] });
+        map.fitBounds(detourPolyline.getBounds(), { padding: [40, 40] });
       }
     }
 
-    // Slider Event Listener
+    // Live Clock & Date
+    function updateLiveClock() {
+      const now = new Date();
+      const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+      document.getElementById('liveClockDisplay').innerText = now.toLocaleTimeString('en-IN', options);
+    }
+    setInterval(updateLiveClock, 1000);
+    updateLiveClock();
+
+    // Slider Event Listener & Target Timestamp Calculation
     const slider = document.getElementById('timeSlider');
     const timeDisplay = document.getElementById('timeDisplay');
+    const targetClockTime = document.getElementById('targetClockTime');
+
+    function updateForecastTimestamp(mins) {
+      const targetDate = new Date(Date.now() + mins * 60 * 1000);
+      const timeStr = targetDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+      targetClockTime.innerText = `Predicted Time: ${timeStr} (${mins === 0 ? 'NOW' : '+' + mins + 'm'})`;
+    }
 
     slider.addEventListener('input', function() {
       const mins = parseInt(this.value);
       timeDisplay.innerText = `+${mins} Mins`;
+      updateForecastTimestamp(mins);
 
       let mult = 1.0;
       if (mins === 0) mult = 0.2;
@@ -660,8 +759,9 @@
       document.getElementById('valRunoff').innerText = `${Math.round(59.8 * mult * 10)/10} mm`;
     });
 
-    // Initial Render
+    // Initial Setup
     renderNodeMarkers(1.0);
+    updateForecastTimestamp(60);
   </script>
 </body>
 </html>
