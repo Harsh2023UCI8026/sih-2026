@@ -105,12 +105,13 @@ python model_train.py
 ```
 *Trains the Nowcasting Surrogate Model and runs live scenario benchmark tests.*
 
-### 4. Launch Interactive Web GIS Dashboard
+### 4. Launch REST API Backend Server
 ```bash
-python -m http.server 8000
+python app.py
 ```
 Open your web browser and navigate to:  
-👉 **`http://localhost:8000/`**
+👉 **`http://localhost:8081/`**  
+📄 Interactive Swagger API Documentation: 👉 **`http://localhost:8081/docs`**
 
 ---
 
