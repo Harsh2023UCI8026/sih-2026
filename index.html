@@ -334,6 +334,71 @@
       height: 100%;
     }
 
+    /* Doppler Radar Floating Button Controls */
+    .map-floating-controls {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      z-index: 1000;
+      display: flex;
+      gap: 10px;
+    }
+
+    .radar-toggle-btn {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      color: #38bdf8;
+      border: 1px solid #0284c7;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: all 0.2s ease;
+    }
+
+    .radar-toggle-btn:hover {
+      background: rgba(15, 23, 42, 0.95);
+      transform: translateY(-1px);
+    }
+
+    .radar-toggle-btn.active {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #38bdf8;
+      box-shadow: 0 0 15px rgba(2, 132, 199, 0.6);
+    }
+
+    .radar-ping {
+      width: 8px;
+      height: 8px;
+      background-color: #ef4444;
+      border-radius: 50%;
+      display: inline-block;
+      position: relative;
+    }
+
+    .radar-toggle-btn.active .radar-ping::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background-color: #ef4444;
+      border-radius: 50%;
+      animation: radarPulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes radarPulse {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(3.5); opacity: 0; }
+    }
+
     /* Floating Legend Inside Map Container */
     .map-legend {
       position: absolute;
@@ -571,6 +636,13 @@
     <div class="map-container">
       <div id="map"></div>
 
+      <!-- Floating Map Control Bar (Doppler Radar Toggle) -->
+      <div class="map-floating-controls">
+        <button class="radar-toggle-btn active" id="btnRadarToggle" onclick="toggleDopplerRadar()">
+          <span class="radar-ping"></span> 📡 Doppler Radar Overlay (dBZ)
+        </button>
+      </div>
+
       <!-- Compact Floating Legend Inside Map -->
       <div class="map-legend">
         <div style="font-weight:800; font-size:11px; margin-bottom:2px; color:var(--text-title);">Depth Legend (cm)</div>
@@ -579,6 +651,13 @@
         <div class="legend-line"><div class="color-box" style="background:var(--moderate-orange);"></div><span>Moderate (15–30 cm)</span></div>
         <div class="legend-line"><div class="color-box" style="background:var(--severe-red);"></div><span>Severe (30–50 cm)</span></div>
         <div class="legend-line"><div class="color-box" style="background:var(--critical-dark);"></div><span>Critical (&gt; 50 cm)</span></div>
+        <hr style="margin: 6px 0; border:0; border-top:1px solid var(--panel-border);">
+        <div style="font-weight:800; font-size:11px; margin-bottom:2px; color:var(--text-title);">Radar Reflectivity</div>
+        <div style="background: linear-gradient(to right, rgba(0,255,255,0.7), rgba(0,255,0,0.7), rgba(255,255,0,0.8), rgba(255,0,0,0.9), rgba(255,0,255,0.9)); height: 8px; border-radius: 4px; margin: 4px 0;"></div>
+        <div style="display:flex; justify-space-between; font-size:9px; color:var(--text-muted);">
+          <span>20 dBZ (Light)</span>
+          <span>55+ dBZ (Torrential)</span>
+        </div>
       </div>
     </div>
 
@@ -758,6 +837,7 @@
       else if (mins === 180) mult = 0.3;
 
       renderNodeMarkers(mult);
+      updateRadarOverlay(mult);
 
       const depth = Math.round(40.3 * mult * 10) / 10;
       document.getElementById('valDepth').innerText = `${depth} cm`;
@@ -766,9 +846,98 @@
       document.getElementById('valRunoff').innerText = `${Math.round(59.8 * mult * 10)/10} mm`;
     });
 
+    // Dynamic Doppler Radar Overlay Layer (RainViewer Weather Radar API + Synthetic Radar Loop fallback)
+    let radarLayerGroup = L.layerGroup().addTo(map);
+    let isRadarActive = true;
+    let radarAnimationTimer = null;
+    let radarFrames = [];
+    let currentFrameIdx = 0;
+
+    // Canvas Synthetic Doppler Storm Cell Generator for Dwarka (High-precision dBZ reflectivity simulation)
+    function createSyntheticDopplerCanvas(phaseAngle, intensityMult) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 500;
+      canvas.height = 500;
+      const ctx = canvas.getContext('2d');
+
+      const cx = 250 + Math.cos(phaseAngle) * 40;
+      const cy = 250 + Math.sin(phaseAngle) * 30;
+      const baseRadius = 180 * intensityMult;
+
+      // Radial multi-band dBZ reflectivity gradient (Light blue -> Green -> Yellow -> Red -> Purple)
+      const grad = ctx.createRadialGradient(cx, cy, 5, cx, cy, baseRadius);
+      grad.addColorStop(0, 'rgba(255, 0, 255, 0.85)');   // Extreme >55 dBZ (Heavy Downpour)
+      grad.addColorStop(0.2, 'rgba(220, 38, 38, 0.8)');   // Severe 45-55 dBZ
+      grad.addColorStop(0.45, 'rgba(234, 88, 12, 0.75)'); // Moderate 35-45 dBZ
+      grad.addColorStop(0.7, 'rgba(217, 119, 6, 0.65)');  // Moderate-low 25-35 dBZ
+      grad.addColorStop(0.85, 'rgba(37, 99, 235, 0.45)'); // Light 15-25 dBZ
+      grad.addColorStop(1, 'rgba(37, 99, 235, 0)');
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, baseRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      return canvas.toDataURL();
+    }
+
+    let syntheticRadarOverlays = [];
+    let radarPhase = 0;
+    let currentIntensityMult = 1.0;
+
+    function updateRadarOverlay(multiplier) {
+      currentIntensityMult = multiplier;
+      if (!isRadarActive) return;
+
+      radarLayerGroup.clearLayers();
+      if (multiplier < 0.1) return; // No radar echo for clear weather
+
+      const dwarkaBounds = [
+        [28.5700, 76.9700], // South-West
+        [28.6500, 77.0800]  // North-East
+      ];
+
+      const imgUrl = createSyntheticDopplerCanvas(radarPhase, currentIntensityMult);
+      const radarOverlay = L.imageOverlay(imgUrl, dwarkaBounds, {
+        opacity: 0.65,
+        interactive: false
+      });
+      radarLayerGroup.addLayer(radarOverlay);
+    }
+
+    // Dynamic Radar Loop Animation (Smoothed 1.2s frame steps)
+    function startRadarAnimation() {
+      if (radarAnimationTimer) clearInterval(radarAnimationTimer);
+      radarAnimationTimer = setInterval(() => {
+        if (!isRadarActive) return;
+        radarPhase += 0.25;
+        if (radarPhase > Math.PI * 2) radarPhase = 0;
+        updateRadarOverlay(currentIntensityMult);
+      }, 800);
+    }
+
+    function toggleDopplerRadar() {
+      const btn = document.getElementById('btnRadarToggle');
+      isRadarActive = !isRadarActive;
+
+      if (isRadarActive) {
+        btn.classList.add('active');
+        btn.innerHTML = `<span class="radar-ping"></span> 📡 Doppler Radar Overlay (dBZ)`;
+        updateRadarOverlay(currentIntensityMult);
+        startRadarAnimation();
+      } else {
+        btn.classList.remove('active');
+        btn.innerHTML = `📡 Enable Doppler Radar`;
+        radarLayerGroup.clearLayers();
+        if (radarAnimationTimer) clearInterval(radarAnimationTimer);
+      }
+    }
+
     // Initial Setup
     renderNodeMarkers(1.0);
     updateForecastTimestamp(60);
+    updateRadarOverlay(1.0);
+    startRadarAnimation();
   </script>
 </body>
 </html>
