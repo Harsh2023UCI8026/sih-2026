@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Urban Flood Nowcasting System | Dwarka Mor (SIH 2026)</title>
+  
+  <!-- Google Fonts & Leaflet CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <style>
+    :root {
+      --bg-dark: #0b0f19;
+      --panel-bg: rgba(18, 26, 43, 0.85);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --accent-blue: #00d2ff;
+      --accent-purple: #7928ca;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      
+      --safe-green: #10b981;
+      --caution-yellow: #f59e0b;
+      --moderate-orange: #f97316;
+      --severe-red: #ef4444;
+      --critical-black: #dc2626;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navbar Header */
+    header {
+      height: 65px;
+      background: rgba(11, 15, 25, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+    }
+
+    .brand-title h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #ffffff, #a5f3fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-title p {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .header-badges {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--glass-border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-pulse {
+      width: 8px;
+      height: 8px;
+      background-color: var(--safe-green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--safe-green);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.3); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Layout Main */
+    .app-container {
+      flex: 1;
+      display: flex;
+      position: relative;
+    }
+
+    #map {
+      flex: 1;
+      height: 100%;
+      background: #0d131f;
+    }
+
+    /* Left Sidebar Panel */
+    .sidebar {
+      width: 400px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      border-right: 1px solid var(--glass-border);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      gap: 16px;
+      z-index: 900;
+      overflow-y: auto;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: rgba(0, 210, 255, 0.3);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .metric-item {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .metric-value {
+      font-family: 'Outfit', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 4px;
+    }
+
+    .metric-unit {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    /* Simulation Control Slider */
+    .slider-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .time-display {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent-blue);
+    }
+
+    input[type=range] {
+      width: 100%;
+      accent-color: var(--accent-blue);
+      cursor: pointer;
+    }
+
+    /* Routing Panel */
+    .route-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .route-option {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .route-option.active {
+      border-color: var(--accent-blue);
+      background: rgba(0, 210, 255, 0.08);
+    }
+
+    .route-name {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .route-status {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .status-blocked {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+    }
+
+    .status-safe {
+      background: rgba(16, 185, 129, 0.2);
+      color: #6ee7b7;
+    }
+
+    /* Legend Overlay on Map */
+    .map-legend {
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 14px;
+      z-index: 1000;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .legend-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+    }
+
+    /* Leaflet Popup Styling Override */
+    .leaflet-popup-content-wrapper {
+      background: rgba(15, 23, 42, 0.95) !important;
+      backdrop-filter: blur(10px);
+      color: #ffffff !important;
+      border: 1px solid var(--glass-border);
+      border-radius: 12px !important;
+    }
+    .leaflet-popup-tip {
+      background: rgba(15, 23, 42, 0.95) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Banner -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">🌊</div>
+      <div class="brand-title">
+        <h1>Urban Flood Nowcasting System</h1>
+        <p>Dwarka Mor Micro-Catchment & Drainage Coupling | SIH 2026</p>
+      </div>
+    </div>
+    
+    <div class="header-badges">
+      <div class="badge">
+        <div class="badge-pulse"></div>
+        <span>IMD Palam Radar Feed: Active</span>
+      </div>
+      <div class="badge" style="border-color: rgba(245, 158, 11, 0.4); color: #fde047;">
+        <span>Target: Dwarka Mor (28.6186° N, 77.0319° E)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- App Container -->
+  <div class="app-container">
+    
+    <!-- Sidebar Control Panel -->
+    <div class="sidebar">
+      
+      <!-- 0-3 Hour Predictive Slider -->
+      <div class="card">
+        <div class="card-title">
+          <span>0–3 Hour Forecast Timeline</span>
+          <span style="color: var(--accent-blue)">NOWCAST ENGINE</span>
+        </div>
+        <div class="slider-container">
+          <div class="slider-header">
+            <span>Prediction Window:</span>
+            <span class="time-display" id="timeDisplay">+60 Minutes</span>
+          </div>
+          <input type="range" id="timeSlider" min="0" max="180" step="15" value="60">
+          <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-muted);">
+            <span>NOW (+0m)</span>
+            <span>+30m</span>
+            <span>+60m</span>
+            <span>+120m</span>
+            <span>+180m</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Hydraulic Metrics -->
+      <div class="card">
+        <div class="card-title">Live Hydraulic & Radar Metrics</div>
+        <div class="metric-grid">
+          <div class="metric-item">
+            <div class="metric-unit">Radar Reflectivity</div>
+            <div class="metric-value" id="valRadar">48.5 <span style="font-size:12px">dBZ</span></div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-unit">Forecast Rain (3h)</div>
+            <div class="metric-value" id="valRain">65.0 <span style="font-size:12px">mm</span></div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-unit">Surface Runoff</div>
+            <div class="metric-value" id="valRunoff">59.8 <span style="font-size:12px">mm</span></div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-unit">Dwarka Mor Depth</div>
+            <div class="metric-value" id="valDepth" style="color: var(--severe-red)">40.3 <span style="font-size:12px">cm</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flood-Safe Navigation API -->
+      <div class="card">
+        <div class="card-title">
+          <span>Flood-Safe Navigation API</span>
+          <span style="color: var(--safe-green)">OSRM ENGINE</span>
+        </div>
+        <div class="route-box">
+          <div class="route-option active" id="routeBtnNormal" onclick="toggleRoute('normal')">
+            <div class="route-name">
+              <span>Standard Route (Najafgarh Road)</span>
+              <span class="route-status status-blocked">BLOCKED (40.3 cm)</span>
+            </div>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+              Uttam Nagar West → Dwarka Mor Metro Crossing → Dwarka Sec 3/14
+            </div>
+          </div>
+
+          <div class="route-option" id="routeBtnDetour" onclick="toggleRoute('detour')">
+            <div class="route-name">
+              <span>Flood-Safe Detour (Recommended)</span>
+              <span class="route-status status-safe">SAFE (2.0 cm)</span>
+            </div>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+              Pankha Road → Dabri Flyover → Dwarka Sec 1 Flyover → Sec 6
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drainage System Status -->
+      <div class="card">
+        <div class="card-title">Storm Drainage Network Status</div>
+        <div style="display:flex; flex-direction:column; gap:8px; font-size:12px;">
+          <div style="display:flex; justify-content:space-between;">
+            <span>PWD Box Drain 2 Capacity:</span>
+            <span style="font-weight:600; color:#fca5a5;">OVER CAPACITY (144%)</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span>Kakrola Regulator Outfall:</span>
+            <span style="font-weight:600; color:var(--severe-red);">SURCHARGED / BACKFLOW</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span>Najafgarh Drain Level:</span>
+            <span style="font-weight:600;">212.1 m MSL (FSL Exceeded)</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Map Canvas -->
+    <div id="map"></div>
+
+    <!-- Map Legend -->
+    <div class="map-legend">
+      <div style="font-weight:700; margin-bottom:4px;">Water Depth Legend (cm)</div>
+      <div class="legend-item"><div class="legend-color" style="background:var(--safe-green);"></div><span>Safe (&lt; 5 cm)</span></div>
+      <div class="legend-item"><div class="legend-color" style="background:var(--caution-yellow);"></div><span>Caution (5 – 15 cm)</span></div>
+      <div class="legend-item"><div class="legend-color" style="background:var(--moderate-orange);"></div><span>Moderate (15 – 30 cm)</span></div>
+      <div class="legend-item"><div class="legend-color" style="background:var(--severe-red);"></div><span>Severe Hazard (30 – 50 cm)</span></div>
+      <div class="legend-item"><div class="legend-color" style="background:#000000; border:1px solid red;"></div><span>Critical Emergency (&gt; 50 cm)</span></div>
+    </div>
+
+  </div>
+
+  <!-- Leaflet JS & App Script -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Initialize Map centered on Dwarka Mor
+    const map = L.map('map').setView([28.6186, 77.0319], 14);
+
+    // CartoDB Dark Matter Tiles
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap &copy; CARTO | SIH 2026',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
+
+    // Key Nodes around Dwarka Mor
+    const nodes = [
+      { name: "Dwarka Mor Metro Crossing", lat: 28.6186, lng: 77.0319, elev: 211.2, baseDepth: 40.3, type: "junction" },
+      { name: "Kakrola Mod Underpass", lat: 28.6120, lng: 77.0250, elev: 209.5, baseDepth: 85.0, type: "underpass" },
+      { name: "Sector 14 Metro Station", lat: 28.6022, lng: 77.0260, elev: 212.8, baseDepth: 22.0, type: "metro" },
+      { name: "Uttam Nagar West Metro", lat: 28.6210, lng: 77.0420, elev: 218.2, baseDepth: 4.0, type: "high_ground" },
+      { name: "Sector 16B NLU Stretch", lat: 28.6034, lng: 77.0174, elev: 212.0, baseDepth: 35.0, type: "road" },
+      { name: "Dwarka Sector 6 Ridge", lat: 28.5910, lng: 77.0610, elev: 219.5, baseDepth: 0.0, type: "dry_baseline" }
+    ];
+
+    let circleMarkers = [];
+
+    function getColor(depth) {
+      if (depth < 5) return '#10b981';
+      if (depth < 15) return '#f59e0b';
+      if (depth < 30) return '#f97316';
+      if (depth < 50) return '#ef4444';
+      return '#8b0000';
+    }
+
+    function renderNodeMarkers(multiplier) {
+      // Clear existing
+      circleMarkers.forEach(m => map.removeLayer(m));
+      circleMarkers = [];
+
+      nodes.forEach(n => {
+        const depth = Math.round(n.baseDepth * multiplier * 10) / 10;
+        const color = getColor(depth);
+        const radius = Math.max(10, Math.min(35, depth * 0.4 + 10));
+
+        const circle = L.circleMarker([n.lat, n.lng], {
+          radius: radius,
+          fillColor: color,
+          color: '#ffffff',
+          weight: 1.5,
+          opacity: 0.9,
+          fillOpacity: 0.75
+        }).addTo(map);
+
+        circle.bindPopup(`
+          <div style="font-family:'Inter',sans-serif; padding:4px;">
+            <h4 style="margin-bottom:6px; color:#a5f3fc;">${n.name}</h4>
+            <div style="font-size:12px; line-height:1.6;">
+              <b>Predicted Depth:</b> <span style="color:${color}; font-weight:700;">${depth} cm</span><br>
+              <b>Elevation:</b> ${n.elev} m MSL<br>
+              <b>Status:</b> ${depth > 30 ? '🔴 IMPASSABLE' : (depth > 15 ? '🟠 MODERATE FLOOD' : '🟢 CLEAR')}
+            </div>
+          </div>
+        `);
+
+        circleMarkers.push(circle);
+      });
+    }
+
+    // Standard Flooded Route Polyline (Red)
+    const normalRouteCoords = [
+      [28.6210, 77.0420], // Uttam Nagar
+      [28.6186, 77.0319], // Dwarka Mor Crossing (Flooded)
+      [28.6022, 77.0260]  // Sec 14
+    ];
+    const normalPolyline = L.polyline(normalRouteCoords, { color: '#ef4444', weight: 6, opacity: 0.9, dashArray: '8, 8' }).addTo(map);
+
+    // Flood-Safe Detour Route Polyline (Cyan/Green)
+    const detourRouteCoords = [
+      [28.6210, 77.0420], // Uttam Nagar
+      [28.6110, 77.0520], // Pankha Road
+      [28.5980, 77.0580], // Dabri Flyover
+      [28.5910, 77.0610]  // Sec 6
+    ];
+    const detourPolyline = L.polyline(detourRouteCoords, { color: '#00d2ff', weight: 6, opacity: 0.9 }).addTo(map);
+
+    function toggleRoute(type) {
+      document.getElementById('routeBtnNormal').classList.remove('active');
+      document.getElementById('routeBtnDetour').classList.remove('active');
+
+      if (type === 'normal') {
+        document.getElementById('routeBtnNormal').classList.add('active');
+        normalPolyline.setStyle({ opacity: 1, weight: 7 });
+        detourPolyline.setStyle({ opacity: 0.2, weight: 3 });
+        map.fitBounds(normalPolyline.getBounds(), { padding: [50, 50] });
+      } else {
+        document.getElementById('routeBtnDetour').classList.add('active');
+        detourPolyline.setStyle({ opacity: 1, weight: 7 });
+        normalPolyline.setStyle({ opacity: 0.2, weight: 3 });
+        map.fitBounds(detourPolyline.getBounds(), { padding: [50, 50] });
+      }
+    }
+
+    // Slider Event Listener
+    const slider = document.getElementById('timeSlider');
+    const timeDisplay = document.getElementById('timeDisplay');
+
+    slider.addEventListener('input', function() {
+      const mins = parseInt(this.value);
+      timeDisplay.innerText = `+${mins} Minutes`;
+
+      // Scale factor for time progression
+      let mult = 1.0;
+      if (mins === 0) mult = 0.2;
+      else if (mins === 15) mult = 0.5;
+      else if (mins === 30) mult = 0.8;
+      else if (mins === 60) mult = 1.0;
+      else if (mins === 120) mult = 0.65;
+      else if (mins === 180) mult = 0.3;
+
+      renderNodeMarkers(mult);
+
+      // Update Metric Display
+      const depth = Math.round(40.3 * mult * 10) / 10;
+      document.getElementById('valDepth').innerText = `${depth} cm`;
+      document.getElementById('valRadar').innerText = `${Math.round(48.5 * mult * 10)/10} dBZ`;
+      document.getElementById('valRain').innerText = `${Math.round(65.0 * mult * 10)/10} mm`;
+      document.getElementById('valRunoff').innerText = `${Math.round(59.8 * mult * 10)/10} mm`;
+    });
+
+    // Initial Render
+    renderNodeMarkers(1.0);
+  </script>
+</body>
+</html>
