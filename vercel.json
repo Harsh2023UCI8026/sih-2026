@@ -6,22 +6,14 @@
       "use": "@vercel/static"
     },
     {
-      "src": "app.py",
+      "src": "api/index.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/app.py"
-    },
-    {
-      "src": "/docs",
-      "dest": "/app.py"
-    },
-    {
-      "src": "/openapi.json",
-      "dest": "/app.py"
+      "dest": "/api/index.py"
     },
     {
       "src": "/(.*)",
