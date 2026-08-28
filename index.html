@@ -427,15 +427,67 @@
     }
 
     /* ========================================================= */
-    /* 📱 100% MOBILE RESPONSIVE TABBED UX (Max-Width 768px) */
-    /* ========================================================= */
+    /* 📱 100% MOBILE RESPONSIVE UI (Max-Width 768px & Small Screens) */
     @media (max-width: 768px) {
-      .mobile-tab-bar {
-        display: flex;
+      body {
+        overflow-x: hidden;
       }
 
-      .app-main {
-        position: relative;
+      .alert-banner {
+        font-size: 11px;
+        padding: 8px 10px;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .alert-banner button {
+        padding: 4px 8px;
+        font-size: 10px;
+      }
+
+      header {
+        padding: 6px 10px;
+        min-height: 50px;
+      }
+
+      .brand-logo-img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .brand-title h1 {
+        font-size: 13px;
+      }
+
+      .brand-title p {
+        font-size: 9px;
+      }
+
+      .header-right {
+        gap: 4px;
+      }
+
+      .header-right a {
+        font-size: 11px !important;
+        padding: 4px 8px !important;
+      }
+
+      .mobile-tab-bar {
+        display: flex;
+        position: sticky;
+        top: 0;
+        z-index: 1500;
+        background: var(--panel-bg);
+        border-bottom: 2px solid var(--brand-blue);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .tab-btn {
+        padding: 10px 4px;
+        font-size: 12px;
+        font-weight: 800;
       }
 
       /* Mobile Mode 1: Map Tab Selected */
@@ -445,7 +497,8 @@
 
       body.mobile-view-map .map-container {
         display: block !important;
-        height: 100%;
+        height: calc(100vh - 110px) !important;
+        width: 100% !important;
       }
 
       /* Mobile Mode 2: Controls Tab Selected */
@@ -455,27 +508,40 @@
 
       body.mobile-view-controls .sidebar {
         display: flex !important;
-        width: 100%;
-        height: 100%;
-        max-height: calc(100vh - 120px);
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch;
-        border-right: none;
-        padding-bottom: 80px !important;
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow-y: visible !important;
+        padding: 10px;
+        padding-bottom: 120px !important;
       }
 
-      .alert-banner {
+      .map-floating-controls {
+        top: 10px;
+        left: 10px;
+      }
+
+      .radar-toggle-btn {
+        padding: 6px 10px;
         font-size: 11px;
       }
 
-      .brand-title h1 {
-        font-size: 14px;
+      .map-legend {
+        bottom: 10px;
+        right: 10px;
+        padding: 6px 8px;
+        font-size: 9px;
+        max-width: 160px;
       }
 
-      .map-legend {
-        bottom: 15px;
-        right: 15px;
-        padding: 6px 10px;
+      .modal-card {
+        width: 95% !important;
+        max-height: 90vh !important;
+        border-radius: 10px;
+      }
+
+      .agency-dispatch-grid {
+        grid-template-columns: 1fr !important;
       }
     }
 
@@ -1123,6 +1189,9 @@
     }
 
     function triggerRouteCalculation() {
+      const btn = document.querySelector('.btn-find-route');
+      if (btn) btn.innerText = '⌛ Calculating Route...';
+
       const vehicle = document.getElementById('selectVehicle').value;
       const leadTimeMins = parseInt(document.getElementById('timeSlider').value) || 60;
 
@@ -1140,14 +1209,26 @@
       })
       .then(res => res.json())
       .then(data => {
+        if (btn) btn.innerText = '⚡ Find Flood-Safe Route';
+
         if (data && data.routes) {
           lastFetchedRoutes = data.routes;
           selectedRouteId = data.recommended_route_id || (data.routes[0] ? data.routes[0].route_id : null);
           renderRoutesOnMap(data.routes);
           renderRouteCards(data.routes, selectedRouteId);
+
+          // Mobile Auto-Switch to Map View on calculation
+          if (window.innerWidth <= 768) {
+            setTimeout(() => {
+              switchMobileTab('map');
+            }, 300);
+          }
         }
       })
-      .catch(err => console.log("Route calculation offline/fallback error:", err));
+      .catch(err => {
+        if (btn) btn.innerText = '⚡ Find Flood-Safe Route';
+        console.log("Route calculation offline/fallback error:", err);
+      });
     }
 
     function renderRoutesOnMap(routes) {
