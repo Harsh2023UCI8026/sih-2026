@@ -137,11 +137,19 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
         path = parsed.path
         query = parse_qs(parsed.query)
 
-        # 1. Dashboard Web UI
+        # 1. Dashboard Web UI & Static Assets
         if path == '/' or path == '/index.html':
             self._send_file(os.path.join(WORKSPACE_DIR, 'index.html'), 'text/html')
         elif path == '/logo.jpeg':
             self._send_file(os.path.join(WORKSPACE_DIR, 'logo.jpeg'), 'image/jpeg')
+        elif path == '/robots.txt':
+            self._send_file(os.path.join(WORKSPACE_DIR, 'robots.txt'), 'text/plain')
+        elif path == '/sitemap.xml':
+            self._send_file(os.path.join(WORKSPACE_DIR, 'sitemap.xml'), 'application/xml')
+        elif path == '/site.webmanifest':
+            self._send_file(os.path.join(WORKSPACE_DIR, 'site.webmanifest'), 'application/manifest+json')
+        elif path == '/dwarka_catchment_bounds.geojson':
+            self._send_file(os.path.join(WORKSPACE_DIR, 'dwarka_catchment_bounds.geojson'), 'application/geo+json')
 
         # 2. REST API: GET /api/v1/nowcast
         elif path == '/api/v1/nowcast':

@@ -3,17 +3,72 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Urban Flood Nowcasting System | Dwarka Mor (SIH 2026)</title>
-  
-  <!-- Favicon -->
+  <!-- Primary SEO Meta Tags -->
+  <title>Urban Flood Nowcasting System | Dwarka Mor Street-Level Inundation (SIH 2026)</title>
+  <meta name="description" content="Real-Time 0-3 Hour Street-Level Flood Inundation Prediction & Safe Routing System for Dwarka Mor & Najafgarh Drain Basin, Delhi by MoES / NCMRWF.">
+  <meta name="keywords" content="Urban Flood Nowcasting, Dwarka Mor Flooding, Delhi Flood Alert, IMD Palam Radar, MoES NCMRWF, Hydrodynamic Flood Routing, Street Water Depth">
+  <meta name="author" content="Ministry of Earth Sciences (MoES) / NCMRWF">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="canonical" href="https://urban-flood-nowcast.moes.gov.in/">
+
+  <!-- GEO & Spatial Search Meta Tags (100% GEO Optimization) -->
+  <meta name="geo.position" content="28.6186;77.0319">
+  <meta name="geo.region" content="IN-DL">
+  <meta name="geo.placename" content="Dwarka Mor, South West Delhi, India">
+  <meta name="ICBM" content="28.6186, 77.0319">
+  <link rel="alternate" type="application/geo+json" href="dwarka_catchment_bounds.geojson" title="Dwarka Catchment Spatial Bounds">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://urban-flood-nowcast.moes.gov.in/">
+  <meta property="og:title" content="Urban Flood Nowcasting System | Street-Level Flood Warnings">
+  <meta property="og:description" content="0-3 Hour forward-looking street inundation predictions and flood-safe emergency routing engine for Dwarka Mor, Delhi.">
+  <meta property="og:image" content="https://urban-flood-nowcast.moes.gov.in/logo.jpeg">
+  <meta property="og:locale" content="en_IN">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Urban Flood Nowcasting System | Dwarka Mor">
+  <meta name="twitter:description" content="Real-time 0-3h street water depth predictions & flood-safe navigation API by MoES.">
+  <meta name="twitter:image" content="https://urban-flood-nowcast.moes.gov.in/logo.jpeg">
+
+  <!-- Favicon & PWA Manifest -->
   <link rel="icon" type="image/jpeg" href="logo.jpeg" />
   <link rel="shortcut icon" type="image/jpeg" href="logo.jpeg" />
+  <link rel="manifest" href="site.webmanifest" />
 
-  <!-- Google Fonts & Leaflet CSS -->
+  <!-- Google Fonts & CDN Preconnect (Lighthouse Performance) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- JSON-LD Structured Data for GEO & Search Engine Knowledge Graphs -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "GovernmentService",
+    "name": "Urban Flood Nowcasting & Safe-Routing System",
+    "serviceType": "Disaster Mitigation & Flood Warning",
+    "provider": {
+      "@type": "GovernmentOrganization",
+      "name": "Ministry of Earth Sciences (MoES) / NCMRWF",
+      "url": "https://www.moes.gov.in"
+    },
+    "areaServed": {
+      "@type": "Place",
+      "name": "Dwarka Mor Catchment, South West Delhi",
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 28.6186,
+        "longitude": 77.0319
+      }
+    },
+    "description": "Real-time 0-3 hour street-level flood inundation prediction and dynamic flood-safe routing engine for Dwarka Mor."
+  }
+  </script>
   
   <style>
     /* CSS Variables for Light Mode (Default) & Dark Mode */
