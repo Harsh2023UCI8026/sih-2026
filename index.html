@@ -1018,23 +1018,33 @@
   <script>
     // Mobile Tab Switcher Logic
     function switchMobileTab(tab) {
+      const btnMap = document.getElementById('tabBtnMap');
+      const btnControls = document.getElementById('tabBtnControls');
+
       document.body.classList.remove('mobile-view-map', 'mobile-view-controls');
-      document.getElementById('tabBtnMap').classList.remove('active');
-      document.getElementById('tabBtnControls').classList.remove('active');
+      if (btnMap) btnMap.classList.remove('active');
+      if (btnControls) btnControls.classList.remove('active');
 
       if (tab === 'map') {
         document.body.classList.add('mobile-view-map');
-        document.getElementById('tabBtnMap').classList.add('active');
-        setTimeout(() => map.invalidateSize(), 200);
+        if (btnMap) btnMap.classList.add('active');
+        if (typeof map !== 'undefined' && map) {
+          setTimeout(() => map.invalidateSize(), 200);
+        }
       } else {
         document.body.classList.add('mobile-view-controls');
-        document.getElementById('tabBtnControls').classList.add('active');
+        if (btnControls) btnControls.classList.add('active');
       }
     }
 
     function showDetourOnMobile() {
       switchMobileTab('map');
-      toggleRoute('detour');
+      if (typeof triggerRouteCalculation === 'function') {
+        triggerRouteCalculation();
+      }
+      if (typeof toggleRoute === 'function') {
+        toggleRoute('detour');
+      }
     }
 
     // Initialize Leaflet Map
@@ -1137,40 +1147,25 @@
     const detourPolyline = L.polyline(detourCoords, { color: '#2563eb', weight: 6, opacity: 0.95 }).addTo(map);
 
     function toggleRoute(type) {
-      document.getElementById('btnNormal').classList.remove('selected');
-      document.getElementById('btnDetour').classList.remove('selected');
+      const btnNormal = document.getElementById('btnNormal');
+      const btnDetour = document.getElementById('btnDetour');
+      if (btnNormal) btnNormal.classList.remove('selected');
+      if (btnDetour) btnDetour.classList.remove('selected');
 
       if (type === 'normal') {
-        document.getElementById('btnNormal').classList.add('selected');
-        normalPolyline.setStyle({ opacity: 1, weight: 7 });
-        detourPolyline.setStyle({ opacity: 0.2, weight: 3 });
-        map.fitBounds(normalPolyline.getBounds(), { padding: [40, 40] });
-      } else {
-        document.getElementById('btnDetour').classList.add('selected');
-        detourPolyline.setStyle({ opacity: 1, weight: 7 });
-        normalPolyline.setStyle({ opacity: 0.2, weight: 3 });
-        map.fitBounds(detourPolyline.getBounds(), { padding: [40, 40] });
-      }
-    }
-
-    // Mobile View Tab Switcher Function
-    function switchMobileTab(tab) {
-      const btnMap = document.getElementById('tabBtnMap');
-      const btnControls = document.getElementById('tabBtnControls');
-
-      if (tab === 'map') {
-        document.body.classList.remove('mobile-view-controls');
-        document.body.classList.add('mobile-view-map');
-        if (btnMap) btnMap.classList.add('active');
-        if (btnControls) btnControls.classList.remove('active');
-        if (typeof map !== 'undefined' && map) {
-          setTimeout(() => map.invalidateSize(), 200);
+        if (btnNormal) btnNormal.classList.add('selected');
+        if (typeof normalPolyline !== 'undefined' && normalPolyline) normalPolyline.setStyle({ opacity: 1, weight: 7 });
+        if (typeof detourPolyline !== 'undefined' && detourPolyline) detourPolyline.setStyle({ opacity: 0.2, weight: 3 });
+        if (typeof map !== 'undefined' && map && typeof normalPolyline !== 'undefined' && normalPolyline) {
+          map.fitBounds(normalPolyline.getBounds(), { padding: [40, 40] });
         }
       } else {
-        document.body.classList.remove('mobile-view-map');
-        document.body.classList.add('mobile-view-controls');
-        if (btnControls) btnControls.classList.add('active');
-        if (btnMap) btnMap.classList.remove('active');
+        if (btnDetour) btnDetour.classList.add('selected');
+        if (typeof detourPolyline !== 'undefined' && detourPolyline) detourPolyline.setStyle({ opacity: 1, weight: 7 });
+        if (typeof normalPolyline !== 'undefined' && normalPolyline) normalPolyline.setStyle({ opacity: 0.2, weight: 3 });
+        if (typeof map !== 'undefined' && map && typeof detourPolyline !== 'undefined' && detourPolyline) {
+          map.fitBounds(detourPolyline.getBounds(), { padding: [40, 40] });
+        }
       }
     }
 
