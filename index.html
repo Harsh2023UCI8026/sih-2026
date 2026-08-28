@@ -432,8 +432,18 @@
     /* ========================================================= */
     /* 📱 100% MOBILE RESPONSIVE UI (Max-Width 768px & Small Screens) */
     @media (max-width: 768px) {
-      body {
-        overflow-x: hidden;
+      html, body {
+        height: auto !important;
+        min-height: 100vh !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .app-main {
+        height: auto !important;
+        min-height: calc(100vh - 110px) !important;
+        overflow: visible !important;
       }
 
       .alert-banner {
@@ -502,6 +512,8 @@
         display: block !important;
         height: calc(100vh - 110px) !important;
         width: 100% !important;
+        position: sticky;
+        top: 110px;
       }
 
       /* Mobile Mode 2: Controls Tab Selected */
@@ -516,7 +528,7 @@
         max-height: none !important;
         overflow-y: visible !important;
         padding: 10px;
-        padding-bottom: 120px !important;
+        padding-bottom: 140px !important;
       }
 
       .map-floating-controls {
