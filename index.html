@@ -134,10 +134,13 @@
     .brand-logo-img {
       width: 38px;
       height: 38px;
+      min-width: 38px;
+      min-height: 38px;
       border-radius: 8px;
       object-fit: cover;
       border: 2px solid var(--brand-blue);
       flex-shrink: 0;
+      display: block !important;
     }
 
     .brand-title h1 {
@@ -788,7 +791,8 @@
   <!-- Header Navbar -->
   <header>
     <div class="brand">
-      <img src="logo.jpeg" alt="Urban Flood Nowcasting Logo" class="brand-logo-img">
+      <img src="logo.jpeg" alt="Urban Flood Nowcasting Logo" class="brand-logo-img" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='flex';">
+      <div id="logoFallback" style="display:none; width:38px; height:38px; background:linear-gradient(135deg, #2563eb, #7c3aed); border-radius:8px; align-items:center; justify-content:center; color:white; font-size:20px; font-weight:800; border:2px solid var(--brand-blue); flex-shrink:0;">🌊</div>
       <div class="brand-title">
         <h1>Urban Flood Nowcasting</h1>
         <p>Dwarka Mor Catchment | SIH 2026</p>
@@ -901,11 +905,13 @@
           </div>
 
           <!-- Vehicle Type Selector -->
-          <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
             <span style="font-size:10px; font-weight:700; color:var(--text-sub);">Vehicle Mode:</span>
-            <select id="selectVehicle" style="padding:4px 8px; font-size:11px; border-radius:6px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); font-weight:700;" onchange="triggerRouteCalculation()">
+            <select id="selectVehicle" style="padding:6px 8px; font-size:11px; border-radius:6px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); font-weight:700; max-width:180px;" onchange="triggerRouteCalculation()">
               <option value="car" selected>🚗 Car (Max 25cm)</option>
-              <option value="ambulance">🚑 Ambulance (Max 45cm)</option>
+              <option value="bike">🏍️ Bike / Scooter (Max 15cm)</option>
+              <option value="rickshaw">🛺 Auto / E-Rickshaw (Max 18cm)</option>
+              <option value="ambulance">🚑 Ambulance / SUV (Max 45cm)</option>
               <option value="pedestrian">🚶 Pedestrian (Max 10cm)</option>
             </select>
           </div>
@@ -1134,18 +1140,18 @@
     let selectedRouteId = null;
     let autocompleteDebounceTimer = null;
 
-    // Nominatim OpenStreetMap Autocomplete with Delhi NCR Bounding Box Restriction
+    // Nominatim OpenStreetMap Autocomplete with English Language & Uber-Style Layout
     function onLocationInput(field, query) {
       if (autocompleteDebounceTimer) clearTimeout(autocompleteDebounceTimer);
       const dropdown = document.getElementById(field === 'origin' ? 'autocompleteOrigin' : 'autocompleteDest');
 
-      if (!query || query.trim().length < 3) {
+      if (!query || query.trim().length < 2) {
         dropdown.style.display = 'none';
         return;
       }
 
       autocompleteDebounceTimer = setTimeout(() => {
-        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&viewbox=76.8,28.4,77.3,28.9&bounded=1&limit=5`;
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&viewbox=76.8,28.4,77.3,28.9&bounded=1&limit=5&accept-language=en`;
         fetch(url, { headers: { 'User-Agent': 'UrbanFloodNowcasting/1.0' } })
           .then(res => res.json())
           .then(data => {
@@ -1153,23 +1159,34 @@
               dropdown.style.display = 'none';
               return;
             }
-            dropdown.innerHTML = data.map(item => `
-              <div class="autocomplete-item" onclick="selectAutocompleteOption('${field}', '${item.display_name.replace(/'/g, "\\'")}', ${item.lat}, ${item.lon})">
-                📍 <b>${item.display_name.split(',')[0]}</b> <span style="font-size:9px; color:var(--text-muted);">${item.display_name.split(',').slice(1,3).join(',')}</span>
-              </div>
-            `).join('');
+            dropdown.innerHTML = data.map(item => {
+              const parts = item.display_name.split(', ');
+              const title = parts[0];
+              const subtitle = parts.slice(1, 4).join(', ');
+              return `
+                <div class="autocomplete-item" onclick="selectAutocompleteOption('${field}', '${title.replace(/'/g, "\\'")}', ${item.lat}, ${item.lon})">
+                  <div style="display:flex; align-items:flex-start; gap:8px;">
+                    <span style="font-size:13px; margin-top:1px; color:#ea4335;">📍</span>
+                    <div style="display:flex; flex-direction:column; gap:1px; overflow:hidden;">
+                      <span style="font-weight:800; font-size:11px; color:var(--text-title); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${title}</span>
+                      <span style="font-size:9px; color:var(--text-muted); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${subtitle}</span>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('');
             dropdown.style.display = 'block';
           }).catch(() => dropdown.style.display = 'none');
-      }, 300);
+      }, 250);
     }
 
     function selectAutocompleteOption(field, name, lat, lng) {
       if (field === 'origin') {
-        document.getElementById('inputOrigin').value = name.split(',')[0];
+        document.getElementById('inputOrigin').value = name;
         document.getElementById('autocompleteOrigin').style.display = 'none';
         currentOriginCoords = { lat: parseFloat(lat), lng: parseFloat(lng) };
       } else {
-        document.getElementById('inputDestination').value = name.split(',')[0];
+        document.getElementById('inputDestination').value = name;
         document.getElementById('autocompleteDest').style.display = 'none';
         currentDestCoords = { lat: parseFloat(lat), lng: parseFloat(lng) };
       }
@@ -1188,9 +1205,36 @@
       }
     }
 
-    function triggerRouteCalculation() {
+    async function ensureGeocodedCoords() {
+      const origText = document.getElementById('inputOrigin').value.trim();
+      const destText = document.getElementById('inputDestination').value.trim();
+
+      if (origText && !origText.startsWith("My Location") && origText !== "Uttam Nagar West Metro") {
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(origText)}&viewbox=76.8,28.4,77.3,28.9&bounded=1&limit=1&accept-language=en`);
+          const data = await res.json();
+          if (data && data[0]) {
+            currentOriginCoords = { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+          }
+        } catch(e) {}
+      }
+
+      if (destText && destText !== "Dwarka Sector 6 Ridge") {
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destText)}&viewbox=76.8,28.4,77.3,28.9&bounded=1&limit=1&accept-language=en`);
+          const data = await res.json();
+          if (data && data[0]) {
+            currentDestCoords = { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+          }
+        } catch(e) {}
+      }
+    }
+
+    async function triggerRouteCalculation() {
       const btn = document.querySelector('.btn-find-route');
       if (btn) btn.innerText = '⌛ Calculating Route...';
+
+      await ensureGeocodedCoords();
 
       const vehicle = document.getElementById('selectVehicle').value;
       const leadTimeMins = parseInt(document.getElementById('timeSlider').value) || 60;

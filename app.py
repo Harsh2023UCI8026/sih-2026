@@ -249,8 +249,13 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
             # Clearance thresholds (cm)
             thresholds = {
                 "pedestrian": 10.0,
+                "bike": 15.0,
+                "twowheeler": 15.0,
+                "rickshaw": 18.0,
+                "autorickshaw": 18.0,
                 "car": 25.0,
-                "ambulance": 45.0
+                "ambulance": 45.0,
+                "suv": 45.0
             }
             max_allowed = thresholds.get(vehicle_type, 25.0)
 
@@ -258,20 +263,21 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
             nowcast = calculate_nowcast(lead_time_mins)
             flood_nodes = nowcast.get("spatial_node_predictions", [])
 
-            # Compute 3 alternative routes (using OSRM or fallback solver)
+            # Compute 3 alternative routes (using OSRM or robust fallback solver)
             import urllib.request
             osrm_routes = []
             try:
                 osrm_url = f"http://router.project-osrm.org/route/v1/driving/{orig['lng']},{orig['lat']};{dest['lng']},{dest['lat']}?overview=full&geometries=geojson&alternatives=true&steps=true"
-                req = urllib.request.Request(osrm_url, headers={'User-Agent': 'Mozilla/5.0'})
-                with urllib.request.urlopen(req, timeout=4) as resp:
+                req = urllib.request.Request(osrm_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
+                with urllib.request.urlopen(req, timeout=3) as resp:
                     if resp.status == 200:
                         osrm_data = json.loads(resp.read().decode('utf-8'))
                         osrm_routes = osrm_data.get("routes", [])
             except Exception as e:
-                print("OSRM query failed/timed out, using local hydraulic routing solver:", e)
+                print("OSRM query offline/failed, using dynamic multi-route generator:", e)
 
             routes_response = []
+
             if osrm_routes:
                 for idx, r in enumerate(osrm_routes):
                     coords_raw = r["geometry"]["coordinates"] # [lng, lat]
@@ -287,7 +293,7 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
                         for fn in flood_nodes:
                             # Euclidean distance approximation in meters
                             d_m = math.sqrt((pt[0] - fn["lat"])**2 + (pt[1] - fn["lng"])**2) * 111000
-                            if d_m < 350: # Within 350m of a flooded manhole/junction
+                            if d_m < 400: # Within 400m of a flooded manhole/junction
                                 d_cm = fn.get("water_depth_cm", 0.0)
                                 if d_cm > max_depth:
                                     max_depth = d_cm
@@ -298,7 +304,6 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
                                         "coords": [fn["lat"], fn["lng"]]
                                     })
 
-                    # Deduplicate flooded segments
                     unique_flooded = []
                     seen = set()
                     for fs in flooded_segs:
@@ -306,16 +311,13 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
                             seen.add(fs["road_name"])
                             unique_flooded.append(fs)
 
-                    # Determine status
                     if max_depth > max_allowed:
                         status = "BLOCKED"
-                    elif max_depth > 15.0:
+                    elif max_depth > 12.0:
                         status = "RISKY"
                     else:
                         status = "SAFE"
 
-                    # Generate Waypoints for Google Maps URL
-                    # Pick 2-3 evenly spaced intermediate points
                     wps = []
                     if len(coords) > 6:
                         step_idx = len(coords) // 3
@@ -342,49 +344,101 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
                         "coordinates": coords,
                         "google_maps_url": gmaps_url
                     })
-            
-            # Fallback or synthetic 2-3 routes if OSRM empty
-            if not routes_response:
-                # Direct route (via Najafgarh Rd)
-                r1_coords = [[orig['lat'], orig['lng']], [28.6186, 77.0319], [dest['lat'], dest['lng']]]
-                # Detour 1 (via Pankha Rd & Dabri Flyover)
-                r2_coords = [[orig['lat'], orig['lng']], [28.6110, 77.0520], [28.5980, 77.0580], [dest['lat'], dest['lng']]]
 
-                depth_dwarka = next((fn["water_depth_cm"] for fn in flood_nodes if fn["id"] == "NODE_DWARKA_MOR_METRO"), 40.3)
+            # Guaranteed Dynamic 3-Route Multi-Path Generator if OSRM returned < 2 routes
+            if len(routes_response) < 2:
+                # Direct distance approx
+                dist_direct_km = math.sqrt((orig['lat'] - dest['lat'])**2 + (orig['lng'] - dest['lng'])**2) * 111.0
+                dist_direct_km = max(0.5, round(dist_direct_km, 1))
 
-                r1_status = "BLOCKED" if depth_dwarka > max_allowed else ("RISKY" if depth_dwarka > 15.0 else "SAFE")
+                mid_lat = (orig['lat'] + dest['lat']) / 2.0
+                mid_lng = (orig['lng'] + dest['lng']) / 2.0
 
-                gmaps_url1 = f"https://www.google.com/maps/dir/?api=1&origin={orig['lat']},{orig['lng']}&destination={dest['lat']},{dest['lng']}&waypoints=28.6186,77.0319&travelmode=driving"
-                gmaps_url2 = f"https://www.google.com/maps/dir/?api=1&origin={orig['lat']},{orig['lng']}&destination={dest['lat']},{dest['lng']}&waypoints=28.6110,77.0520|28.5980,77.0580&travelmode=driving"
+                # Perpendicular offset vector for 2 alternative detours
+                dx = dest['lng'] - orig['lng']
+                dy = dest['lat'] - orig['lat']
+                norm = math.sqrt(dx*dx + dy*dy) or 1.0
+                offset_dist = min(0.03, max(0.008, norm * 0.25))
 
-                routes_response = [
-                    {
-                        "route_id": "r1",
-                        "name": "Standard Direct Route (Najafgarh Rd)",
-                        "status": r1_status,
-                        "eta_minutes": 10,
-                        "distance_km": 4.2,
-                        "max_water_depth_cm": depth_dwarka,
-                        "vehicle_type": vehicle_type,
-                        "clearance_threshold_cm": max_allowed,
-                        "flooded_segments": [{"road_name": "Dwarka Mor Metro Crossing", "depth_cm": depth_dwarka, "coords": [28.6186, 77.0319]}],
-                        "coordinates": r1_coords,
-                        "google_maps_url": gmaps_url1
-                    },
-                    {
-                        "route_id": "r2",
-                        "name": "Flood-Safe Detour (Pankha Rd / Dabri Flyover)",
-                        "status": "SAFE",
-                        "eta_minutes": 14,
-                        "distance_km": 6.8,
-                        "max_water_depth_cm": 2.0,
-                        "vehicle_type": vehicle_type,
-                        "clearance_threshold_cm": max_allowed,
-                        "flooded_segments": [],
-                        "coordinates": r2_coords,
-                        "google_maps_url": gmaps_url2
-                    }
+                # Route 1: Direct path
+                r1_coords = [
+                    [orig['lat'], orig['lng']],
+                    [mid_lat, mid_lng],
+                    [dest['lat'], dest['lng']]
                 ]
+
+                # Route 2: North/East Bypass detour (+offset)
+                r2_coords = [
+                    [orig['lat'], orig['lng']],
+                    [orig['lat'] + (dest['lat']-orig['lat'])*0.33 + (-dy/norm)*offset_dist, orig['lng'] + (dest['lng']-orig['lng'])*0.33 + (dx/norm)*offset_dist],
+                    [orig['lat'] + (dest['lat']-orig['lat'])*0.66 + (-dy/norm)*offset_dist, orig['lng'] + (dest['lng']-orig['lng'])*0.66 + (dx/norm)*offset_dist],
+                    [dest['lat'], dest['lng']]
+                ]
+
+                # Route 3: South/West Bypass detour (-offset)
+                r3_coords = [
+                    [orig['lat'], orig['lng']],
+                    [orig['lat'] + (dest['lat']-orig['lat'])*0.33 - (-dy/norm)*offset_dist, orig['lng'] + (dest['lng']-orig['lng'])*0.33 - (dx/norm)*offset_dist],
+                    [orig['lat'] + (dest['lat']-orig['lat'])*0.66 - (-dy/norm)*offset_dist, orig['lng'] + (dest['lng']-orig['lng'])*0.66 - (dx/norm)*offset_dist],
+                    [dest['lat'], dest['lng']]
+                ]
+
+                all_candidate_paths = [
+                    ("r1", "Direct Route", r1_coords, dist_direct_km, max(2, int(dist_direct_km * 2.5))),
+                    ("r2", "Bypass Detour A", r2_coords, round(dist_direct_km * 1.2, 1), max(3, int(dist_direct_km * 3.0))),
+                    ("r3", "Bypass Detour B", r3_coords, round(dist_direct_km * 1.35, 1), max(4, int(dist_direct_km * 3.4)))
+                ]
+
+                routes_response = []
+                for r_id, r_name, c_list, r_dist, r_eta in all_candidate_paths:
+                    max_depth = 0.0
+                    flooded_segs = []
+
+                    for pt in c_list:
+                        for fn in flood_nodes:
+                            d_m = math.sqrt((pt[0] - fn["lat"])**2 + (pt[1] - fn["lng"])**2) * 111000
+                            if d_m < 450:
+                                d_cm = fn.get("water_depth_cm", 0.0)
+                                if d_cm > max_depth:
+                                    max_depth = d_cm
+                                if d_cm > 15.0:
+                                    flooded_segs.append({
+                                        "road_name": fn["name"],
+                                        "depth_cm": d_cm,
+                                        "coords": [fn["lat"], fn["lng"]]
+                                    })
+
+                    unique_flooded = []
+                    seen = set()
+                    for fs in flooded_segs:
+                        if fs["road_name"] not in seen:
+                            seen.add(fs["road_name"])
+                            unique_flooded.append(fs)
+
+                    if max_depth > max_allowed:
+                        status = "BLOCKED"
+                    elif max_depth > 12.0:
+                        status = "RISKY"
+                    else:
+                        status = "SAFE"
+
+                    # Waypoints for Google Maps
+                    wp_str = f"{c_list[1][0]:.5f},{c_list[1][1]:.5f}"
+                    gmaps = f"https://www.google.com/maps/dir/?api=1&origin={orig['lat']:.5f},{orig['lng']:.5f}&destination={dest['lat']:.5f},{dest['lng']:.5f}&waypoints={wp_str}&travelmode=driving"
+
+                    routes_response.append({
+                        "route_id": r_id,
+                        "name": r_name,
+                        "status": status,
+                        "eta_minutes": r_eta,
+                        "distance_km": r_dist,
+                        "max_water_depth_cm": round(max_depth, 1),
+                        "vehicle_type": vehicle_type,
+                        "clearance_threshold_cm": max_allowed,
+                        "flooded_segments": unique_flooded,
+                        "coordinates": c_list,
+                        "google_maps_url": gmaps
+                    })
 
             # Sort routes: SAFE first, then RISKY, then BLOCKED
             status_order = {"SAFE": 0, "RISKY": 1, "BLOCKED": 2}
@@ -476,15 +530,18 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
         else:
             self._send_json({"error": "POST Endpoint not found"}, 404)
 
+class ReusableHTTPServer(HTTPServer):
+    allow_reuse_address = True
+
 def run_server(port=8081):
     server_address = ('', port)
-    httpd = HTTPServer(server_address, SIHNowcastingAPIHandler)
+    httpd = ReusableHTTPServer(server_address, SIHNowcastingAPIHandler)
     print("=" * 60)
     print(f"SIH 2026 REST API Backend Server Running on http://localhost:{port}/")
     print(f"Swagger API Documentation available at: http://localhost:{port}/docs")
     print(f"GET  /api/v1/nowcast?lead_time_mins=60")
     print(f"GET  /api/v1/drainage-network")
-    print(f"POST /api/v1/navigate")
+    print(f"POST /api/v1/route/flood-safe")
     print("=" * 60)
     httpd.serve_forever()
 
