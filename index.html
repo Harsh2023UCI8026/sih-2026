@@ -276,6 +276,39 @@
       text-transform: uppercase;
     }
 
+    .card-head-accordion {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      padding: 2px 0;
+    }
+
+    .card-head-accordion h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      margin: 0;
+    }
+
+    .accordion-arrow {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--brand-blue);
+      transition: transform 0.25s ease;
+    }
+
+    .card.collapsed .card-collapsible-body {
+      display: none !important;
+    }
+
+    .card.collapsed .accordion-arrow {
+      transform: rotate(-90deg);
+    }
+
     .time-val {
       font-family: 'Outfit', sans-serif;
       font-size: 18px;
@@ -807,7 +840,7 @@
     <span>⚠️ <b>FLOOD ALERT:</b> Dwarka Mor predicted depth <b>40.3 cm</b> in 60 mins.</span>
     <div style="display:flex; gap:6px; align-items:center;">
       <button class="alert-btn" style="background:#ffffff; color:#dc2626;" onclick="broadcastEmergencyAlert()">📢 BROADCAST ALERT</button>
-      <button class="alert-btn" onclick="showDetourOnMobile()">SHOW DETOUR</button>
+      <button class="alert-btn" onclick="showDetourOnMobile()">🔀 Alternate Safe Route</button>
     </div>
   </div>
 
@@ -853,12 +886,13 @@
         Predicts exact water height on streets 0–3 hours in advance to keep you safe from heavy rainfall.
       </div>
 
-      <!-- Forecast Slider -->
-      <div class="card">
-        <div class="card-head">
+      <!-- Forecast Slider (Collapsible Accordion) -->
+      <div class="card collapsed" id="cardForecast">
+        <div class="card-head-accordion" onclick="toggleCardAccordion('cardForecast')">
           <h3>⏱️ Rain & Flood Forecast (0–3 Hours)</h3>
+          <span class="accordion-arrow">▼</span>
         </div>
-        <div>
+        <div class="card-collapsible-body" style="margin-top:6px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
             <span style="font-size:11px; color:var(--text-muted);">Lead Time:</span>
             <span class="time-val" id="timeDisplay">+60 Mins</span>
@@ -877,27 +911,30 @@
         </div>
       </div>
 
-      <!-- Metrics Grid -->
-      <div class="card">
-        <div class="card-head">
+      <!-- Metrics Grid (Collapsible Accordion) -->
+      <div class="card collapsed" id="cardMetrics">
+        <div class="card-head-accordion" onclick="toggleCardAccordion('cardMetrics')">
           <h3>🌧️ Live Rain & Water Level Metrics</h3>
+          <span class="accordion-arrow">▼</span>
         </div>
-        <div class="metrics-grid">
-          <div class="metric-item">
-            <div class="metric-lbl">Radar Rain Intensity</div>
-            <div class="metric-num" id="valRadar">48.5 <span style="font-size:10px; color:var(--text-muted)">dBZ</span></div>
-          </div>
-          <div class="metric-item">
-            <div class="metric-lbl">Expected Rain (3h)</div>
-            <div class="metric-num" id="valRain">65.0 <span style="font-size:10px; color:var(--text-muted)">mm</span></div>
-          </div>
-          <div class="metric-item">
-            <div class="metric-lbl">Excess Water on Streets</div>
-            <div class="metric-num" id="valRunoff">59.8 <span style="font-size:10px; color:var(--text-muted)">mm</span></div>
-          </div>
-          <div class="metric-item">
-            <div class="metric-lbl">Dwarka Mor Water Height</div>
-            <div class="metric-num" id="valDepth" style="color: var(--severe-red)">40.3 <span style="font-size:10px; color:var(--text-muted)">cm</span></div>
+        <div class="card-collapsible-body" style="margin-top:6px;">
+          <div class="metrics-grid">
+            <div class="metric-item">
+              <div class="metric-lbl">Radar Rain Intensity</div>
+              <div class="metric-num" id="valRadar">48.5 <span style="font-size:10px; color:var(--text-muted)">dBZ</span></div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-lbl">Expected Rain (3h)</div>
+              <div class="metric-num" id="valRain">65.0 <span style="font-size:10px; color:var(--text-muted)">mm</span></div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-lbl">Excess Water on Streets</div>
+              <div class="metric-num" id="valRunoff">59.8 <span style="font-size:10px; color:var(--text-muted)">mm</span></div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-lbl">Dwarka Mor Water Height</div>
+              <div class="metric-num" id="valDepth" style="color: var(--severe-red)">40.3 <span style="font-size:10px; color:var(--text-muted)">cm</span></div>
+            </div>
           </div>
         </div>
       </div>
@@ -914,7 +951,7 @@
           <!-- Origin Input -->
           <div style="position:relative;">
             <div style="display:flex; gap:4px; align-items:center;">
-              <input type="text" id="inputOrigin" placeholder="Starting Point (e.g. Uttam Nagar West)" value="Uttam Nagar West Metro" style="flex:1; padding:7px 9px; font-size:11px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); border-radius:6px;" oninput="onLocationInput('origin', this.value)">
+              <input type="text" id="inputOrigin" placeholder="Enter starting point (e.g. Uttam Nagar West)" value="" style="flex:1; padding:7px 9px; font-size:11px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); border-radius:6px;" oninput="onLocationInput('origin', this.value)">
               <button onclick="useCurrentLocation()" title="Use Current GPS Location" style="padding:7px 9px; font-size:11px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:6px; cursor:pointer; color:var(--brand-blue); font-weight:700; white-space:nowrap;">📍 GPS</button>
             </div>
             <div id="autocompleteOrigin" class="autocomplete-dropdown" style="display:none;"></div>
@@ -922,7 +959,7 @@
 
           <!-- Destination Input -->
           <div style="position:relative;">
-            <input type="text" id="inputDestination" placeholder="Destination (e.g. Dwarka Sector 6)" value="Dwarka Sector 6 Ridge" style="width:100%; padding:7px 9px; font-size:11px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); border-radius:6px;" oninput="onLocationInput('dest', this.value)">
+            <input type="text" id="inputDestination" placeholder="Enter destination (e.g. Dwarka Sector 6)" value="" style="width:100%; padding:7px 9px; font-size:11px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); border-radius:6px;" oninput="onLocationInput('dest', this.value)">
             <div id="autocompleteDest" class="autocomplete-dropdown" style="display:none;"></div>
           </div>
 
@@ -950,12 +987,13 @@
 
       </div>
 
-      <!-- Drain Status -->
-      <div class="card">
-        <div class="card-head">
+      <!-- Drain Status (Collapsible Accordion) -->
+      <div class="card collapsed" id="cardDrains">
+        <div class="card-head-accordion" onclick="toggleCardAccordion('cardDrains')">
           <h3>🌊 Underground Storm Drain Status</h3>
+          <span class="accordion-arrow">▼</span>
         </div>
-        <div style="font-size:10px; display:flex; flex-direction:column; gap:4px; margin-top:4px;">
+        <div class="card-collapsible-body" style="font-size:10px; display:flex; flex-direction:column; gap:4px; margin-top:6px;">
           <div style="display:flex; justify-content:space-between;">
             <span>PWD Main Box Drain:</span>
             <span style="font-weight:700; color:var(--severe-red);">FULL & OVERFLOWING (144%)</span>
@@ -967,17 +1005,20 @@
         </div>
       </div>
 
-      <!-- Emergency Services Alert Broadcast Card -->
-      <div class="card">
-        <div class="card-head">
-          <h3>Emergency Broadcast</h3>
+      <!-- Emergency Services Alert Broadcast Card (Collapsible Accordion) -->
+      <div class="card collapsed" id="cardBroadcast">
+        <div class="card-head-accordion" onclick="toggleCardAccordion('cardBroadcast')">
+          <h3>📢 Emergency Broadcast</h3>
+          <span class="accordion-arrow">▼</span>
         </div>
-        <p style="font-size:10px; color:var(--text-muted); margin-top:3px;">
-          Automated multi-agency dispatch triggers for NDRF, Traffic Police & DMRC.
-        </p>
-        <button class="broadcast-btn-sidebar" onclick="broadcastEmergencyAlert()">
-          📢 Broadcast Emergency Alert
-        </button>
+        <div class="card-collapsible-body" style="margin-top:6px;">
+          <p style="font-size:10px; color:var(--text-muted); margin-top:3px;">
+            Automated multi-agency dispatch triggers for NDRF, Traffic Police & DMRC.
+          </p>
+          <button class="broadcast-btn-sidebar" onclick="broadcastEmergencyAlert()">
+            📢 Broadcast Emergency Alert
+          </button>
+        </div>
       </div>
 
     </div>
@@ -1599,26 +1640,67 @@
       }).join('');
     }
 
+    function toggleCardAccordion(cardId) {
+      const card = document.getElementById(cardId);
+      if (card) {
+        card.classList.toggle('collapsed');
+      }
+    }
+
     function viewRouteOnMap(routeId) {
       selectRoute(routeId);
+
+      // Auto-write location inputs if empty
+      const origInput = document.getElementById('inputOrigin');
+      const destInput = document.getElementById('inputDestination');
+      if (origInput && !origInput.value) origInput.value = "Uttam Nagar West Metro";
+      if (destInput && !destInput.value) destInput.value = "Dwarka Sector 6 Ridge";
+
       switchMobileTab('map');
+
+      // Zoom & fit Leaflet map bounds to selected route
+      const route = lastFetchedRoutes ? lastFetchedRoutes.find(r => r.route_id === routeId) : null;
+      if (route) {
+        const coords = route.coordinates || route.waypoints;
+        if (coords && coords.length > 0) {
+          map.fitBounds(L.polyline(coords).getBounds(), { padding: [40, 40] });
+        }
+      }
     }
 
     function selectRoute(routeId) {
       selectedRouteId = routeId;
+
+      // Auto-fill inputs if empty
+      const origInput = document.getElementById('inputOrigin');
+      const destInput = document.getElementById('inputDestination');
+      if (origInput && !origInput.value) origInput.value = "Uttam Nagar West Metro";
+      if (destInput && !destInput.value) destInput.value = "Dwarka Sector 6 Ridge";
+
       renderRoutesOnMap(lastFetchedRoutes);
       renderRouteCards(lastFetchedRoutes, selectedRouteId);
     }
 
     function navigateToGoogleMaps(url) {
-      if (!url) return;
-      // Handle Mobile Intent Deep Link for Android if applicable
+      // Auto-fill inputs if empty
+      const origInput = document.getElementById('inputOrigin');
+      const destInput = document.getElementById('inputDestination');
+      if (origInput && !origInput.value) origInput.value = "Uttam Nagar West Metro";
+      if (destInput && !destInput.value) destInput.value = "Dwarka Sector 6 Ridge";
+
+      let finalUrl = url;
+      if (!finalUrl && currentOriginCoords && currentDestCoords) {
+        finalUrl = `https://www.google.com/maps/dir/?api=1&origin=${currentOriginCoords.lat},${currentOriginCoords.lng}&destination=${currentDestCoords.lat},${currentDestCoords.lng}&travelmode=driving`;
+      }
+
+      if (!finalUrl) return;
+
       const isAndroid = /Android/i.test(navigator.userAgent);
-      if (isAndroid) {
-        const intentUrl = url.replace('https://www.google.com/maps/dir/?api=1&', 'intent://maps.google.com/maps?') + '#Intent;package=com.google.android.apps.maps;scheme=https;end';
+      if (isAndroid && finalUrl.startsWith('https://www.google.com/maps')) {
+        const intentUrl = finalUrl.replace('https://www.google.com/maps/dir/?api=1&', 'intent://maps.google.com/maps?') + '#Intent;package=com.google.android.apps.maps;scheme=https;end';
         window.location.href = intentUrl;
       } else {
-        window.open(url, '_blank');
+        window.open(finalUrl, '_blank');
       }
     }
 
