@@ -1390,6 +1390,7 @@
           vehicle_type: vehicle,
           distance_km: parseFloat((distKm * 1.15).toFixed(1)),
           estimated_time_mins: Math.round((distKm * 1.15) * 2.5),
+          coordinates: detourAWaypoints,
           waypoints: detourAWaypoints,
           gmaps_url: gmapsDetourA,
           warning_notes: 'All segments clear. Safe for selected vehicle.'
@@ -1404,6 +1405,7 @@
           vehicle_type: vehicle,
           distance_km: parseFloat((distKm * 1.25).toFixed(1)),
           estimated_time_mins: Math.round((distKm * 1.25) * 2.5),
+          coordinates: detourBWaypoints,
           waypoints: detourBWaypoints,
           gmaps_url: gmapsDetourB,
           warning_notes: 'Minor surface water. Passable with caution.'
@@ -1418,6 +1420,7 @@
           vehicle_type: vehicle,
           distance_km: parseFloat(distKm.toFixed(1)),
           estimated_time_mins: Math.round(distKm * 2.0),
+          coordinates: directWaypoints,
           waypoints: directWaypoints,
           gmaps_url: gmapsDirect,
           warning_notes: directDepth > maxLimit ? `Water depth ${directDepth}cm exceeds ${vehicle} limit (${maxLimit}cm).` : 'Clear route.'
@@ -1453,9 +1456,9 @@
       const handleRouteSuccess = (data) => {
         if (btn) btn.innerText = '⚡ Find Flood-Safe Route';
 
-        if (data && data.routes) {
+        if (data && data.routes && data.routes.length > 0) {
           lastFetchedRoutes = data.routes;
-          selectedRouteId = data.recommended_route_id || (data.routes[0] ? data.routes[0].route_id : null);
+          selectedRouteId = data.recommended_route_id || data.routes[0].route_id;
           renderRoutesOnMap(data.routes);
           renderRouteCards(data.routes, selectedRouteId);
 
@@ -1464,6 +1467,9 @@
             const listEl = document.getElementById('routeResultsList');
             if (listEl) listEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           }, 100);
+        } else {
+          const fallbackData = calculateClientSideFallbackRoutes(currentOriginCoords, currentDestCoords, vehicle);
+          handleRouteSuccess(fallbackData);
         }
       };
 
@@ -1511,16 +1517,20 @@
         const opacity = isSelected ? 0.95 : 0.4;
         const weight = isSelected ? 7 : 4;
 
-        const polyline = L.polyline(r.coordinates, {
-          color: color,
-          weight: weight,
-          opacity: opacity,
-          dashArray: dashArray
-        }).addTo(map);
+        const coords = r.coordinates || r.waypoints || [];
 
-        polyline.on('click', () => selectRoute(r.route_id));
-        activeRoutePolylines.push(polyline);
-        boundsGroup.push(...r.coordinates);
+        if (coords && coords.length > 0) {
+          const polyline = L.polyline(coords, {
+            color: color,
+            weight: weight,
+            opacity: opacity,
+            dashArray: dashArray
+          }).addTo(map);
+
+          polyline.on('click', () => selectRoute(r.route_id));
+          activeRoutePolylines.push(polyline);
+          boundsGroup.push(...coords);
+        }
 
         // Add Flooded Segment Warning Markers on Map
         if (r.flooded_segments && r.flooded_segments.length > 0) {
