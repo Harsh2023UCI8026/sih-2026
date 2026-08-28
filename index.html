@@ -479,6 +479,88 @@
       }
     }
 
+    /* Dynamic Routing UI & Autocomplete Dropdown */
+    .autocomplete-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      max-height: 150px;
+      overflow-y: auto;
+      z-index: 1200;
+      box-shadow: var(--shadow-md);
+    }
+
+    .autocomplete-item {
+      padding: 6px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--panel-border);
+      color: var(--text-title);
+    }
+
+    .autocomplete-item:hover {
+      background: var(--card-bg);
+      color: var(--brand-blue);
+    }
+
+    .btn-find-route {
+      background: linear-gradient(135deg, var(--brand-blue), #1d4ed8);
+      color: #ffffff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 4px;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-find-route:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4);
+    }
+
+    .badge-risky {
+      background: #fef3c7;
+      color: #d97706;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .btn-gmaps-navigate {
+      background: #15803d;
+      color: #ffffff;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 6px;
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(21, 128, 61, 0.3);
+      transition: all 0.2s ease;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-gmaps-navigate:hover {
+      background: #166534;
+      transform: translateY(-1px);
+    }
+
     /* Emergency Alert Broadcast Modal (Global Styles) */
     .modal-overlay {
       position: fixed;
@@ -728,34 +810,50 @@
         </div>
       </div>
 
-      <!-- Navigation Routing API -->
+      <!-- Dynamic Flood-Safe Navigation API Card -->
       <div class="card">
         <div class="card-head">
-          <h3>Flood-Safe Navigation API</h3>
+          <h3>Point A → B Flood-Safe Router</h3>
         </div>
-        <div class="route-selector" style="margin-top:6px;">
+        
+        <!-- Input Form -->
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px; position:relative;">
           
-          <div class="route-item selected" id="btnNormal" onclick="toggleRoute('normal')">
-            <div class="route-title">
-              <span>Standard Route (Najafgarh Rd)</span>
-              <span class="badge-blocked">BLOCKED</span>
+          <!-- Origin Input -->
+          <div style="position:relative;">
+            <div style="display:flex; gap:4px; align-items:center;">
+              <input type="text" id="inputOrigin" placeholder="Origin (e.g. Uttam Nagar West)" value="Uttam Nagar West Metro" style="flex:1; padding:7px 9px; font-size:11px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); border-radius:6px;" oninput="onLocationInput('origin', this.value)">
+              <button onclick="useCurrentLocation()" title="Use Current GPS Location" style="padding:7px 9px; font-size:11px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:6px; cursor:pointer; color:var(--brand-blue); font-weight:700; white-space:nowrap;">📍 GPS</button>
             </div>
-            <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">
-              Dwarka Mor Crossing (Water Depth: 40.3 cm)
-            </div>
+            <div id="autocompleteOrigin" class="autocomplete-dropdown" style="display:none;"></div>
           </div>
 
-          <div class="route-item" id="btnDetour" onclick="toggleRoute('detour')">
-            <div class="route-title">
-              <span>Safe Detour (Recommended)</span>
-              <span class="badge-safe">SAFE (2.0 cm)</span>
-            </div>
-            <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">
-              Via Pankha Road & Dabri Flyover
-            </div>
+          <!-- Destination Input -->
+          <div style="position:relative;">
+            <input type="text" id="inputDestination" placeholder="Destination (e.g. Dwarka Sector 6)" value="Dwarka Sector 6 Ridge" style="width:100%; padding:7px 9px; font-size:11px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); border-radius:6px;" oninput="onLocationInput('dest', this.value)">
+            <div id="autocompleteDest" class="autocomplete-dropdown" style="display:none;"></div>
           </div>
 
+          <!-- Vehicle Type Selector -->
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:10px; font-weight:700; color:var(--text-sub);">Vehicle Mode:</span>
+            <select id="selectVehicle" style="padding:4px 8px; font-size:11px; border-radius:6px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); font-weight:700;" onchange="triggerRouteCalculation()">
+              <option value="car" selected>🚗 Car (Max 25cm)</option>
+              <option value="ambulance">🚑 Ambulance (Max 45cm)</option>
+              <option value="pedestrian">🚶 Pedestrian (Max 10cm)</option>
+            </select>
+          </div>
+
+          <button class="btn-find-route" onclick="triggerRouteCalculation()">
+            ⚡ Find Flood-Safe Route
+          </button>
         </div>
+
+        <!-- Calculated Route Results List -->
+        <div id="routeResultsList" style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
+          <!-- Dynamically populated -->
+        </div>
+
       </div>
 
       <!-- Drain Status -->
@@ -961,6 +1059,211 @@
       }
     }
 
+    // Dynamic Point A -> B Flood-Aware Routing State & Logic
+    let currentOriginCoords = { lat: 28.6210, lng: 77.0420 }; // Uttam Nagar West Metro
+    let currentDestCoords = { lat: 28.5910, lng: 77.0610 };   // Dwarka Sector 6 Ridge
+    let activeRoutePolylines = [];
+    let activeRouteMarkers = [];
+    let lastFetchedRoutes = [];
+    let selectedRouteId = null;
+    let autocompleteDebounceTimer = null;
+
+    // Nominatim OpenStreetMap Autocomplete with Delhi NCR Bounding Box Restriction
+    function onLocationInput(field, query) {
+      if (autocompleteDebounceTimer) clearTimeout(autocompleteDebounceTimer);
+      const dropdown = document.getElementById(field === 'origin' ? 'autocompleteOrigin' : 'autocompleteDest');
+
+      if (!query || query.trim().length < 3) {
+        dropdown.style.display = 'none';
+        return;
+      }
+
+      autocompleteDebounceTimer = setTimeout(() => {
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&viewbox=76.8,28.4,77.3,28.9&bounded=1&limit=5`;
+        fetch(url, { headers: { 'User-Agent': 'UrbanFloodNowcasting/1.0' } })
+          .then(res => res.json())
+          .then(data => {
+            if (!data || data.length === 0) {
+              dropdown.style.display = 'none';
+              return;
+            }
+            dropdown.innerHTML = data.map(item => `
+              <div class="autocomplete-item" onclick="selectAutocompleteOption('${field}', '${item.display_name.replace(/'/g, "\\'")}', ${item.lat}, ${item.lon})">
+                📍 <b>${item.display_name.split(',')[0]}</b> <span style="font-size:9px; color:var(--text-muted);">${item.display_name.split(',').slice(1,3).join(',')}</span>
+              </div>
+            `).join('');
+            dropdown.style.display = 'block';
+          }).catch(() => dropdown.style.display = 'none');
+      }, 300);
+    }
+
+    function selectAutocompleteOption(field, name, lat, lng) {
+      if (field === 'origin') {
+        document.getElementById('inputOrigin').value = name.split(',')[0];
+        document.getElementById('autocompleteOrigin').style.display = 'none';
+        currentOriginCoords = { lat: parseFloat(lat), lng: parseFloat(lng) };
+      } else {
+        document.getElementById('inputDestination').value = name.split(',')[0];
+        document.getElementById('autocompleteDest').style.display = 'none';
+        currentDestCoords = { lat: parseFloat(lat), lng: parseFloat(lng) };
+      }
+      triggerRouteCalculation();
+    }
+
+    function useCurrentLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          currentOriginCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          document.getElementById('inputOrigin').value = `My Location (${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)})`;
+          triggerRouteCalculation();
+        }, () => alert("Could not fetch current GPS location."));
+      } else {
+        alert("Geolocation is not supported by your browser.");
+      }
+    }
+
+    function triggerRouteCalculation() {
+      const vehicle = document.getElementById('selectVehicle').value;
+      const leadTimeMins = parseInt(document.getElementById('timeSlider').value) || 60;
+
+      const payload = {
+        origin: currentOriginCoords,
+        destination: currentDestCoords,
+        vehicle_type: vehicle,
+        lead_time_mins: leadTimeMins
+      };
+
+      fetch('/api/v1/route/flood-safe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.routes) {
+          lastFetchedRoutes = data.routes;
+          selectedRouteId = data.recommended_route_id || (data.routes[0] ? data.routes[0].route_id : null);
+          renderRoutesOnMap(data.routes);
+          renderRouteCards(data.routes, selectedRouteId);
+        }
+      })
+      .catch(err => console.log("Route calculation offline/fallback error:", err));
+    }
+
+    function renderRoutesOnMap(routes) {
+      // Clear existing route layers
+      activeRoutePolylines.forEach(p => map.removeLayer(p));
+      activeRouteMarkers.forEach(m => map.removeLayer(m));
+      activeRoutePolylines = [];
+      activeRouteMarkers = [];
+
+      let boundsGroup = [];
+
+      routes.forEach(r => {
+        const isSelected = (r.route_id === selectedRouteId);
+        let color = '#059669'; // Green SAFE
+        let dashArray = null;
+
+        if (r.status === 'BLOCKED') {
+          color = '#dc2626'; // Red
+          dashArray = '8, 8';
+        } else if (r.status === 'RISKY') {
+          color = '#ea580c'; // Orange
+          dashArray = '4, 4';
+        }
+
+        const opacity = isSelected ? 0.95 : 0.4;
+        const weight = isSelected ? 7 : 4;
+
+        const polyline = L.polyline(r.coordinates, {
+          color: color,
+          weight: weight,
+          opacity: opacity,
+          dashArray: dashArray
+        }).addTo(map);
+
+        polyline.on('click', () => selectRoute(r.route_id));
+        activeRoutePolylines.push(polyline);
+        boundsGroup.push(...r.coordinates);
+
+        // Add Flooded Segment Warning Markers on Map
+        if (r.flooded_segments && r.flooded_segments.length > 0) {
+          r.flooded_segments.forEach(fs => {
+            const warningMarker = L.marker(fs.coords, {
+              icon: L.divIcon({
+                className: 'custom-warning-icon',
+                html: `<div style="background:#dc2626; color:white; font-size:9px; font-weight:800; padding:2px 6px; border-radius:4px; border:1px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.3); white-space:nowrap;">🚫 ${fs.road_name}: ${fs.depth_cm}cm</div>`,
+                iconSize: [100, 20],
+                iconAnchor: [50, 10]
+              })
+            }).addTo(map);
+            activeRouteMarkers.push(warningMarker);
+          });
+        }
+      });
+
+      if (boundsGroup.length > 0) {
+        map.fitBounds(L.polyline(boundsGroup).getBounds(), { padding: [40, 40] });
+      }
+    }
+
+    function renderRouteCards(routes, activeId) {
+      const container = document.getElementById('routeResultsList');
+      if (!routes || routes.length === 0) {
+        container.innerHTML = `<div style="font-size:10px; color:var(--text-muted);">No routes found.</div>`;
+        return;
+      }
+
+      container.innerHTML = routes.map(r => {
+        const isSelected = (r.route_id === activeId);
+        let badgeClass = 'badge-safe';
+        if (r.status === 'BLOCKED') badgeClass = 'badge-blocked';
+        else if (r.status === 'RISKY') badgeClass = 'badge-risky';
+
+        return `
+          <div class="route-item ${isSelected ? 'selected' : ''}" onclick="selectRoute('${r.route_id}')">
+            <div class="route-title">
+              <span>${r.name}</span>
+              <span class="${badgeClass}">${r.status} (${r.max_water_depth_cm} cm)</span>
+            </div>
+            <div style="font-size:10px; color:var(--text-sub); margin-top:3px; display:flex; justify-content:space-between;">
+              <span>⏱️ ${r.eta_minutes} mins (${r.distance_km} km)</span>
+              <span>Limit: ${r.clearance_threshold_cm} cm</span>
+            </div>
+            ${r.status === 'BLOCKED' ? `
+              <div style="font-size:9px; color:var(--severe-red); font-weight:700; margin-top:3px;">
+                🚫 Exceeds ${r.vehicle_type} safety depth limit (${r.max_water_depth_cm} cm > ${r.clearance_threshold_cm} cm)
+              </div>
+            ` : ''}
+            
+            ${r.google_maps_url ? `
+              <button class="btn-gmaps-navigate" onclick="event.stopPropagation(); navigateToGoogleMaps('${r.google_maps_url}')">
+                🗺️ Navigate via Google Maps
+              </button>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectRoute(routeId) {
+      selectedRouteId = routeId;
+      renderRoutesOnMap(lastFetchedRoutes);
+      renderRouteCards(lastFetchedRoutes, selectedRouteId);
+    }
+
+    function navigateToGoogleMaps(url) {
+      if (!url) return;
+      // Handle Mobile Intent Deep Link for Android if applicable
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      if (isAndroid) {
+        const intentUrl = url.replace('https://www.google.com/maps/dir/?api=1&', 'intent://maps.google.com/maps?') + '#Intent;package=com.google.android.apps.maps;scheme=https;end';
+        window.location.href = intentUrl;
+      } else {
+        window.open(url, '_blank');
+      }
+    }
+
     // Live Clock & Date
     function updateLiveClock() {
       const now = new Date();
@@ -1002,6 +1305,9 @@
       document.getElementById('valRadar').innerText = `${Math.round(48.5 * mult * 10)/10} dBZ`;
       document.getElementById('valRain').innerText = `${Math.round(65.0 * mult * 10)/10} mm`;
       document.getElementById('valRunoff').innerText = `${Math.round(59.8 * mult * 10)/10} mm`;
+
+      // Trigger dynamic re-routing check on timeline slider update
+      triggerRouteCalculation();
     });
 
     // Dynamic Doppler Radar Overlay Layer (RainViewer Weather Radar API + Synthetic Radar Loop fallback)
