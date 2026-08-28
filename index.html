@@ -1142,6 +1142,27 @@
       }
     }
 
+    // Mobile View Tab Switcher Function
+    function switchMobileTab(tab) {
+      const btnMap = document.getElementById('tabBtnMap');
+      const btnControls = document.getElementById('tabBtnControls');
+
+      if (tab === 'map') {
+        document.body.classList.remove('mobile-view-controls');
+        document.body.classList.add('mobile-view-map');
+        if (btnMap) btnMap.classList.add('active');
+        if (btnControls) btnControls.classList.remove('active');
+        if (typeof map !== 'undefined' && map) {
+          setTimeout(() => map.invalidateSize(), 200);
+        }
+      } else {
+        document.body.classList.remove('mobile-view-map');
+        document.body.classList.add('mobile-view-controls');
+        if (btnControls) btnControls.classList.add('active');
+        if (btnMap) btnMap.classList.remove('active');
+      }
+    }
+
     // Dynamic Point A -> B Flood-Aware Routing State & Logic
     let currentOriginCoords = { lat: 28.6210, lng: 77.0420 }; // Uttam Nagar West Metro
     let currentDestCoords = { lat: 28.5910, lng: 77.0610 };   // Dwarka Sector 6 Ridge
@@ -1381,12 +1402,11 @@
           renderRoutesOnMap(data.routes);
           renderRouteCards(data.routes, selectedRouteId);
 
-          // Mobile Auto-Switch to Map View on calculation
-          if (window.innerWidth <= 768) {
-            setTimeout(() => {
-              switchMobileTab('map');
-            }, 350);
-          }
+          // Smooth scroll route cards into view so mobile user sees instant results
+          setTimeout(() => {
+            const listEl = document.getElementById('routeResultsList');
+            if (listEl) listEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 100);
         }
       };
 
@@ -1479,30 +1499,47 @@
         if (r.status === 'BLOCKED') badgeClass = 'badge-blocked';
         else if (r.status === 'RISKY') badgeClass = 'badge-risky';
 
+        const eta = r.eta_minutes || r.estimated_time_mins || 15;
+        const gmapsUrl = r.gmaps_url || r.google_maps_url;
+
         return `
           <div class="route-item ${isSelected ? 'selected' : ''}" onclick="selectRoute('${r.route_id}')">
             <div class="route-title">
-              <span>${r.name}</span>
+              <span style="font-weight:800; font-size:11px;">${r.name}</span>
               <span class="${badgeClass}">${r.status} (${r.max_water_depth_cm} cm)</span>
             </div>
             <div style="font-size:10px; color:var(--text-sub); margin-top:3px; display:flex; justify-content:space-between;">
-              <span>⏱️ ${r.eta_minutes} mins (${r.distance_km} km)</span>
-              <span>Limit: ${r.clearance_threshold_cm} cm</span>
+              <span>⏱️ ${eta} mins (${r.distance_km} km)</span>
+              <span>Vehicle Limit: ${r.clearance_threshold_cm} cm</span>
             </div>
             ${r.status === 'BLOCKED' ? `
               <div style="font-size:9px; color:var(--severe-red); font-weight:700; margin-top:3px;">
-                🚫 Exceeds ${r.vehicle_type} safety depth limit (${r.max_water_depth_cm} cm > ${r.clearance_threshold_cm} cm)
+                🚫 Water depth ${r.max_water_depth_cm}cm exceeds ${r.vehicle_type || 'vehicle'} limit (${r.clearance_threshold_cm}cm)
               </div>
-            ` : ''}
+            ` : `
+              <div style="font-size:9px; color:var(--safe-green); font-weight:700; margin-top:3px;">
+                ✅ Passable & safe for selected vehicle
+              </div>
+            `}
             
-            ${r.google_maps_url ? `
-              <button class="btn-gmaps-navigate" onclick="event.stopPropagation(); navigateToGoogleMaps('${r.google_maps_url}')">
-                🗺️ Navigate via Google Maps
+            <div style="display:flex; gap:6px; margin-top:6px;">
+              <button style="flex:1; padding:6px; font-size:10px; font-weight:800; background:var(--brand-blue); color:white; border:none; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;" onclick="event.stopPropagation(); viewRouteOnMap('${r.route_id}')">
+                🗺️ View on Map
               </button>
-            ` : ''}
+              ${gmapsUrl ? `
+                <button class="btn-gmaps-navigate" style="flex:1; margin-top:0;" onclick="event.stopPropagation(); navigateToGoogleMaps('${gmapsUrl}')">
+                  🧭 Google Maps
+                </button>
+              ` : ''}
+            </div>
           </div>
         `;
       }).join('');
+    }
+
+    function viewRouteOnMap(routeId) {
+      selectRoute(routeId);
+      switchMobileTab('map');
     }
 
     function selectRoute(routeId) {
@@ -1712,6 +1749,29 @@
       }).catch(err => console.log("Offline mode: using simulated alert payload."));
     }
 
+    function switchAlertModalTab(tab) {
+      const summaryView = document.getElementById('alertViewSummary');
+      const jsonView = document.getElementById('alertViewJson');
+      const tabSummary = document.getElementById('alertTabSummary');
+      const tabJson = document.getElementById('alertTabJson');
+
+      if (tab === 'summary') {
+        summaryView.style.display = 'flex';
+        jsonView.style.display = 'none';
+        tabSummary.style.background = 'var(--brand-blue)';
+        tabSummary.style.color = 'white';
+        tabJson.style.background = 'transparent';
+        tabJson.style.color = 'var(--text-sub)';
+      } else {
+        summaryView.style.display = 'none';
+        jsonView.style.display = 'flex';
+        tabJson.style.background = 'var(--brand-blue)';
+        tabJson.style.color = 'white';
+        tabSummary.style.background = 'transparent';
+        tabSummary.style.color = 'var(--text-sub)';
+      }
+    }
+
     function closeAlertModal() {
       document.getElementById('alertModal').classList.remove('active');
     }
@@ -1727,56 +1787,86 @@
   <div class="modal-overlay" id="alertModal" onclick="if(event.target===this) closeAlertModal()">
     <div class="modal-card">
       <div class="modal-header">
-        <h3>📢 Emergency Services Dispatch & API Payload</h3>
+        <h3>📢 Emergency Multi-Agency Broadcast Center</h3>
         <button class="modal-close-btn" onclick="closeAlertModal()">✕</button>
       </div>
       <div class="modal-body">
         
+        <!-- View Selector Tabs -->
+        <div style="display:flex; gap:6px; background:var(--card-bg); padding:4px; border-radius:6px; border:1px solid var(--card-border);">
+          <button id="alertTabSummary" onclick="switchAlertModalTab('summary')" style="flex:1; padding:6px; font-size:11px; font-weight:800; border:none; border-radius:4px; background:var(--brand-blue); color:white; cursor:pointer;">
+            📱 Common People Summary
+          </button>
+          <button id="alertTabJson" onclick="switchAlertModalTab('json')" style="flex:1; padding:6px; font-size:11px; font-weight:800; border:none; border-radius:4px; background:transparent; color:var(--text-sub); cursor:pointer;">
+            ⚡ SIH Judge / Developer API
+          </button>
+        </div>
+
+        <!-- Alert Summary Banner -->
         <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.3); padding:10px; border-radius:8px;">
           <div>
             <div style="font-size:12px; font-weight:800; color:var(--severe-red);">🚨 RED CRITICAL FLOOD EMERGENCY</div>
-            <div style="font-size:10px; color:var(--text-sub);">Location: Dwarka Mor Metro Crossing (Depth: 40.3 cm)</div>
+            <div style="font-size:10px; color:var(--text-sub);">Location: Dwarka Mor Metro Crossing (Street Water: 40.3 cm)</div>
           </div>
-          <span style="background:#dc2626; color:white; font-size:10px; font-weight:800; padding:4px 8px; border-radius:4px;">BROADCAST SENT</span>
+          <span style="background:#dc2626; color:white; font-size:10px; font-weight:800; padding:4px 8px; border-radius:4px;">3 AGENCIES NOTIFIED</span>
         </div>
 
-        <div style="font-weight:700; font-size:12px; color:var(--text-title);">Multi-Agency Dispatch Status:</div>
+        <!-- View 1: Common People Summary View -->
+        <div id="alertViewSummary" style="display:flex; flex-direction:column; gap:8px;">
+          <div style="font-weight:700; font-size:11px; color:var(--text-title);">Government Agency Actions Triggered:</div>
 
-        <div class="agency-dispatch-grid">
-          <div class="agency-card police">
-            <div class="agency-title">
-              <span>🚓 Traffic Police</span>
-              <span class="agency-badge">DISPATCHED</span>
+          <div class="agency-dispatch-grid">
+            
+            <div class="agency-card police">
+              <div class="agency-title">
+                <span>🚓 Delhi Traffic Police</span>
+                <span class="agency-badge">DISPATCHED</span>
+              </div>
+              <div style="font-size:10px; color:var(--text-sub); margin-top:2px;">
+                <b>Action:</b> Najafgarh Road blocked at Dwarka Mor due to 40.3cm deep water. Traffic diverted to Dabri Flyover.
+              </div>
+              <div style="font-size:9px; color:var(--brand-blue); font-weight:700; margin-top:4px;">
+                📱 Automated SMS sent to Control (+91-11-23010101)
+              </div>
             </div>
-            <div style="font-size:10px; color:var(--text-sub);">Road closure advisory on Najafgarh Rd. Diverting traffic to Dabri Flyover.</div>
-            <div style="font-size:9px; color:var(--brand-blue); font-weight:700; margin-top:4px;">📱 SMS Broadcast Triggered</div>
-          </div>
 
-          <div class="agency-card ndrf">
-            <div class="agency-title">
-              <span>🦺 NDRF Response</span>
-              <span class="agency-badge">HIGH ALERT</span>
+            <div class="agency-card ndrf">
+              <div class="agency-title">
+                <span>🦺 NDRF Disaster Response</span>
+                <span class="agency-badge">HIGH ALERT</span>
+              </div>
+              <div style="font-size:10px; color:var(--text-sub); margin-top:2px;">
+                <b>Action:</b> High-capacity dewatering pumps mobilized at Kakrola Drain Outlet.
+              </div>
+              <div style="font-size:9px; color:var(--brand-purple); font-weight:700; margin-top:4px;">
+                ⚡ Dewatering Pump 4 & 5 Triggered (+91-9871000000)
+              </div>
             </div>
-            <div style="font-size:10px; color:var(--text-sub);">Dewatering pump deployment requested at Kakrola Outfall Regulator.</div>
-            <div style="font-size:9px; color:var(--brand-purple); font-weight:700; margin-top:4px;">⚡ Dewatering Unit Mobilized</div>
-          </div>
 
-          <div class="agency-card dmrc">
-            <div class="agency-title">
-              <span>🚇 DMRC Metro</span>
-              <span class="agency-badge">ADVISORY</span>
+            <div class="agency-card dmrc">
+              <div class="agency-title">
+                <span>🚇 DMRC Delhi Metro</span>
+                <span class="agency-badge">ADVISORY</span>
+              </div>
+              <div style="font-size:10px; color:var(--text-sub); margin-top:2px;">
+                <b>Action:</b> Gate 2 at Dwarka Mor Metro Station waterlogged. Passengers guided to Gate 1 entry.
+              </div>
+              <div style="font-size:9px; color:var(--safe-green); font-weight:700; margin-top:4px;">
+                📢 Public Transit Advisory Active (+91-11-23417910)
+              </div>
             </div>
-            <div style="font-size:10px; color:var(--text-sub);">Gate 2 waterlogged. Passengers redirected to Gate 1 entry.</div>
-            <div style="font-size:9px; color:var(--safe-green); font-weight:700; margin-top:4px;">📢 Public Transit Alert Active</div>
+
           </div>
         </div>
 
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-weight:700; font-size:11px; color:var(--text-title);">📄 Live REST API Payload (`POST /api/v1/alert-broadcast`):</span>
-          <button onclick="copyAlertJson()" style="font-size:10px; padding:3px 8px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:4px; cursor:pointer; color:var(--text-sub);">📋 Copy JSON</button>
+        <!-- View 2: SIH Judge / Developer API JSON Payload -->
+        <div id="alertViewJson" style="display:none; flex-direction:column; gap:6px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-weight:700; font-size:11px; color:var(--text-title);">📄 Live REST API Payload (`POST /api/v1/alert-broadcast`):</span>
+            <button onclick="copyAlertJson()" style="font-size:10px; padding:3px 8px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:4px; cursor:pointer; color:var(--text-sub);">📋 Copy JSON</button>
+          </div>
+          <pre class="json-code-box" id="jsonPayloadDisplay">Loading payload...</pre>
         </div>
-
-        <pre class="json-code-box" id="jsonPayloadDisplay">Loading payload...</pre>
 
       </div>
     </div>
