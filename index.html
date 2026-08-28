@@ -472,15 +472,157 @@
         font-size: 14px;
       }
 
-      .status-badge span {
-        display: none;
-      }
-
       .map-legend {
         bottom: 15px;
         right: 15px;
         padding: 6px 10px;
       }
+    }
+
+    /* Emergency Alert Broadcast Modal (Global Styles) */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 99999 !important;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex !important;
+    }
+
+    .modal-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 620px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      animation: modalSlideUp 0.25s ease-out;
+    }
+
+    @keyframes modalSlideUp {
+      from { transform: translateY(30px) scale(0.97); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      padding: 14px 18px;
+      background: linear-gradient(90deg, #dc2626, #b91c1c);
+      color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #ffffff;
+    }
+
+    .modal-close-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: #ffffff;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .modal-close-btn:hover {
+      background: rgba(255,255,255,0.4);
+    }
+
+    .modal-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .agency-dispatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+    }
+
+    .agency-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px;
+      border-left: 4px solid var(--brand-blue);
+    }
+
+    .agency-card.ndrf { border-left-color: #ea580c; }
+    .agency-card.police { border-left-color: #dc2626; }
+    .agency-card.dmrc { border-left-color: #0284c7; }
+
+    .agency-title { font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; color: var(--text-title); }
+    .agency-badge { font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700; background: #d1fae5; color: #059669; }
+
+    .json-code-box {
+      background: #0f172a;
+      color: #38bdf8;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 14px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 11px;
+      line-height: 1.5;
+      max-height: 220px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .broadcast-btn-sidebar {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      color: #ffffff;
+      border: none;
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+      transition: all 0.2s ease;
+      margin-top: 6px;
+    }
+
+    .broadcast-btn-sidebar:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(220, 38, 38, 0.5);
     }
   </style>
 </head>
@@ -489,7 +631,10 @@
   <!-- Top Alert Banner -->
   <div class="alert-banner">
     <span>⚠️ <b>FLOOD ALERT:</b> Dwarka Mor predicted depth <b>40.3 cm</b> in 60 mins.</span>
-    <button class="alert-btn" onclick="showDetourOnMobile()">SHOW DETOUR</button>
+    <div style="display:flex; gap:6px; align-items:center;">
+      <button class="alert-btn" style="background:#ffffff; color:#dc2626;" onclick="broadcastEmergencyAlert()">📢 BROADCAST ALERT</button>
+      <button class="alert-btn" onclick="showDetourOnMobile()">SHOW DETOUR</button>
+    </div>
   </div>
 
   <!-- Header Navbar -->
@@ -628,6 +773,19 @@
             <span style="font-weight:700; color:var(--severe-red);">BACKFLOW SURCHARGE</span>
           </div>
         </div>
+      </div>
+
+      <!-- Emergency Services Alert Broadcast Card -->
+      <div class="card">
+        <div class="card-head">
+          <h3>Emergency Broadcast</h3>
+        </div>
+        <p style="font-size:10px; color:var(--text-muted); margin-top:3px;">
+          Automated multi-agency dispatch triggers for NDRF, Traffic Police & DMRC.
+        </p>
+        <button class="broadcast-btn-sidebar" onclick="broadcastEmergencyAlert()">
+          📢 Broadcast Emergency Alert
+        </button>
       </div>
 
     </div>
@@ -938,6 +1096,125 @@
     updateForecastTimestamp(60);
     updateRadarOverlay(1.0);
     startRadarAnimation();
+
+    // Emergency Services Alert & SMS Payload Simulation Logic
+    function broadcastEmergencyAlert() {
+      const modal = document.getElementById('alertModal');
+      modal.classList.add('active');
+
+      const currentDepth = parseFloat(document.getElementById('valDepth').innerText) || 40.3;
+
+      const payload = {
+        "alert_status": "BROADCASTED",
+        "timestamp_epoch": Math.floor(Date.now() / 1000),
+        "target_location": "Dwarka Mor Metro Crossing",
+        "water_depth_cm": currentDepth,
+        "severity": currentDepth > 30 ? "RED_CRITICAL_EMERGENCY" : "ORANGE_MODERATE_ALERT",
+        "agency_dispatches": {
+          "delhi_traffic_police": {
+            "action": "ROAD_CLOSURE_ADVISORY",
+            "message": "Najafgarh Road closed at Dwarka Mor. Divert traffic to Dabri Flyover.",
+            "sms_recipient": "+91-11-23010101 (Traffic Control)"
+          },
+          "ndrf_disaster_management": {
+            "action": "DEWATERING_PUMP_DEPLOYMENT",
+            "priority": "HIGH_ALERT",
+            "target_pump_station": "Kakrola Outfall Regulator",
+            "sms_recipient": "+91-9871000000 (NDRF Control Room)"
+          },
+          "dmrc_delhi_metro": {
+            "action": "STATION_ENTRY_ADVISORY",
+            "message": "Gate 2 at Dwarka Mor Metro Station waterlogged. Direct passengers to Gate 1.",
+            "sms_recipient": "+91-11-23417910 (DMRC Control)"
+          }
+        }
+      };
+
+      document.getElementById('jsonPayloadDisplay').innerText = JSON.stringify(payload, null, 2);
+
+      // Attempt backend API call if server is running
+      fetch('/api/v1/alert-broadcast', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          target_location: "Dwarka Mor Metro Crossing",
+          water_depth_cm: currentDepth
+        })
+      }).then(res => res.json()).then(data => {
+        if(data && data.alert_status) {
+          document.getElementById('jsonPayloadDisplay').innerText = JSON.stringify(data, null, 2);
+        }
+      }).catch(err => console.log("Offline mode: using simulated alert payload."));
+    }
+
+    function closeAlertModal() {
+      document.getElementById('alertModal').classList.remove('active');
+    }
+
+    function copyAlertJson() {
+      const jsonText = document.getElementById('jsonPayloadDisplay').innerText;
+      navigator.clipboard.writeText(jsonText);
+      alert("JSON Alert Payload copied to clipboard!");
+    }
   </script>
+
+  <!-- Emergency Alert Broadcast Modal Dialog -->
+  <div class="modal-overlay" id="alertModal" onclick="if(event.target===this) closeAlertModal()">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>📢 Emergency Services Dispatch & API Payload</h3>
+        <button class="modal-close-btn" onclick="closeAlertModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.3); padding:10px; border-radius:8px;">
+          <div>
+            <div style="font-size:12px; font-weight:800; color:var(--severe-red);">🚨 RED CRITICAL FLOOD EMERGENCY</div>
+            <div style="font-size:10px; color:var(--text-sub);">Location: Dwarka Mor Metro Crossing (Depth: 40.3 cm)</div>
+          </div>
+          <span style="background:#dc2626; color:white; font-size:10px; font-weight:800; padding:4px 8px; border-radius:4px;">BROADCAST SENT</span>
+        </div>
+
+        <div style="font-weight:700; font-size:12px; color:var(--text-title);">Multi-Agency Dispatch Status:</div>
+
+        <div class="agency-dispatch-grid">
+          <div class="agency-card police">
+            <div class="agency-title">
+              <span>🚓 Traffic Police</span>
+              <span class="agency-badge">DISPATCHED</span>
+            </div>
+            <div style="font-size:10px; color:var(--text-sub);">Road closure advisory on Najafgarh Rd. Diverting traffic to Dabri Flyover.</div>
+            <div style="font-size:9px; color:var(--brand-blue); font-weight:700; margin-top:4px;">📱 SMS Broadcast Triggered</div>
+          </div>
+
+          <div class="agency-card ndrf">
+            <div class="agency-title">
+              <span>🦺 NDRF Response</span>
+              <span class="agency-badge">HIGH ALERT</span>
+            </div>
+            <div style="font-size:10px; color:var(--text-sub);">Dewatering pump deployment requested at Kakrola Outfall Regulator.</div>
+            <div style="font-size:9px; color:var(--brand-purple); font-weight:700; margin-top:4px;">⚡ Dewatering Unit Mobilized</div>
+          </div>
+
+          <div class="agency-card dmrc">
+            <div class="agency-title">
+              <span>🚇 DMRC Metro</span>
+              <span class="agency-badge">ADVISORY</span>
+            </div>
+            <div style="font-size:10px; color:var(--text-sub);">Gate 2 waterlogged. Passengers redirected to Gate 1 entry.</div>
+            <div style="font-size:9px; color:var(--safe-green); font-weight:700; margin-top:4px;">📢 Public Transit Alert Active</div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-weight:700; font-size:11px; color:var(--text-title);">📄 Live REST API Payload (`POST /api/v1/alert-broadcast`):</span>
+          <button onclick="copyAlertJson()" style="font-size:10px; padding:3px 8px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:4px; cursor:pointer; color:var(--text-sub);">📋 Copy JSON</button>
+        </div>
+
+        <pre class="json-code-box" id="jsonPayloadDisplay">Loading payload...</pre>
+
+      </div>
+    </div>
+  </div>
 </body>
 </html>
