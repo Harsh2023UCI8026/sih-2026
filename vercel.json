@@ -1,16 +1,26 @@
 {
   "version": 2,
-  "builds": [
+  "routes": [
     {
-      "src": "index.html",
-      "use": "@vercel/static"
+      "src": "/robots.txt",
+      "dest": "/robots.txt"
     },
     {
-      "src": "api/index.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
+      "src": "/sitemap.xml",
+      "dest": "/sitemap.xml"
+    },
+    {
+      "src": "/site.webmanifest",
+      "dest": "/site.webmanifest"
+    },
+    {
+      "src": "/logo.jpeg",
+      "dest": "/logo.jpeg"
+    },
+    {
+      "src": "/dwarka_catchment_bounds.geojson",
+      "dest": "/dwarka_catchment_bounds.geojson"
+    },
     {
       "src": "/docs",
       "dest": "/api/index.py"
