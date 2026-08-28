@@ -592,15 +592,20 @@
       background: linear-gradient(135deg, var(--brand-blue), #1d4ed8);
       color: #ffffff;
       border: none;
-      padding: 8px 12px;
+      padding: 10px 12px;
       border-radius: 6px;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 800;
       cursor: pointer;
       width: 100%;
       margin-top: 4px;
       box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
       transition: all 0.2s ease;
+      position: relative;
+      z-index: 100 !important;
+      pointer-events: auto !important;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: rgba(37, 99, 235, 0.3);
     }
 
     .btn-find-route:hover {
@@ -790,6 +795,12 @@
   </style>
 </head>
 <body class="mobile-view-map">
+
+  <!-- Mobile Debug / Error Toast Notification Banner -->
+  <div id="mobileErrorToast" style="display:none; position:fixed; bottom:70px; left:50%; transform:translateX(-50%); z-index:999999; max-width:92%; width:340px; background:#dc2626; color:white; padding:10px 14px; border-radius:8px; font-size:11px; font-weight:700; box-shadow:0 6px 20px rgba(0,0,0,0.3); text-align:center; transition:all 0.3s;">
+    <span id="mobileErrorToastMsg">Error message</span>
+    <button onclick="this.parentElement.style.display='none'" style="margin-left:8px; background:transparent; border:none; color:white; font-weight:800; cursor:pointer;">✕</button>
+  </div>
 
   <!-- Top Alert Banner -->
   <div class="alert-banner">
@@ -1225,16 +1236,62 @@
       triggerRouteCalculation();
     }
 
+    // 📱 Mobile-Visible Error Toast & Debug Handler
+    function showMobileToast(msg, type = 'error') {
+      const toast = document.getElementById('mobileErrorToast');
+      const msgEl = document.getElementById('mobileErrorToastMsg');
+      if (toast && msgEl) {
+        msgEl.innerText = msg;
+        toast.style.background = type === 'error' ? '#dc2626' : (type === 'warning' ? '#d97706' : '#059669');
+        toast.style.display = 'block';
+        setTimeout(() => {
+          toast.style.display = 'none';
+        }, 6000);
+      }
+    }
+
+    window.onerror = function(msg, url, line, col, error) {
+      showMobileToast(`⚠️ JS Error: ${msg} (Line ${line})`, 'error');
+    };
+
     function useCurrentLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
+      const gpsBtn = document.querySelector('button[title="Use Current GPS Location"]');
+      if (gpsBtn) gpsBtn.innerText = '⌛ GPS...';
+
+      if (!navigator.geolocation) {
+        if (gpsBtn) gpsBtn.innerText = '📍 GPS';
+        showMobileToast("Geolocation is not supported by your browser. Please type location manually.", "warning");
+        return;
+      }
+
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 8000,
+        maximumAge: 0
+      };
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          if (gpsBtn) gpsBtn.innerText = '📍 GPS';
           currentOriginCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
           document.getElementById('inputOrigin').value = `My Location (${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)})`;
+          showMobileToast("📍 GPS location set successfully!", "success");
           triggerRouteCalculation();
-        }, () => alert("Could not fetch current GPS location."));
-      } else {
-        alert("Geolocation is not supported by your browser.");
-      }
+        },
+        (err) => {
+          if (gpsBtn) gpsBtn.innerText = '📍 GPS';
+          let msg = "Could not fetch GPS location.";
+          if (err.code === 1) {
+            msg = "Location permission denied. Please allow location access or type starting location manually.";
+          } else if (err.code === 2) {
+            msg = "GPS position unavailable. Please type starting location manually.";
+          } else if (err.code === 3) {
+            msg = "GPS request timed out. Please type starting location manually.";
+          }
+          showMobileToast(msg, "warning");
+        },
+        options
+      );
     }
 
     async function ensureGeocodedCoords() {

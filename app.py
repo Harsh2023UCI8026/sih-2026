@@ -153,26 +153,97 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
             self._send_json(get_drainage_graph())
 
         # 4. OpenAPI / Swagger API Docs Endpoint
-        elif path == '/docs' or path == '/api/v1/docs':
-            swagger_html = """
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <title>SIH26085 Flood Nowcasting REST API Docs</title>
-              <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui.css" />
-            </head>
-            <body>
-              <div id="swagger-ui"></div>
-              <script src="https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui-bundle.js"></script>
-              <script>
-                SwaggerUIBundle({
-                  url: '/api/v1/openapi.json',
-                  dom_id: '#swagger-ui',
-                });
-              </script>
-            </body>
-            </html>
-            """
+        elif path == '/docs' or path == '/api/docs' or path == '/api/v1/docs':
+            swagger_html = """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Urban Flood Nowcasting System REST API | SIH 2026</title>
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui.css" />
+  <style>
+    /* 📱 Mobile-First Responsive Overrides for Swagger UI (360px - 480px) */
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #fafafa;
+    }
+    @media (max-width: 600px) {
+      .swagger-ui .wrapper {
+        padding: 0 8px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      .swagger-ui .opblock-summary {
+        flex-wrap: wrap !important;
+        padding: 8px !important;
+      }
+      .swagger-ui .opblock-summary-path {
+        font-size: 11px !important;
+        word-break: break-all !important;
+        max-width: 100% !important;
+      }
+      .swagger-ui .opblock-summary-description {
+        display: none !important;
+      }
+      .swagger-ui .opblock-summary-method {
+        min-width: 48px !important;
+        font-size: 10px !important;
+        padding: 4px 6px !important;
+      }
+      .swagger-ui table {
+        display: block !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        width: 100% !important;
+      }
+      .swagger-ui .btn {
+        width: 100% !important;
+        margin: 4px 0 !important;
+        box-sizing: border-box !important;
+      }
+      .swagger-ui .info {
+        margin: 12px 0 !important;
+      }
+      .swagger-ui .info .title {
+        font-size: 18px !important;
+      }
+      .swagger-ui .topbar {
+        display: none !important;
+      }
+      .swagger-ui .opblock-body pre.microlight {
+        font-size: 10px !important;
+        word-break: break-all !important;
+        white-space: pre-wrap !important;
+      }
+      .swagger-ui .responses-table {
+        width: 100% !important;
+      }
+      .swagger-ui select {
+        width: 100% !important;
+      }
+      .swagger-ui input[type=text] {
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="swagger-ui"></div>
+  <script src="https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui-bundle.js"></script>
+  <script>
+    SwaggerUIBundle({
+      url: '/api/v1/openapi.json',
+      dom_id: '#swagger-ui',
+      deepLinking: true,
+      presets: [
+        SwaggerUIBundle.presets.apis
+      ]
+    });
+  </script>
+</body>
+</html>"""
             self.send_response(200)
             self.send_header('Content-Type', 'text/html')
             self.end_headers()
