@@ -61,6 +61,14 @@
       "dest": "/human.webp"
     },
     {
+      "src": "/styles.min.css",
+      "dest": "/styles.min.css"
+    },
+    {
+      "src": "/script.min.js",
+      "dest": "/script.min.js"
+    },
+    {
       "src": "/dwarka_catchment_bounds.geojson",
       "dest": "/dwarka_catchment_bounds.geojson"
     },

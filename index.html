@@ -51,6 +51,7 @@
 
   <link rel="preload" as="style" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="/styles.min.css">
   <noscript>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -1182,8 +1183,8 @@
   <header>
     <div class="brand">
       <picture>
-        <source srcset="logo.webp" type="image/webp">
-        <img src="logo.jpeg" alt="Urban Flood Nowcasting System Logo" width="38" height="38" class="brand-logo-img">
+        <source srcset="/logo.webp" type="image/webp">
+        <img src="/logo.jpeg" alt="Urban Flood Nowcasting System Logo" width="44" height="49" class="brand-logo-img">
       </picture>
       <div class="brand-title">
         <h1>Urban Flood Nowcasting</h1>
@@ -1315,8 +1316,8 @@
               
               <!-- human.webp realistic image -->
               <picture>
-                <source srcset="human.webp" type="image/webp">
-                <img src="human.jpeg" alt="Human Height Reference for Water Inundation" width="130" height="175" loading="lazy" style="height:175px; width:auto; object-fit:contain; z-index:2; position:relative; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
+                <source srcset="/human.webp" type="image/webp">
+                <img src="/human.jpeg" alt="Human Height Reference for Water Inundation" width="219" height="219" loading="lazy" style="height:175px; width:auto; object-fit:contain; z-index:2; position:relative; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
               </picture>
 
               <!-- Reference Height Markings Overlay -->
@@ -1345,7 +1346,7 @@
               </div>
 
               <!-- Dynamic Animated Water Level Overlay -->
-              <div id="imgWaterOverlay" style="position:absolute; bottom:0; left:0; width:100%; height:75px; background:linear-gradient(180deg, rgba(37,99,235,0.65) 0%, rgba(29,78,216,0.85) 100%); z-index:3; border-top:3px solid #2563eb; transition:height 0.4s ease; display:flex; align-items:flex-start; justify-content:center;">
+              <div id="imgWaterOverlay" style="position:absolute; bottom:0; left:0; width:100%; height:75px; background:linear-gradient(180deg, rgba(37,99,235,0.65) 0%, rgba(29,78,216,0.85) 100%); z-index:3; border-top:3px solid #2563eb; transition:transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease; display:flex; align-items:flex-start; justify-content:center;">
                 <span id="imgDepthBadge" style="background:#1e40af; color:#ffffff; font-size:10px; font-weight:900; padding:2px 8px; border-radius:10px; margin-top:-10px; box-shadow:0 2px 6px rgba(0,0,0,0.3);">
                   40.3 cm (Ghutno tak)
                 </span>
@@ -2752,16 +2753,20 @@
               alertSpan.innerHTML = data.alert_message;
             }
 
-            // Update node markers on map
-            if (data.nodes) {
-              updateNodeMarkersFromData(data.nodes);
-            }
+            // Defer non-critical DOM/Map marker calculations to requestIdleCallback (Fix long main-thread tasks)
+            const scheduleWork = window.requestIdleCallback || (cb => setTimeout(cb, 1));
+            scheduleWork(() => {
+              // Update node markers on map
+              if (data.nodes) {
+                updateNodeMarkersFromData(data.nodes);
+              }
 
-            let mult = depth > 0 ? (depth / 40.3) : 0.0;
-            updateRadarOverlay(mult);
+              let mult = depth > 0 ? (depth / 40.3) : 0.0;
+              updateRadarOverlay(mult);
 
-            // Update Simple View UI Presentation Layer
-            updateSimpleViewUI(depth, dbz, rainMm, leadMins);
+              // Update Simple View UI Presentation Layer
+              updateSimpleViewUI(depth, dbz, rainMm, leadMins);
+            });
           }
         })
         .catch(err => {
@@ -3095,5 +3100,6 @@
   </div>
     </div>
   </div>
+  <script defer src="/script.min.js"></script>
 </body>
 </html>
