@@ -41,14 +41,14 @@
   <!-- Google Fonts & CDN Preconnect (Lighthouse Performance) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://a.tile.openstreetmap.org">
-  <link rel="preconnect" href="https://unpkg.com">
-  <link rel="dns-prefetch" href="https://unpkg.com">
+  <link rel="preload" as="image" href="/human.webp" type="image/webp" fetchpriority="high">
+  <link rel="preload" as="image" href="/human.jpeg" type="image/jpeg" fetchpriority="high">
 
   <!-- Async Non-Render Blocking Stylesheets -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 
+  <link rel="preload" as="script" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
   <link rel="preload" as="style" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onload="this.media='all'">
   <noscript>
@@ -1315,11 +1315,8 @@
             
             <div style="position:relative; width:100%; max-width:320px; height:200px; margin:0 auto; background:var(--panel-bg); border-radius:10px; border:1px solid var(--panel-border); overflow:hidden; display:flex; align-items:flex-end; justify-content:center;">
               
-              <!-- human.webp realistic image -->
-              <picture>
-                <source srcset="/human.webp" type="image/webp">
-                <img src="/human.jpeg" alt="Human Height Reference for Water Inundation" width="219" height="219" fetchpriority="high" loading="eager" style="height:175px; width:auto; object-fit:contain; z-index:2; position:relative; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
-              </picture>
+              <!-- human.jpeg realistic image -->
+              <img src="/human.jpeg" alt="Human Height Reference for Water Inundation" width="219" height="219" fetchpriority="high" loading="eager" style="height:175px; width:auto; object-fit:contain; z-index:2; position:relative; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
 
               <!-- Reference Height Markings Overlay -->
               <div style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:4; pointer-events:none;">
