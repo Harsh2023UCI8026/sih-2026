@@ -49,8 +49,16 @@
       "dest": "/logo.jpeg"
     },
     {
+      "src": "/logo.webp",
+      "dest": "/logo.webp"
+    },
+    {
       "src": "/human.jpeg",
       "dest": "/human.jpeg"
+    },
+    {
+      "src": "/human.webp",
+      "dest": "/human.webp"
     },
     {
       "src": "/dwarka_catchment_bounds.geojson",
