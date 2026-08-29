@@ -104,8 +104,8 @@
       --card-border: #cbd5e1;
       
       --text-title: #0f172a;
-      --text-sub: #475569;
-      --text-muted: #64748b;
+      --text-sub: #334155;
+      --text-muted: #334155;
       
       --brand-blue: #2563eb;
       --brand-purple: #7c3aed;
@@ -2800,33 +2800,43 @@
       circleMarkers.forEach(m => map.removeLayer(m));
       circleMarkers = [];
 
-      nodesData.forEach(n => {
-        const depth = n.water_depth_cm || 0.0;
-        const color = getColor(depth);
-        const radius = Math.max(10, Math.min(30, depth * 0.4 + 10));
+      const scheduleWork = window.requestIdleCallback || (cb => setTimeout(cb, 1));
+      let idx = 0;
+      function renderChunk() {
+        const chunk = nodesData.slice(idx, idx + 2);
+        chunk.forEach(n => {
+          const depth = n.water_depth_cm || 0.0;
+          const color = getColor(depth);
+          const radius = Math.max(10, Math.min(30, depth * 0.4 + 10));
 
-        const circle = L.circleMarker([n.lat, n.lng], {
-          radius: radius,
-          fillColor: color,
-          color: '#ffffff',
-          weight: 2,
-          opacity: 1,
-          fillOpacity: 0.85
-        }).addTo(map);
+          const circle = L.circleMarker([n.lat, n.lng], {
+            radius: radius,
+            fillColor: color,
+            color: '#ffffff',
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.85
+          }).addTo(map);
 
-        circle.bindPopup(`
-          <div style="font-family:'Plus Jakarta Sans',sans-serif; padding:4px; max-width:190px;">
-            <h4 style="margin-bottom:4px; font-family:'Outfit'; font-size:14px;">${n.name}</h4>
-            <div style="font-size:11px; line-height:1.4;">
-              <b>Predicted Depth:</b> <span style="color:${color}; font-weight:800;">${depth} cm</span><br>
-              <b>Elevation:</b> ${n.elevation_m} m MSL<br>
-              <b>Status:</b> ${depth > 30 ? '🔴 IMPASSABLE' : (depth > 15 ? '🟠 MODERATE' : '🟢 SAFE')}
+          circle.bindPopup(`
+            <div style="font-family:'Plus Jakarta Sans',sans-serif; padding:4px; max-width:190px;">
+              <h4 style="margin-bottom:4px; font-family:'Outfit'; font-size:14px;">${n.name}</h4>
+              <div style="font-size:11px; line-height:1.4;">
+                <b>Predicted Depth:</b> <span style="color:${color}; font-weight:800;">${depth} cm</span><br>
+                <b>Elevation:</b> ${n.elevation_m} m MSL<br>
+                <b>Status:</b> ${depth > 30 ? '🔴 IMPASSABLE' : (depth > 15 ? '🟠 MODERATE' : '🟢 SAFE')}
+              </div>
             </div>
-          </div>
-        `);
+          `);
 
-        circleMarkers.push(circle);
-      });
+          circleMarkers.push(circle);
+        });
+        idx += 2;
+        if (idx < nodesData.length) {
+          scheduleWork(renderChunk);
+        }
+      }
+      renderChunk();
     }
 
     function toggleDataMode() {
