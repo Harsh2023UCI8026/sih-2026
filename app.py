@@ -189,6 +189,8 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
                 content = f.read()
             self.send_response(200)
             self.send_header('Content-Type', content_type)
+            if content_type.startswith('image/') or content_type.startswith('font/'):
+                self.send_header('Cache-Control', 'public, max-age=31536000, immutable')
             self.send_header('Content-Length', str(len(content)))
             self.end_headers()
             self.wfile.write(content)
