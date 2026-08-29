@@ -38,17 +38,16 @@
   <link rel="shortcut icon" type="image/jpeg" href="logo.jpeg" />
   <link rel="manifest" href="site.webmanifest" />
 
-  <!-- Google Fonts & CDN Preconnect (Lighthouse Performance) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <!-- Google Fonts Preconnect (Lighthouse Performance) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="image" href="/human.webp" type="image/webp" fetchpriority="high">
-  <link rel="preload" as="image" href="/human.jpeg" type="image/jpeg" fetchpriority="high">
+  <link rel="preload" as="image" href="/human.jpeg" fetchpriority="high">
 
   <!-- Async Non-Render Blocking Stylesheets -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 
-  <link rel="preload" as="script" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" fetchpriority="high"></script>
   <link rel="preload" as="style" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onload="this.media='all'">
   <noscript>
@@ -1503,7 +1502,6 @@
   </main>
 
   <!-- Leaflet JS & Script -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     // Mobile Tab Switcher Single Source of Truth Logic
     let activeMobileTab = 'controls'; // Default = 'controls' (Dashboard & Controls)
