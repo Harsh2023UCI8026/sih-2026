@@ -2362,6 +2362,7 @@
       targetClockTime.innerText = `Predicted Time: ${timeStr} (${mins === 0 ? 'NOW' : '+' + mins + 'm'})`;
     }
 
+    let sliderFetchTimeout = null;
     slider.addEventListener('input', function() {
       const mins = parseInt(this.value);
       timeDisplay.innerText = `+${mins} Mins`;
@@ -2375,10 +2376,11 @@
       else if (mins === 120) mult = 0.65;
       else if (mins === 180) mult = 0.3;
 
-      fetchNowcastData(mins);
-
-      // Trigger dynamic re-routing check on timeline slider update (silent if inputs incomplete)
-      triggerRouteCalculation(false);
+      if (sliderFetchTimeout) clearTimeout(sliderFetchTimeout);
+      sliderFetchTimeout = setTimeout(() => {
+        fetchNowcastData(mins);
+        triggerRouteCalculation(false);
+      }, 150);
     });
 
     // =================================================================
