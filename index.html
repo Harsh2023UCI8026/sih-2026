@@ -47,7 +47,7 @@
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" fetchpriority="high"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
   <link rel="preload" as="style" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onload="this.media='all'">
   <noscript>
@@ -1539,21 +1539,27 @@
       }
     }
 
-    // Initialize Leaflet Map
-    const map = L.map('map').setView([28.6186, 77.0319], 14);
+    // Initialize Leaflet Map safely after DOM & defer script load
+    let map, lightTiles, darkTiles, currentTileLayer;
+    let currentTheme = 'light';
 
-    const lightTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors | SIH 2026',
-      maxZoom: 19
+    document.addEventListener('DOMContentLoaded', () => {
+      map = L.map('map').setView([28.6186, 77.0319], 14);
+
+      lightTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors | SIH 2026',
+        maxZoom: 19
+      });
+
+      darkTiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri | SIH 2026',
+        maxZoom: 16
+      });
+
+      lightTiles.addTo(map);
+      currentTileLayer = lightTiles;
     });
 
-    const darkTiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles &copy; Esri | SIH 2026',
-      maxZoom: 16
-    });
-
-    lightTiles.addTo(map);
-    let currentTileLayer = lightTiles;
     let currentTheme = 'light';
 
     // Dwarka Mor Pilot Catchment Boundary Polygon Overlay
