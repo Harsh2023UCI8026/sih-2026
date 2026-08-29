@@ -18,8 +18,16 @@
       "dest": "/logo.jpeg"
     },
     {
+      "src": "/human.jpeg",
+      "dest": "/human.jpeg"
+    },
+    {
       "src": "/dwarka_catchment_bounds.geojson",
       "dest": "/dwarka_catchment_bounds.geojson"
+    },
+    {
+      "src": "/pothole_depression_registry.json",
+      "dest": "/pothole_depression_registry.json"
     },
     {
       "src": "/docs",

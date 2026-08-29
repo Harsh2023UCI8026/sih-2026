@@ -294,25 +294,33 @@
 
     /* Compact Sidebar Panel */
     .sidebar {
-      width: 360px;
+      width: 380px;
       background: var(--panel-bg);
       border-right: 1px solid var(--panel-border);
       display: flex;
       flex-direction: column;
       padding: 12px;
-      gap: 10px;
+      gap: 12px;
       z-index: 900;
       overflow-y: auto;
       height: 100%;
+    }
+
+    #simpleViewContainer,
+    #technicalViewContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
     }
 
     .explainer-box {
       background: rgba(37, 99, 235, 0.08);
       border: 1px solid rgba(37, 99, 235, 0.2);
       border-radius: 8px;
-      padding: 8px 10px;
+      padding: 10px 12px;
       font-size: 11px;
-      line-height: 1.4;
+      line-height: 1.45;
       color: var(--text-sub);
     }
 
@@ -320,7 +328,12 @@
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 10px;
-      padding: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+      transition: all 0.2s ease;
     }
 
     .card-head h3 {
@@ -329,6 +342,7 @@
       font-weight: 700;
       color: var(--text-sub);
       text-transform: uppercase;
+      letter-spacing: 0.3px;
     }
 
     .card-head-accordion {
@@ -337,7 +351,7 @@
       align-items: center;
       cursor: pointer;
       user-select: none;
-      padding: 2px 0;
+      padding: 4px 0;
     }
 
     .card-head-accordion h3 {
@@ -346,7 +360,14 @@
       font-weight: 700;
       color: var(--text-sub);
       text-transform: uppercase;
+      letter-spacing: 0.3px;
       margin: 0;
+    }
+
+    .card-collapsible-body {
+      padding-top: 8px;
+      border-top: 1px dashed var(--panel-border);
+      margin-top: 4px;
     }
 
     .accordion-arrow {
@@ -414,15 +435,25 @@
 
     /* Map Box */
     .map-container {
-      flex: 1;
-      position: relative;
-      height: 100%;
-      width: 100%;
+      flex: 1 !important;
+      position: relative !important;
+      height: 100% !important;
+      min-height: 400px !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      background: #f1f5f9;
+      display: block !important;
     }
 
     #map {
-      width: 100%;
-      height: 100%;
+      width: 100% !important;
+      height: 100% !important;
+      position: absolute !important;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
     }
 
     /* Doppler Radar Floating Button Controls */
@@ -442,19 +473,89 @@
       border: 1px solid #0284c7;
       padding: 8px 14px;
       border-radius: 8px;
-      font-weight: 700;
+      background: var(--brand-blue);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 20px;
       font-size: 12px;
+      font-weight: 700;
       cursor: pointer;
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
       transition: all 0.2s ease;
+      pointer-events: auto;
     }
 
     .radar-toggle-btn:hover {
-      background: rgba(15, 23, 42, 0.95);
       transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    }
+
+    .expand-map-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-title);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+      pointer-events: auto;
+    }
+
+    .expand-map-btn:hover {
+      background: var(--brand-blue);
+      color: #ffffff;
+      border-color: var(--brand-blue);
+      transform: translateY(-1px);
+    }
+
+    /* Fullscreen Expanded Map State */
+    body.map-fullscreen .app-main {
+      height: 100vh !important;
+      width: 100vw !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: visible !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      z-index: 999990 !important;
+    }
+
+    body.map-fullscreen .map-container {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 999999 !important;
+      border-radius: 0 !important;
+      background: var(--panel-bg) !important;
+    }
+
+    body.map-fullscreen #map {
+      width: 100vw !important;
+      height: 100vh !important;
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      z-index: 1 !important;
+    }
+
+    body.map-fullscreen .sidebar,
+    body.map-fullscreen header,
+    body.map-fullscreen .alert-banner,
+    body.map-fullscreen .mobile-tab-bar {
+      display: none !important;
     }
 
     .radar-toggle-btn.active {
@@ -490,18 +591,17 @@
       100% { transform: scale(3.5); opacity: 0; }
     }
 
-    /* Floating Legend Inside Map Container */
+    /* Floating Legend Inside Leaflet Map Control Container */
     .map-legend {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
       background: var(--panel-bg);
       border: 1px solid var(--panel-border);
       border-radius: 8px;
       padding: 8px 12px;
-      z-index: 1000;
       font-size: 10px;
       box-shadow: var(--shadow-md);
+      max-width: 200px;
+      margin: 10px !important;
+      pointer-events: auto;
     }
 
     .legend-line {
@@ -515,6 +615,134 @@
       width: 10px;
       height: 10px;
       border-radius: 2px;
+    }
+
+    /* ========================================================= */
+    /* 👨‍👩‍👧 DUAL-VIEW SYSTEM STYLES (Simple View ↔ Technical View) */
+    .view-mode-bar {
+      display: flex;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+
+    .view-mode-btn {
+      flex: 1;
+      padding: 8px 10px;
+      font-size: 11px;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      min-height: 40px;
+    }
+
+    .view-mode-btn.active {
+      background: var(--brand-blue);
+      color: #ffffff;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Hero Status Card (Simple View) */
+    .simple-hero-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      border: 2px solid #ef4444;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.15);
+    }
+
+    .hero-status-icon {
+      font-size: 38px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .hero-status-content {
+      flex: 1;
+    }
+
+    .hero-status-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 900;
+      color: #7f1d1d;
+      margin-bottom: 2px;
+    }
+
+    .hero-status-subtitle {
+      font-size: 13px;
+      font-weight: 700;
+      color: #991b1b;
+    }
+
+    .hero-status-trend {
+      font-size: 11px;
+      font-weight: 700;
+      color: #b91c1c;
+      margin-top: 4px;
+    }
+
+    /* ========================================================= */
+    /* 🖥️ DESKTOP SIDE-BY-SIDE LAYOUT (Min-Width 769px) */
+    @media (min-width: 769px) {
+      html, body {
+        height: 100vh !important;
+        overflow: hidden !important;
+      }
+
+      .mobile-tab-bar {
+        display: none !important;
+      }
+
+      .app-main {
+        display: flex !important;
+        flex-direction: row !important;
+        height: calc(100vh - 105px) !important;
+        width: 100% !important;
+        overflow: hidden !important;
+      }
+
+      .sidebar,
+      body.mobile-view-map .sidebar,
+      body.mobile-view-controls .sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 380px !important;
+        min-width: 380px !important;
+        max-width: 380px !important;
+        height: 100% !important;
+        overflow-y: auto !important;
+        border-right: 1px solid var(--panel-border) !important;
+        box-sizing: border-box !important;
+        padding: 12px !important;
+        gap: 12px !important;
+        flex-shrink: 0 !important;
+      }
+
+      .map-container,
+      body.mobile-view-map .map-container,
+      body.mobile-view-controls .map-container {
+        display: block !important;
+        flex: 1 !important;
+        width: auto !important;
+        height: 100% !important;
+        min-width: 0 !important;
+        position: relative !important;
+      }
     }
 
     /* ========================================================= */
@@ -600,8 +828,6 @@
         display: block !important;
         height: calc(100vh - 110px) !important;
         width: 100% !important;
-        position: sticky;
-        top: 110px;
       }
 
       /* Mobile Mode 2: Controls Tab Selected */
@@ -627,6 +853,10 @@
       .radar-toggle-btn {
         padding: 6px 10px;
         font-size: 11px;
+      }
+
+      body.mobile-view-controls .map-legend {
+        display: none !important;
       }
 
       .map-legend {
@@ -882,7 +1112,7 @@
     }
   </style>
 </head>
-<body class="mobile-view-map">
+<body class="desktop-view">
 
   <!-- Mobile Debug / Error Toast Notification Banner -->
   <div id="mobileErrorToast" style="display:none; position:fixed; bottom:70px; left:50%; transform:translateX(-50%); z-index:999999; max-width:92%; width:340px; background:#dc2626; color:white; padding:10px 14px; border-radius:8px; font-size:11px; font-weight:700; box-shadow:0 6px 20px rgba(0,0,0,0.3); text-align:center; transition:all 0.3s;">
@@ -917,6 +1147,10 @@
         <div class="dot-live"></div>
         <span id="liveClockDisplay">Live</span>
       </div>
+      <!-- Live Real-Time Weather vs Heavy Storm Simulation Mode Toggle Button -->
+      <button class="theme-toggle-btn" id="dataModeBtn" onclick="toggleDataMode()" style="border-color: var(--brand-blue); background: var(--card-bg);" title="Switch between Live Real-Time Weather & Heavy Storm Simulation">
+        <span id="dataModeIcon">🟢</span> <span id="dataModeText">Live Weather</span>
+      </button>
       <!-- Light / Dark Mode Toggle Button (Sun / Moon) -->
       <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">
         <span id="themeIcon">☀️</span> <span id="themeText">Light</span>
@@ -936,68 +1170,21 @@
     <!-- Left Sidebar Control Panel -->
     <div class="sidebar">
       
-      <div class="explainer-box">
-        <b>💡 How it works:</b><br>
-        Predicts exact water height on streets 0–3 hours in advance to keep you safe from heavy rainfall.
+      <!-- Top View Mode Switcher (Simple View ↔ Technical View) -->
+      <div class="view-mode-bar">
+        <button class="view-mode-btn active" id="btnViewSimple" onclick="switchViewMode('simple')">
+          👨‍👩‍👧 Simple View (For Everyone)
+        </button>
+        <button class="view-mode-btn" id="btnViewTechnical" onclick="switchViewMode('technical')">
+          📊 Technical View (SIH/Experts)
+        </button>
       </div>
 
-      <!-- Forecast Slider (Collapsible Accordion) -->
-      <div class="card collapsed" id="cardForecast">
-        <div class="card-head-accordion" onclick="toggleCardAccordion('cardForecast')">
-          <h3>⏱️ Rain & Flood Forecast (0–3 Hours)</h3>
-          <span class="accordion-arrow">▼</span>
-        </div>
-        <div class="card-collapsible-body" style="margin-top:6px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
-            <span style="font-size:11px; color:var(--text-muted);">Lead Time:</span>
-            <span class="time-val" id="timeDisplay">+60 Mins</span>
-          </div>
-          <div style="font-size:11px; font-weight:800; color:var(--brand-purple); margin:2px 0;" id="targetClockTime">
-            Calculating...
-          </div>
-          <input type="range" id="timeSlider" min="0" max="180" step="15" value="60">
-          <div style="display:flex; justify-content:space-between; font-size:9px; color:var(--text-muted); font-weight:700;">
-            <span>NOW</span>
-            <span>+30m</span>
-            <span>+60m</span>
-            <span>+120m</span>
-            <span>+180m</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Metrics Grid (Collapsible Accordion) -->
-      <div class="card collapsed" id="cardMetrics">
-        <div class="card-head-accordion" onclick="toggleCardAccordion('cardMetrics')">
-          <h3>🌧️ Live Rain & Water Level Metrics</h3>
-          <span class="accordion-arrow">▼</span>
-        </div>
-        <div class="card-collapsible-body" style="margin-top:6px;">
-          <div class="metrics-grid">
-            <div class="metric-item">
-              <div class="metric-lbl">Radar Rain Intensity</div>
-              <div class="metric-num" id="valRadar">48.5 <span style="font-size:10px; color:var(--text-muted)">dBZ</span></div>
-            </div>
-            <div class="metric-item">
-              <div class="metric-lbl">Expected Rain (3h)</div>
-              <div class="metric-num" id="valRain">65.0 <span style="font-size:10px; color:var(--text-muted)">mm</span></div>
-            </div>
-            <div class="metric-item">
-              <div class="metric-lbl">Excess Water on Streets</div>
-              <div class="metric-num" id="valRunoff">59.8 <span style="font-size:10px; color:var(--text-muted)">mm</span></div>
-            </div>
-            <div class="metric-item">
-              <div class="metric-lbl">Dwarka Mor Water Height</div>
-              <div class="metric-num" id="valDepth" style="color: var(--severe-red)">40.3 <span style="font-size:10px; color:var(--text-muted)">cm</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Dynamic Flood-Safe Navigation API Card -->
-      <div class="card">
+      <!-- ================================================================= -->
+      <!-- 🚗 ALWAYS VISIBLE: SHARED FLOOD-SAFE ROUTE FINDER (Point A -> Point B) -->
+      <div class="card" id="cardRouteFinder" style="margin-bottom:10px; border:2px solid var(--brand-blue);">
         <div class="card-head">
-          <h3>🚗 Safe Route Finder (Avoid Flooded Roads)</h3>
+          <h3 id="lblRouteFinderTitle">🚗 Safe Route Finder (Avoid Flooded Roads)</h3>
         </div>
         
         <!-- Input Form -->
@@ -1039,8 +1226,172 @@
         <div id="routeResultsList" style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
           <!-- Dynamically populated -->
         </div>
+      </div>
+
+      <!-- ================================================================= -->
+      <!-- 👨‍👩‍👧 SIMPLE VIEW CONTAINER (Default Mode for Citizens & Commuters) -->
+      <div id="simpleViewContainer" style="display: flex; flex-direction: column; gap: 10px;">
+        
+        <!-- Language Switcher Bar -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:11px; font-weight:800; color:var(--text-sub);" id="txtCommuterHeader">COMMUTER SAFETY DASHBOARD</span>
+          <button class="lang-toggle-btn" id="btnLangToggle" onclick="toggleLanguage()" style="padding:5px 9px; font-size:11px; font-weight:800; background:var(--card-bg); border:1px solid var(--brand-blue); border-radius:6px; cursor:pointer; color:var(--brand-blue);">
+            🌐 Hinglish / English
+          </button>
+        </div>
+
+        <!-- A) Hero Status Card (Big & Prominent) -->
+        <div class="simple-hero-card" id="simpleHeroCard">
+          <div class="hero-status-icon" id="heroStatusIcon">🚨</div>
+          <div class="hero-status-content">
+            <div class="hero-status-title" id="heroStatusTitle">Dwarka Mor abhi KHATARNAAK hai</div>
+            <div class="hero-status-subtitle" id="heroStatusSubtitle">Paani: Ghutno tak (Knee-deep) - 40.3 cm</div>
+            <div class="hero-status-trend" id="heroStatusTrend">⏱️ Agla 1 ghanta aur badhega</div>
+          </div>
+        </div>
+
+        <!-- B) Human-Figure & Vehicle Water Level Illustration (human.jpeg Image Visualizer) -->
+        <div class="card" id="cardWaterIllustration">
+          <div class="card-head">
+            <h3 id="lblWaterIllustrationTitle">🚶 Water Level Visualizer (Knee / Car Level)</h3>
+          </div>
+          <div style="text-align:center; padding:6px 0; position:relative; overflow:hidden;">
+            
+            <div style="position:relative; width:100%; max-width:320px; height:200px; margin:0 auto; background:var(--panel-bg); border-radius:10px; border:1px solid var(--panel-border); overflow:hidden; display:flex; align-items:flex-end; justify-content:center;">
+              
+              <!-- human.jpeg realistic image -->
+              <img src="human.jpeg" alt="Human Height Reference for Water Inundation" style="height:175px; width:auto; object-fit:contain; z-index:2; position:relative; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
+
+              <!-- Reference Height Markings Overlay -->
+              <div style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:4; pointer-events:none;">
+                
+                <!-- Ground Line -->
+                <div style="position:absolute; bottom:0; left:0; width:100%; border-bottom:3px solid #64748b; font-size:9px; font-weight:800; color:#64748b; text-align:center; background:rgba(255,255,255,0.75);">
+                  GROUND LEVEL (Road Surface)
+                </div>
+
+                <!-- Ankle 10cm -->
+                <div style="position:absolute; bottom:25px; left:5px; right:5px; border-bottom:1px dashed #94a3b8; font-size:8px; color:#475569; font-weight:700; background:rgba(255,255,255,0.6); width:fit-content; padding:0 4px;">
+                  Ankle (10cm)
+                </div>
+
+                <!-- Knee / Car Engine 30cm -->
+                <div style="position:absolute; bottom:60px; left:5px; right:5px; border-bottom:1.5px dashed #f59e0b; font-size:8px; color:#d97706; font-weight:800; background:rgba(255,255,255,0.6); width:fit-content; padding:0 4px;">
+                  Knee / 🚗 Engine (30cm)
+                </div>
+
+                <!-- Waist 60cm -->
+                <div style="position:absolute; bottom:110px; left:5px; right:5px; border-bottom:1.5px dashed #ef4444; font-size:8px; color:#dc2626; font-weight:800; background:rgba(255,255,255,0.6); width:fit-content; padding:0 4px;">
+                  Waist (60cm)
+                </div>
+
+              </div>
+
+              <!-- Dynamic Animated Water Level Overlay -->
+              <div id="imgWaterOverlay" style="position:absolute; bottom:0; left:0; width:100%; height:75px; background:linear-gradient(180deg, rgba(37,99,235,0.65) 0%, rgba(29,78,216,0.85) 100%); z-index:3; border-top:3px solid #2563eb; transition:height 0.4s ease; display:flex; align-items:flex-start; justify-content:center;">
+                <span id="imgDepthBadge" style="background:#1e40af; color:#ffffff; font-size:10px; font-weight:900; padding:2px 8px; border-radius:10px; margin-top:-10px; box-shadow:0 2px 6px rgba(0,0,0,0.3);">
+                  40.3 cm (Ghutno tak)
+                </span>
+              </div>
+
+            </div>
+
+            <div id="simpleCarWarning" style="font-size:11px; font-weight:800; color:#dc2626; margin-top:8px;">
+              🚗 <b>Car Engine Flood Risk:</b> Water height is above car engine level (25cm)!
+            </div>
+
+          </div>
+        </div>
+
+        <!-- C) Rain Intensity — Plain Language + Icon -->
+        <div class="card" id="cardSimpleRain">
+          <div class="card-head">
+            <h3 id="lblRainTitle">🌧️ Baarish ki Stithi (Rain Intensity)</h3>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; margin-top:8px;">
+            <div style="font-size:32px;" id="simpleRainIcon">⛈️</div>
+            <div>
+              <div style="font-size:15px; font-weight:800; color:var(--text-title);" id="simpleRainLabel">Tez Baarish</div>
+              <div style="font-size:11px; color:var(--text-muted);" id="simpleRainSub">Radar Intensity: 48.5 dBZ | Total: 65mm</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- D) "What Should I Do?" Action Advice Card -->
+        <div class="card" id="cardActionAdvice" style="border-left:4px solid #ef4444;">
+          <div class="card-head">
+            <h3 id="lblActionTitle">🎯 Aapko Kya Karna Chahiye (Commuter Advice)</h3>
+          </div>
+          <div style="margin-top:6px; font-size:12px; font-weight:700; line-height:1.5; color:var(--text-title);" id="simpleActionText">
+            🚫 Ghar par rukein! Agle 2 ghante Dwarka Mor metro crossing avoid karein. Paani ghutno se upar hai.
+          </div>
+        </div>
 
       </div>
+
+      <!-- ================================================================= -->
+      <!-- 📊 TECHNICAL VIEW CONTAINER (For SIH Judges & Technical Experts) -->
+      <div id="technicalViewContainer" style="display: none; flex-direction: column; gap: 10px;">
+
+        <div class="explainer-box">
+          <b>💡 Methodology & Hydrodynamics:</b><br>
+          Coupled 1D-2D SWMM directed graph solver with SCS-CN runoff & GNN surrogate predictions for SIH evaluators.
+        </div>
+
+        <!-- Forecast Slider (Collapsible Accordion) -->
+        <div class="card collapsed" id="cardForecast">
+          <div class="card-head-accordion" onclick="toggleCardAccordion('cardForecast')">
+            <h3>⏱️ Rain & Flood Forecast (0–3 Hours)</h3>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="card-collapsible-body" style="margin-top:6px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+              <span style="font-size:11px; color:var(--text-muted);">Lead Time:</span>
+              <span class="time-val" id="timeDisplay">+60 Mins</span>
+            </div>
+            <div style="font-size:11px; font-weight:800; color:var(--brand-purple); margin:2px 0;" id="targetClockTime">
+              Calculating...
+            </div>
+            <input type="range" id="timeSlider" min="0" max="180" step="15" value="60">
+            <div style="display:flex; justify-content:space-between; font-size:9px; color:var(--text-muted); font-weight:700;">
+              <span>NOW (✅)</span>
+              <span>+30m (🟡)</span>
+              <span>+60m (🔴)</span>
+              <span>+120m (🟠)</span>
+              <span>+180m (✅)</span>
+            </div>
+          </div>
+        </div>
+
+      <!-- Metrics Grid (Collapsible Accordion) -->
+      <div class="card collapsed" id="cardMetrics">
+        <div class="card-head-accordion" onclick="toggleCardAccordion('cardMetrics')">
+          <h3>🌧️ Live Rain & Water Level Metrics</h3>
+          <span class="accordion-arrow">▼</span>
+        </div>
+        <div class="card-collapsible-body" style="margin-top:6px;">
+          <div class="metrics-grid">
+            <div class="metric-item">
+              <div class="metric-lbl">Radar Rain Intensity</div>
+              <div class="metric-num" id="valRadar">48.5 <span style="font-size:10px; color:var(--text-muted)">dBZ</span></div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-lbl">Expected Rain (3h)</div>
+              <div class="metric-num" id="valRain">65.0 <span style="font-size:10px; color:var(--text-muted)">mm</span></div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-lbl">Excess Water on Streets</div>
+              <div class="metric-num" id="valRunoff">59.8 <span style="font-size:10px; color:var(--text-muted)">mm</span></div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-lbl">Dwarka Mor Water Height</div>
+              <div class="metric-num" id="valDepth" style="color: var(--severe-red)">40.3 <span style="font-size:10px; color:var(--text-muted)">cm</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
 
       <!-- Drain Status (Collapsible Accordion) -->
       <div class="card collapsed" id="cardDrains">
@@ -1082,28 +1433,14 @@
     <div class="map-container">
       <div id="map"></div>
 
-      <!-- Floating Map Control Bar (Doppler Radar Toggle) -->
+      <!-- Floating Map Control Bar (Doppler Radar Toggle & Expand Fullscreen) -->
       <div class="map-floating-controls">
         <button class="radar-toggle-btn active" id="btnRadarToggle" onclick="toggleDopplerRadar()">
           <span class="radar-ping"></span> 📡 Doppler Radar Overlay (dBZ)
         </button>
-      </div>
-
-      <!-- Compact Floating Legend Inside Map -->
-      <div class="map-legend">
-        <div style="font-weight:800; font-size:11px; margin-bottom:2px; color:var(--text-title);">Depth Legend (cm)</div>
-        <div class="legend-line"><div class="color-box" style="background:var(--safe-green);"></div><span>Safe (&lt; 5 cm)</span></div>
-        <div class="legend-line"><div class="color-box" style="background:var(--caution-yellow);"></div><span>Caution (5–15 cm)</span></div>
-        <div class="legend-line"><div class="color-box" style="background:var(--moderate-orange);"></div><span>Moderate (15–30 cm)</span></div>
-        <div class="legend-line"><div class="color-box" style="background:var(--severe-red);"></div><span>Severe (30–50 cm)</span></div>
-        <div class="legend-line"><div class="color-box" style="background:var(--critical-dark);"></div><span>Critical (&gt; 50 cm)</span></div>
-        <hr style="margin: 6px 0; border:0; border-top:1px solid var(--panel-border);">
-        <div style="font-weight:800; font-size:11px; margin-bottom:2px; color:var(--text-title);">Radar Reflectivity</div>
-        <div style="background: linear-gradient(to right, rgba(0,255,255,0.7), rgba(0,255,0,0.7), rgba(255,255,0,0.8), rgba(255,0,0,0.9), rgba(255,0,255,0.9)); height: 8px; border-radius: 4px; margin: 4px 0;"></div>
-        <div style="display:flex; justify-space-between; font-size:9px; color:var(--text-muted);">
-          <span>20 dBZ (Light)</span>
-          <span>55+ dBZ (Torrential)</span>
-        </div>
+        <button class="expand-map-btn" id="btnExpandMap" onclick="toggleMapFullscreen()" title="Expand Map to Fullscreen">
+          <span id="expandMapIcon">⛶</span> <span id="expandMapText">Expand Map</span>
+        </button>
       </div>
     </div>
 
@@ -1124,9 +1461,6 @@
       if (tab === 'map') {
         document.body.classList.add('mobile-view-map');
         if (btnMap) btnMap.classList.add('active');
-        if (typeof map !== 'undefined' && map) {
-          setTimeout(() => map.invalidateSize(), 200);
-        }
       } else {
         document.body.classList.add('mobile-view-controls');
         if (btnControls) btnControls.classList.add('active');
@@ -1159,6 +1493,46 @@
     lightTiles.addTo(map);
     let currentTileLayer = lightTiles;
     let currentTheme = 'light';
+
+    // Dwarka Mor Pilot Catchment Boundary Polygon Overlay
+    const catchmentPolygon = L.polygon([
+      [28.6280, 77.0150],
+      [28.6280, 77.0500],
+      [28.5900, 77.0500],
+      [28.5900, 77.0150]
+    ], {
+      color: '#2563eb',
+      weight: 2,
+      dashArray: '6, 6',
+      fillColor: '#3b82f6',
+      fillOpacity: 0.07,
+      interactive: true
+    }).addTo(map);
+
+    catchmentPolygon.bindTooltip("<b>Dwarka Mor Pilot Catchment Zone</b><br>MoES / NCMRWF High-Resolution Flood Model", { permanent: false, direction: "center" });
+
+    // Anchor Depth & Radar Legend to Bottom-Right Corner of Leaflet Map
+    const legendControl = L.control({ position: 'bottomright' });
+    legendControl.onAdd = function (map) {
+      const div = L.DomUtil.create('div', 'map-legend');
+      div.innerHTML = `
+        <div style="font-weight:800; font-size:11px; margin-bottom:2px; color:var(--text-title);">Depth Legend (cm)</div>
+        <div class="legend-line"><div class="color-box" style="background:var(--safe-green);"></div><span>Safe (&lt; 5 cm)</span></div>
+        <div class="legend-line"><div class="color-box" style="background:var(--caution-yellow);"></div><span>Caution (5–15 cm)</span></div>
+        <div class="legend-line"><div class="color-box" style="background:var(--moderate-orange);"></div><span>Moderate (15–30 cm)</span></div>
+        <div class="legend-line"><div class="color-box" style="background:var(--severe-red);"></div><span>Severe (30–50 cm)</span></div>
+        <div class="legend-line"><div class="color-box" style="background:var(--critical-dark);"></div><span>Critical (&gt; 50 cm)</span></div>
+        <hr style="margin: 6px 0; border:0; border-top:1px solid var(--panel-border);">
+        <div style="font-weight:800; font-size:11px; margin-bottom:2px; color:var(--text-title);">Radar Reflectivity</div>
+        <div style="background: linear-gradient(to right, rgba(0,255,255,0.7), rgba(0,255,0,0.7), rgba(255,255,0,0.8), rgba(255,0,0,0.9), rgba(255,0,255,0.9)); height: 8px; border-radius: 4px; margin: 4px 0;"></div>
+        <div style="display:flex; justify-content:space-between; font-size:9px; color:var(--text-muted);">
+          <span>20 dBZ (Light)</span>
+          <span>55+ dBZ (Torrential)</span>
+        </div>
+      `;
+      return div;
+    };
+    legendControl.addTo(map);
 
     function toggleTheme() {
       if (currentTheme === 'light') {
@@ -1235,6 +1609,46 @@
       });
     }
 
+    // Ground-Truth Potholes & Road Depressions Layer (vashu.csv)
+    let potholeMarkers = [];
+    function fetchPotholesAndRender() {
+      fetch('/api/v1/potholes-depressions')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.hotspots) {
+            potholeMarkers.forEach(m => map.removeLayer(m));
+            potholeMarkers = [];
+
+            data.hotspots.forEach(spot => {
+              const marker = L.circleMarker([spot.latitude, spot.longitude], {
+                radius: 7,
+                fillColor: '#f59e0b',
+                color: '#78350f',
+                weight: 2,
+                opacity: 0.9,
+                fillOpacity: 0.9
+              }).addTo(map);
+
+              marker.bindPopup(`
+                <div style="font-family:'Plus Jakarta Sans',sans-serif; padding:4px; max-width:210px;">
+                  <span style="background:#fef3c7; color:#92400e; font-size:9px; font-weight:800; padding:2px 6px; border-radius:4px;">VERIFIED POTHOLE / DEPRESSION</span>
+                  <h4 style="margin:4px 0; font-family:'Outfit'; font-size:13px; color:#1e293b;">${spot.location_name}</h4>
+                  <div style="font-size:11px; line-height:1.4; color:#475569;">
+                    <b>Elevation:</b> ${spot.elevation_m} m MSL<br>
+                    <b>Observed Depth:</b> <span style="color:#d97706; font-weight:800;">${spot.observed_water_depth_cm} cm</span><br>
+                    <b>Roughness ($\mu_{clog}$):</b> ${spot.mannings_n_clogged}<br>
+                    <a href="${spot.source_url}" target="_blank" rel="noopener" style="color:#2563eb; font-weight:700; text-decoration:none;">📄 Official Source Link</a>
+                  </div>
+                </div>
+              `);
+              potholeMarkers.push(marker);
+            });
+          }
+        })
+        .catch(err => console.log("Pothole registry fetch skipped:", err));
+    }
+    fetchPotholesAndRender();
+
     // Polyline Routes
     const normalCoords = [[28.6210, 77.0420], [28.6186, 77.0319], [28.6022, 77.0260]];
     const normalPolyline = L.polyline(normalCoords, { color: '#dc2626', weight: 6, opacity: 0.9, dashArray: '8, 8' }).addTo(map);
@@ -1266,8 +1680,8 @@
     }
 
     // Dynamic Point A -> B Flood-Aware Routing State & Logic
-    let currentOriginCoords = { lat: 28.6210, lng: 77.0420 }; // Uttam Nagar West Metro
-    let currentDestCoords = { lat: 28.5910, lng: 77.0610 };   // Dwarka Sector 6 Ridge
+    let currentOriginCoords = null;
+    let currentDestCoords = null;
     let activeRoutePolylines = [];
     let activeRouteMarkers = [];
     let lastFetchedRoutes = [];
@@ -1324,7 +1738,6 @@
         document.getElementById('autocompleteDest').style.display = 'none';
         currentDestCoords = { lat: parseFloat(lat), lng: parseFloat(lng) };
       }
-      triggerRouteCalculation();
     }
 
     // 📱 Mobile-Visible Error Toast & Debug Handler
@@ -1366,8 +1779,7 @@
           if (gpsBtn) gpsBtn.innerText = '📍 GPS';
           currentOriginCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
           document.getElementById('inputOrigin').value = `My Location (${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)})`;
-          showMobileToast("📍 GPS location set successfully!", "success");
-          triggerRouteCalculation();
+          showMobileToast("📍 GPS location set! Please enter a destination & click 'Find Flood-Safe Route'.", "success");
         },
         (err) => {
           if (gpsBtn) gpsBtn.innerText = '📍 GPS';
@@ -1526,16 +1938,42 @@
       };
     }
 
-    async function triggerRouteCalculation() {
+    async function triggerRouteCalculation(isUserAction = true) {
       const btn = document.querySelector('.btn-find-route');
+
+      const origText = document.getElementById('inputOrigin')?.value?.trim();
+      const destText = document.getElementById('inputDestination')?.value?.trim();
+
+      if (!origText || !destText) {
+        if (btn) btn.innerText = '⚡ Find Flood-Safe Route';
+        if (isUserAction) {
+          if (!origText && !destText) {
+            showMobileToast("⚠️ Please enter starting point & destination to calculate route.", "warning");
+          } else if (!origText) {
+            showMobileToast("⚠️ Please enter a starting point.", "warning");
+          } else {
+            showMobileToast("⚠️ Please enter a destination.", "warning");
+          }
+        }
+        return;
+      }
+
       if (btn) btn.innerText = '⌛ Calculating Route...';
 
       try {
         await ensureGeocodedCoords();
       } catch(e) {}
 
-      const vehicle = document.getElementById('selectVehicle').value;
-      const leadTimeMins = parseInt(document.getElementById('timeSlider').value) || 60;
+      if (!currentOriginCoords || !currentDestCoords) {
+        if (btn) btn.innerText = '⚡ Find Flood-Safe Route';
+        if (isUserAction) {
+          showMobileToast("⚠️ Could not locate address coordinates. Please pick from dropdown suggestions.", "warning");
+        }
+        return;
+      }
+
+      const vehicle = document.getElementById('selectVehicle')?.value || 'car';
+      const leadTimeMins = parseInt(document.getElementById('timeSlider')?.value) || 60;
 
       const payload = {
         origin: currentOriginCoords,
@@ -1546,6 +1984,10 @@
 
       const handleRouteSuccess = (data) => {
         if (btn) btn.innerText = '⚡ Find Flood-Safe Route';
+
+        if (data && data.is_outside_pilot) {
+          showMobileToast(data.geofence_message || "ℹ️ Origin/Destination outside pilot catchment area. Applying standard navigation rules with pilot coverage boundary overlay.", "warning");
+        }
 
         if (data && data.routes && data.routes.length > 0) {
           lastFetchedRoutes = data.routes;
@@ -1792,18 +2234,231 @@
       else if (mins === 120) mult = 0.65;
       else if (mins === 180) mult = 0.3;
 
-      renderNodeMarkers(mult);
-      updateRadarOverlay(mult);
+      fetchNowcastData(mins);
 
-      const depth = Math.round(40.3 * mult * 10) / 10;
-      document.getElementById('valDepth').innerText = `${depth} cm`;
-      document.getElementById('valRadar').innerText = `${Math.round(48.5 * mult * 10)/10} dBZ`;
-      document.getElementById('valRain').innerText = `${Math.round(65.0 * mult * 10)/10} mm`;
-      document.getElementById('valRunoff').innerText = `${Math.round(59.8 * mult * 10)/10} mm`;
-
-      // Trigger dynamic re-routing check on timeline slider update
-      triggerRouteCalculation();
+      // Trigger dynamic re-routing check on timeline slider update (silent if inputs incomplete)
+      triggerRouteCalculation(false);
     });
+
+    // =================================================================
+    // 👨‍👩‍👧 DUAL-VIEW SYSTEM & HINGLISH / ENGLISH TRANSFORMATION LOGIC
+    let currentViewMode = localStorage.getItem('urban_flood_view_mode') || 'simple';
+    let currentLanguage = localStorage.getItem('urban_flood_language') || 'hinglish'; // 'hinglish' or 'english'
+
+    function switchViewMode(mode) {
+      currentViewMode = mode;
+      localStorage.setItem('urban_flood_view_mode', mode);
+
+      const btnSimple = document.getElementById('btnViewSimple');
+      const btnTechnical = document.getElementById('btnViewTechnical');
+      const containerSimple = document.getElementById('simpleViewContainer');
+      const containerTechnical = document.getElementById('technicalViewContainer');
+
+      if (mode === 'simple') {
+        if (btnSimple) btnSimple.classList.add('active');
+        if (btnTechnical) btnTechnical.classList.remove('active');
+        if (containerSimple) containerSimple.style.display = 'flex';
+        if (containerTechnical) containerTechnical.style.display = 'none';
+      } else {
+        if (btnTechnical) btnTechnical.classList.add('active');
+        if (btnSimple) btnSimple.classList.remove('active');
+        if (containerTechnical) containerTechnical.style.display = 'flex';
+        if (containerSimple) containerSimple.style.display = 'none';
+      }
+
+      // Trigger map resize refresh
+      if (typeof map !== 'undefined' && map) {
+        setTimeout(() => map.invalidateSize(), 150);
+      }
+
+      const sliderVal = parseInt(document.getElementById('timeSlider')?.value || 60);
+      let mult = 1.0;
+      if (sliderVal === 0) mult = 0.2;
+      else if (sliderVal === 15) mult = 0.5;
+      else if (sliderVal === 30) mult = 0.8;
+      else if (sliderVal === 60) mult = 1.0;
+      else if (sliderVal === 120) mult = 0.65;
+      else if (sliderVal === 180) mult = 0.3;
+
+      updateSimpleViewUI(Math.round(40.3 * mult * 10) / 10, Math.round(48.5 * mult * 10) / 10, Math.round(65.0 * mult * 10) / 10, sliderVal);
+    }
+
+    function toggleLanguage() {
+      currentLanguage = (currentLanguage === 'hinglish') ? 'english' : 'hinglish';
+      localStorage.setItem('urban_flood_language', currentLanguage);
+
+      const btn = document.getElementById('btnLangToggle');
+      if (btn) btn.innerText = currentLanguage === 'hinglish' ? '🌐 Hinglish Mode' : '🌐 English Mode';
+      
+      const sliderVal = parseInt(document.getElementById('timeSlider')?.value || 60);
+      let mult = 1.0;
+      if (sliderVal === 0) mult = 0.2;
+      else if (sliderVal === 15) mult = 0.5;
+      else if (sliderVal === 30) mult = 0.8;
+      else if (sliderVal === 60) mult = 1.0;
+      else if (sliderVal === 120) mult = 0.65;
+      else if (sliderVal === 180) mult = 0.3;
+
+      updateSimpleViewUI(Math.round(40.3 * mult * 10) / 10, Math.round(48.5 * mult * 10) / 10, Math.round(65.0 * mult * 10) / 10, sliderVal);
+    }
+
+    window.switchViewMode = switchViewMode;
+    window.toggleLanguage = toggleLanguage;
+
+    function updateSimpleViewUI(depthCm, radarDbz, rain3hMm, leadMins) {
+      const isHi = (currentLanguage === 'hinglish');
+
+      // 1. Hero Status Card & Depth Mapping
+      const heroCard = document.getElementById('simpleHeroCard');
+      const heroIcon = document.getElementById('heroStatusIcon');
+      const heroTitle = document.getElementById('heroStatusTitle');
+      const heroSub = document.getElementById('heroStatusSubtitle');
+      const heroTrend = document.getElementById('heroStatusTrend');
+
+      let icon = '✅';
+      let title = isHi ? 'Bilkul Safe' : 'Completely Safe';
+      let sub = isHi ? `Paani Nahi Hai (${depthCm} cm)` : `No Water Accumulation (${depthCm} cm)`;
+      let bg = 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)';
+      let border = '#10b981';
+      let textColor = '#065f46';
+
+      if (depthCm > 50.0) {
+        icon = '🚨';
+        title = isHi ? 'Bahut Khatarnaak — Raasta Band!' : 'Extremely Dangerous — Road Closed!';
+        sub = isHi ? `Bahut Gehra Paani (${depthCm} cm) - High Risk` : `Deep Water Inundation (${depthCm} cm)`;
+        bg = 'linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%)';
+        border = '#991b1b';
+        textColor = '#7f1d1d';
+      } else if (depthCm > 30.0) {
+        icon = '🔴';
+        title = isHi ? 'Kamar tak Paani — MAT JAAYEIN!' : 'Waist-Deep Water — DO NOT ENTER!';
+        sub = isHi ? `Kamar / Ghutno tak Paani (${depthCm} cm)` : `Waist/Knee Level Water (${depthCm} cm)`;
+        bg = 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)';
+        border = '#ef4444';
+        textColor = '#991b1b';
+      } else if (depthCm > 15.0) {
+        icon = '🟠';
+        title = isHi ? 'Ghutno tak Paani — Do baar sochein' : 'Knee-Deep Water — Think Twice';
+        sub = isHi ? `Ghutno tak Paani (${depthCm} cm)` : `Knee-Level Water (${depthCm} cm)`;
+        bg = 'linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%)';
+        border = '#f97316';
+        textColor = '#9a3412';
+      } else if (depthCm > 5.0) {
+        icon = '🟡';
+        title = isHi ? 'Halka Paani — Savdhani se jaayein' : 'Light Waterlogging — Proceed with Caution';
+        sub = isHi ? `Takhno tak Paani (${depthCm} cm)` : `Ankle-Level Water (${depthCm} cm)`;
+        bg = 'linear-gradient(135deg, #fef9c3 0%, #fef08a 100%)';
+        border = '#eab308';
+        textColor = '#854d0e';
+      }
+
+      if (heroCard) {
+        heroCard.style.background = bg;
+        heroCard.style.borderColor = border;
+      }
+      if (heroIcon) heroIcon.innerText = icon;
+      if (heroTitle) {
+        heroTitle.innerText = title;
+        heroTitle.style.color = textColor;
+      }
+      if (heroSub) {
+        heroSub.innerText = sub;
+        heroSub.style.color = textColor;
+      }
+      if (heroTrend) {
+        if (leadMins > 60) {
+          heroTrend.innerText = isHi ? '⏱️ Paani dheere dheere kam ho raha hai' : '⏱️ Water level receding gradually';
+        } else if (leadMins > 0) {
+          heroTrend.innerText = isHi ? '⏱️ Agla 1 ghanta paani aur badhega' : '⏱️ Water level rising over next 1 hour';
+        } else {
+          heroTrend.innerText = isHi ? '⏱️ Abhi ki stithi (Current Baseline)' : '⏱️ Current Baseline Status';
+        }
+      }
+
+      // 2. human.jpeg Realistic Image Water Level Overlay Calculation
+      const imgOverlay = document.getElementById('imgWaterOverlay');
+      const depthBadge = document.getElementById('imgDepthBadge');
+      const carWarning = document.getElementById('simpleCarWarning');
+
+      // Container total height = 200px. Max 100cm maps to 160px height.
+      const overlayHeightPx = Math.max(0, Math.min(185, Math.round(depthCm * 1.7)));
+
+      if (imgOverlay) {
+        imgOverlay.style.height = `${overlayHeightPx}px`;
+      }
+      if (depthBadge) {
+        let badgeLabel = `${depthCm} cm`;
+        if (depthCm > 60) badgeLabel += isHi ? ' (Kamar tak)' : ' (Waist Level)';
+        else if (depthCm > 25) badgeLabel += isHi ? ' (Ghutno tak)' : ' (Knee Level)';
+        else if (depthCm > 5) badgeLabel += isHi ? ' (Takhne tak)' : ' (Ankle Level)';
+        else badgeLabel += isHi ? ' (Bilkul Safe)' : ' (Safe)';
+        depthBadge.innerText = badgeLabel;
+      }
+
+      if (carWarning) {
+        if (depthCm >= 25.0) {
+          carWarning.style.display = 'block';
+          carWarning.innerHTML = isHi 
+            ? `🚗 <b>Car Engine Hazard:</b> Paani ${depthCm}cm hai! Car engine/exhaust mein paani jane ka khatra hai (Engine Limit: 25cm).` 
+            : `🚗 <b>Car Engine Hazard:</b> Water depth is ${depthCm}cm! Exceeds car engine intake limit (25cm).`;
+        } else {
+          carWarning.style.display = 'none';
+        }
+      }
+
+      // 3. Rain Intensity Plain Language Converter
+      const rainIcon = document.getElementById('simpleRainIcon');
+      const rainLabel = document.getElementById('simpleRainLabel');
+      const rainSub = document.getElementById('simpleRainSub');
+
+      let rIcon = '🌦️';
+      let rLabel = isHi ? 'Halki Baarish' : 'Light Rain';
+
+      if (radarDbz >= 50.0) {
+        rIcon = '🌊⛈️';
+        rLabel = isHi ? 'Bahut Tez / Toofani Baarish' : 'Torrential Downpour / Storm';
+      } else if (radarDbz >= 35.0) {
+        rIcon = '⛈️';
+        rLabel = isHi ? 'Tez Baarish' : 'Heavy Rain';
+      } else if (radarDbz >= 20.0) {
+        rIcon = '🌧️';
+        rLabel = isHi ? 'Normal Baarish' : 'Moderate Rain';
+      }
+
+      if (rainIcon) rainIcon.innerText = rIcon;
+      if (rainLabel) rainLabel.innerText = `${rLabel} (${radarDbz} dBZ)`;
+      if (rainSub) rainSub.innerText = isHi ? `Radar Intensity: ${radarDbz} dBZ | Total Expected: ${rain3hMm} mm` : `Radar Intensity: ${radarDbz} dBZ | Total Expected: ${rain3hMm} mm`;
+
+      // 4. "What Should I Do?" Action Advice Card
+      const actionCard = document.getElementById('cardActionAdvice');
+      const actionText = document.getElementById('simpleActionText');
+
+      let actionMsg = isHi ? '✅ Ghar se abhi nikal sakte hain — koi khatra nahi.' : '✅ Safe to commute — no waterlogging threat.';
+      let actionBorder = '#10b981';
+
+      if (depthCm > 30.0) {
+        actionMsg = isHi 
+          ? `🚫 Ghar par rukein! Agle 2 ghante Dwarka Mor metro crossing avoid karein. Paani ghutno se upar (${depthCm}cm) hai.` 
+          : `🚫 Stay indoors! Avoid Dwarka Mor metro crossing for next 2 hours. Water depth is knee-high (${depthCm}cm).`;
+        actionBorder = '#ef4444';
+      } else if (depthCm > 15.0) {
+        actionMsg = isHi 
+          ? `⚠️ Zaroori ho tabhi nikalein! Najafgarh Road avoid karein aur alternate safe detour route use karein.` 
+          : `⚠️ Travel only if necessary! Avoid Najafgarh Road and use the alternate safe detour route.`;
+        actionBorder = '#f97316';
+      } else if (depthCm > 5.0) {
+        actionMsg = isHi 
+          ? `🟡 Halka paani hai. Dheere gaadi chalayein aur potholes se bachein.` 
+          : `🟡 Minor water accumulation. Drive cautiously and watch for road depressions.`;
+        actionBorder = '#eab308';
+      }
+
+      if (actionCard) actionCard.style.borderLeftColor = actionBorder;
+      if (actionText) actionText.innerText = actionMsg;
+    }
+
+    // Initialize View Mode on Load
+    switchViewMode(currentViewMode);
 
     // Dynamic Doppler Radar Overlay Layer (RainViewer Weather Radar API + Synthetic Radar Loop fallback)
     let radarLayerGroup = L.layerGroup().addTo(map);
@@ -1892,11 +2547,179 @@
       }
     }
 
-    // Initial Setup
-    renderNodeMarkers(1.0);
+    function toggleMapFullscreen() {
+      const mapContainer = document.querySelector('.map-container');
+      const btnText = document.getElementById('expandMapText');
+      const btnIcon = document.getElementById('expandMapIcon');
+
+      const isNativeFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+      const isCssFs = document.body.classList.contains('map-fullscreen');
+
+      if (!isNativeFs && !isCssFs) {
+        if (mapContainer && mapContainer.requestFullscreen) {
+          mapContainer.requestFullscreen().catch(() => {});
+        } else if (mapContainer && mapContainer.webkitRequestFullscreen) {
+          mapContainer.webkitRequestFullscreen();
+        }
+        document.body.classList.add('map-fullscreen');
+        if (btnText) btnText.innerText = 'Collapse Map';
+        if (btnIcon) btnIcon.innerText = '🗗';
+      } else {
+        if (document.exitFullscreen && isNativeFs) {
+          document.exitFullscreen().catch(() => {});
+        } else if (document.webkitExitFullscreen && isNativeFs) {
+          document.webkitExitFullscreen();
+        }
+        document.body.classList.remove('map-fullscreen');
+        if (btnText) btnText.innerText = 'Expand Map';
+        if (btnIcon) btnIcon.innerText = '⛶';
+      }
+
+      if (typeof map !== 'undefined' && map) {
+        map.invalidateSize();
+        setTimeout(() => map.invalidateSize(), 50);
+        setTimeout(() => map.invalidateSize(), 150);
+        setTimeout(() => map.invalidateSize(), 300);
+        setTimeout(() => map.invalidateSize(), 600);
+      }
+    }
+
+    document.addEventListener('fullscreenchange', () => {
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      const btnText = document.getElementById('expandMapText');
+      const btnIcon = document.getElementById('expandMapIcon');
+      if (!isFs) {
+        document.body.classList.remove('map-fullscreen');
+        if (btnText) btnText.innerText = 'Expand Map';
+        if (btnIcon) btnIcon.innerText = '⛶';
+      } else {
+        document.body.classList.add('map-fullscreen');
+        if (btnText) btnText.innerText = 'Collapse Map';
+        if (btnIcon) btnIcon.innerText = '🗗';
+      }
+      if (typeof map !== 'undefined' && map) {
+        setTimeout(() => map.invalidateSize(), 100);
+        setTimeout(() => map.invalidateSize(), 300);
+      }
+    });
+
+    window.toggleMapFullscreen = toggleMapFullscreen;
+
+    // Live Weather vs Heavy Storm Simulation Mode Toggle
+    let currentDataMode = localStorage.getItem('urban_flood_data_mode') || 'live'; // 'live' or 'simulated'
+
+    function fetchNowcastData(leadMins = 60) {
+      fetch(`/api/v1/nowcast?mode=${currentDataMode}&lead_time_mins=${leadMins}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.metrics) {
+            const depth = data.metrics.dwarka_mor_depth_cm || 0.0;
+            const dbz = data.metrics.radar_dbz || 0.0;
+            const rainMm = data.metrics.rain_3h_mm || 0.0;
+            const runoffMm = data.metrics.excess_runoff_mm || 0.0;
+
+            document.getElementById('valDepth').innerText = `${depth} cm`;
+            document.getElementById('valRadar').innerText = `${dbz} dBZ`;
+            document.getElementById('valRain').innerText = `${rainMm} mm`;
+            document.getElementById('valRunoff').innerText = `${runoffMm} mm`;
+
+            // Update Top Alert Banner Text
+            const alertSpan = document.querySelector('.alert-banner span');
+            if (alertSpan && data.alert_message) {
+              alertSpan.innerHTML = data.alert_message;
+            }
+
+            // Update node markers on map
+            if (data.nodes) {
+              updateNodeMarkersFromData(data.nodes);
+            }
+
+            let mult = depth > 0 ? (depth / 40.3) : 0.0;
+            updateRadarOverlay(mult);
+
+            // Update Simple View UI Presentation Layer
+            updateSimpleViewUI(depth, dbz, rainMm, leadMins);
+          }
+        })
+        .catch(err => console.log("Using local calculation fallback:", err));
+    }
+
+    function updateNodeMarkersFromData(nodesData) {
+      circleMarkers.forEach(m => map.removeLayer(m));
+      circleMarkers = [];
+
+      nodesData.forEach(n => {
+        const depth = n.water_depth_cm || 0.0;
+        const color = getColor(depth);
+        const radius = Math.max(10, Math.min(30, depth * 0.4 + 10));
+
+        const circle = L.circleMarker([n.lat, n.lng], {
+          radius: radius,
+          fillColor: color,
+          color: '#ffffff',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.85
+        }).addTo(map);
+
+        circle.bindPopup(`
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; padding:4px; max-width:190px;">
+            <h4 style="margin-bottom:4px; font-family:'Outfit'; font-size:14px;">${n.name}</h4>
+            <div style="font-size:11px; line-height:1.4;">
+              <b>Predicted Depth:</b> <span style="color:${color}; font-weight:800;">${depth} cm</span><br>
+              <b>Elevation:</b> ${n.elevation_m} m MSL<br>
+              <b>Status:</b> ${depth > 30 ? '🔴 IMPASSABLE' : (depth > 15 ? '🟠 MODERATE' : '🟢 SAFE')}
+            </div>
+          </div>
+        `);
+
+        circleMarkers.push(circle);
+      });
+    }
+
+    function toggleDataMode() {
+      currentDataMode = (currentDataMode === 'live') ? 'simulated' : 'live';
+      localStorage.setItem('urban_flood_data_mode', currentDataMode);
+      updateDataModeBtnUI();
+      const sliderVal = parseInt(document.getElementById('timeSlider')?.value || 60);
+      fetchNowcastData(sliderVal);
+    }
+
+    function updateDataModeBtnUI() {
+      const btnIcon = document.getElementById('dataModeIcon');
+      const btnText = document.getElementById('dataModeText');
+      if (currentDataMode === 'live') {
+        if (btnIcon) btnIcon.innerText = '🟢';
+        if (btnText) btnText.innerText = 'Live Weather';
+      } else {
+        if (btnIcon) btnIcon.innerText = '⛈️';
+        if (btnText) btnText.innerText = 'Storm Simulation';
+      }
+    }
+
+    // Initial Setup & Responsive Leaflet Resizing
+    updateDataModeBtnUI();
+    fetchNowcastData(60);
     updateForecastTimestamp(60);
-    updateRadarOverlay(1.0);
     startRadarAnimation();
+
+    window.addEventListener('resize', () => {
+      if (typeof map !== 'undefined' && map) {
+        map.invalidateSize();
+      }
+    });
+
+    setTimeout(() => {
+      if (typeof map !== 'undefined' && map) {
+        map.invalidateSize();
+      }
+    }, 200);
+
+    setTimeout(() => {
+      if (typeof map !== 'undefined' && map) {
+        map.invalidateSize();
+      }
+    }, 600);
 
     // Emergency Services Alert & SMS Payload Simulation Logic
     function broadcastEmergencyAlert() {

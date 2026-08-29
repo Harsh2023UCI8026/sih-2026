@@ -1,5 +1,5 @@
 {
-  "network_name": "Dwarka Mor & Najafgarh Feeder Stormwater Directed Graph",
+  "network_name": "Dwarka Mor & Najafgarh Feeder Stormwater Directed Graph (Integrated)",
   "spatial_crs": "EPSG:4326",
   "nodes": [
     {
@@ -67,6 +67,28 @@
       "elevation_invert_m": 206.5,
       "max_depth_m": 4.0,
       "inflow_catchment_sqm": 500000
+    },
+    {
+      "id": "node_11698552028",
+      "name": "Storm Drain Inlet",
+      "type": "osm_drain_inlet",
+      "latitude": 28.6023708,
+      "longitude": 77.0482608,
+      "elevation_rim_m": 213.0,
+      "elevation_invert_m": 211.5,
+      "max_depth_m": 1.5,
+      "inflow_catchment_sqm": 55000
+    },
+    {
+      "id": "node_11698552756",
+      "name": "Storm Drain Inlet",
+      "type": "osm_drain_inlet",
+      "latitude": 28.6024335,
+      "longitude": 77.0489582,
+      "elevation_rim_m": 213.0,
+      "elevation_invert_m": 211.5,
+      "max_depth_m": 1.5,
+      "inflow_catchment_sqm": 55000
     }
   ],
   "edges": [
@@ -127,13 +149,219 @@
       "mannings_n": 0.018,
       "max_capacity_cumec": 45.0,
       "equivalent_capacity_mmhr": 60.0
+    },
+    {
+      "id": "EDGE_OSM_3",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
+    },
+    {
+      "id": "EDGE_OSM_4",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
+    },
+    {
+      "id": "EDGE_OSM_5",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
+    },
+    {
+      "id": "EDGE_OSM_6",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
+    },
+    {
+      "id": "EDGE_OSM_7",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
+    },
+    {
+      "id": "EDGE_OSM_8",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
+    },
+    {
+      "id": "EDGE_OSM_9",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
+    },
+    {
+      "id": "EDGE_OSM_10",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
+    },
+    {
+      "id": "EDGE_OSM_11",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
+    },
+    {
+      "id": "EDGE_OSM_12",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
+    },
+    {
+      "id": "EDGE_OSM_13",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
+    },
+    {
+      "id": "EDGE_OSM_14",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
+    },
+    {
+      "id": "EDGE_OSM_15",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
+    },
+    {
+      "id": "EDGE_OSM_16",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
+    },
+    {
+      "id": "EDGE_OSM_17",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
+    },
+    {
+      "id": "EDGE_OSM_18",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
+    },
+    {
+      "id": "EDGE_OSM_19",
+      "source": "NODE_DWARKA_MOR_METRO",
+      "target": "NODE_KAKROLA_UNDERPASS",
+      "type": "canal",
+      "length_m": 480,
+      "width_m": 2.0,
+      "height_m": 1.6,
+      "mannings_n": 0.015,
+      "max_capacity_cumec": 16.5,
+      "equivalent_capacity_mmhr": 48.0
     }
   ],
   "hydraulic_metadata": {
-    "total_nodes": 6,
-    "total_edges": 5,
+    "total_nodes": 8,
+    "total_edges": 22,
     "critical_surcharge_node": "NODE_DWARKA_MOR_METRO",
     "outlet_node": "NODE_NAJAFGARH_OUTFALL",
-    "najafgarh_drain_fsl_m": 211.5
+    "najafgarh_drain_fsl_m": 211.5,
+    "integrated_osm_features": 19,
+    "integrated_dem_points": 25
   }
 }

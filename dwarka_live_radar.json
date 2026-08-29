@@ -1,0 +1,37 @@
+{
+  "station": "IMD Palam S-Band Doppler Weather Radar (Delhi)",
+  "coordinates": {
+    "lat": 28.6186,
+    "lng": 77.0319
+  },
+  "rainviewer_radar_host": "https://tilecache.rainviewer.com",
+  "latest_radar_timestamp": 1787983800,
+  "nowcast_15min_interval_mm": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "timestamps_iso": [
+    "2026-08-29T00:00",
+    "2026-08-29T00:15",
+    "2026-08-29T00:30",
+    "2026-08-29T00:45",
+    "2026-08-29T01:00",
+    "2026-08-29T01:15",
+    "2026-08-29T01:30",
+    "2026-08-29T01:45",
+    "2026-08-29T02:00",
+    "2026-08-29T02:15",
+    "2026-08-29T02:30",
+    "2026-08-29T02:45"
+  ]
+}

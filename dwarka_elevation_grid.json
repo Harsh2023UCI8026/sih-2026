@@ -1,0 +1,132 @@
+{
+  "source": "Open-Elevation DEM (SRTM / Copernicus 30m DTM)",
+  "bounding_box": "28.5900,77.0150 to 28.6300,77.0500",
+  "total_sample_points": 25,
+  "elevation_points": [
+    {
+      "latitude": 28.59,
+      "longitude": 77.015,
+      "elevation_msl_m": 212.0
+    },
+    {
+      "latitude": 28.59,
+      "longitude": 77.0238,
+      "elevation_msl_m": 213.0
+    },
+    {
+      "latitude": 28.59,
+      "longitude": 77.0325,
+      "elevation_msl_m": 209.0
+    },
+    {
+      "latitude": 28.59,
+      "longitude": 77.0413,
+      "elevation_msl_m": 210.0
+    },
+    {
+      "latitude": 28.59,
+      "longitude": 77.05,
+      "elevation_msl_m": 209.0
+    },
+    {
+      "latitude": 28.6,
+      "longitude": 77.015,
+      "elevation_msl_m": 208.0
+    },
+    {
+      "latitude": 28.6,
+      "longitude": 77.0238,
+      "elevation_msl_m": 210.0
+    },
+    {
+      "latitude": 28.6,
+      "longitude": 77.0325,
+      "elevation_msl_m": 218.0
+    },
+    {
+      "latitude": 28.6,
+      "longitude": 77.0413,
+      "elevation_msl_m": 218.0
+    },
+    {
+      "latitude": 28.6,
+      "longitude": 77.05,
+      "elevation_msl_m": 215.0
+    },
+    {
+      "latitude": 28.61,
+      "longitude": 77.015,
+      "elevation_msl_m": 214.0
+    },
+    {
+      "latitude": 28.61,
+      "longitude": 77.0238,
+      "elevation_msl_m": 212.0
+    },
+    {
+      "latitude": 28.61,
+      "longitude": 77.0325,
+      "elevation_msl_m": 217.0
+    },
+    {
+      "latitude": 28.61,
+      "longitude": 77.0413,
+      "elevation_msl_m": 219.0
+    },
+    {
+      "latitude": 28.61,
+      "longitude": 77.05,
+      "elevation_msl_m": 216.0
+    },
+    {
+      "latitude": 28.62,
+      "longitude": 77.015,
+      "elevation_msl_m": 213.0
+    },
+    {
+      "latitude": 28.62,
+      "longitude": 77.0238,
+      "elevation_msl_m": 213.0
+    },
+    {
+      "latitude": 28.62,
+      "longitude": 77.0325,
+      "elevation_msl_m": 218.0
+    },
+    {
+      "latitude": 28.62,
+      "longitude": 77.0413,
+      "elevation_msl_m": 215.0
+    },
+    {
+      "latitude": 28.62,
+      "longitude": 77.05,
+      "elevation_msl_m": 219.0
+    },
+    {
+      "latitude": 28.63,
+      "longitude": 77.015,
+      "elevation_msl_m": 212.0
+    },
+    {
+      "latitude": 28.63,
+      "longitude": 77.0238,
+      "elevation_msl_m": 220.0
+    },
+    {
+      "latitude": 28.63,
+      "longitude": 77.0325,
+      "elevation_msl_m": 212.0
+    },
+    {
+      "latitude": 28.63,
+      "longitude": 77.0413,
+      "elevation_msl_m": 219.0
+    },
+    {
+      "latitude": 28.63,
+      "longitude": 77.05,
+      "elevation_msl_m": 214.0
+    }
+  ]
+}

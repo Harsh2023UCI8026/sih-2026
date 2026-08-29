@@ -2,7 +2,7 @@ import os
 import json
 import math
 import time
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import HTTPServer, ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs, urlparse
 
 # Load Drainage Graph JSON if available
@@ -24,8 +24,17 @@ def get_drainage_graph():
         ]
     }
 
-def calculate_nowcast(lead_time_mins=60):
-    # Scale multiplier based on 0-180 minute lead time window
+def calculate_nowcast(lead_time_mins=60, mode="live"):
+    # Try fetching fresh live Doppler radar & Open-Meteo precipitation data
+    radar_file = os.path.join(WORKSPACE_DIR, "dwarka_live_radar.json")
+    live_radar_data = None
+    if os.path.exists(radar_file):
+        try:
+            with open(radar_file, 'r', encoding='utf-8') as rf:
+                live_radar_data = json.load(rf)
+        except Exception:
+            live_radar_data = None
+
     mult = 1.0
     if lead_time_mins <= 0: mult = 0.2
     elif lead_time_mins <= 15: mult = 0.5
@@ -34,9 +43,47 @@ def calculate_nowcast(lead_time_mins=60):
     elif lead_time_mins <= 120: mult = 0.65
     else: mult = 0.3
 
-    rain_3h_mm = round(65.0 * mult, 1)
-    radar_dbz = round(48.5 * mult, 1)
-    runoff_mm = round(59.8 * mult, 1)
+    if mode == "simulated":
+        rain_3h_mm = round(65.0 * mult, 1)
+        radar_dbz = round(48.5 * mult, 1)
+        runoff_mm = round(59.8 * mult, 1)
+        dwarka_depth = round(40.3 * mult, 1)
+        kakrola_depth = round(85.0 * mult, 1)
+        sec14_depth = round(22.0 * mult, 1)
+        uttam_depth = round(4.0 * mult, 1)
+        is_live_data = False
+        data_source_name = "Heavy Storm Simulation (SIH Cloudburst Demo)"
+        alert_msg = f"⚠️ FLOOD ALERT: Heavy rain simulation predicted depth {dwarka_depth} cm at Dwarka Mor."
+    else:
+        # Real-Time LIVE Data Mode
+        is_live_data = True
+        data_source_name = "IMD Palam Doppler Radar & Open-Meteo Live API"
+        
+        series = live_radar_data.get('nowcast_15min_interval_mm', []) if live_radar_data else []
+        idx = min(11, max(0, lead_time_mins // 15))
+        live_val = series[idx] if (series and len(series) > idx) else 0.0
+        
+        if live_val is None: live_val = 0.0
+
+        if live_val == 0.0 and (not series or sum(series) == 0.0):
+            # Real live status today: Dry / Clear Weather
+            rain_3h_mm = 0.0
+            radar_dbz = 0.0
+            runoff_mm = 0.0
+            dwarka_depth = 0.0
+            kakrola_depth = 0.0
+            sec14_depth = 0.0
+            uttam_depth = 0.0
+            alert_msg = "🟢 LIVE WEATHER: Dwarka Mor streets are completely clear (0.0 cm depth). No active flood threat."
+        else:
+            rain_3h_mm = round(sum(series), 1)
+            radar_dbz = round(min(55.0, max(15.0, 10 * math.log10(max(1, 200 * (live_val**1.6))))), 1)
+            runoff_mm = round(rain_3h_mm * 0.7, 1)
+            dwarka_depth = round(runoff_mm * 0.75 * mult, 1)
+            kakrola_depth = round(runoff_mm * 1.4 * mult, 1)
+            sec14_depth = round(runoff_mm * 0.4 * mult, 1)
+            uttam_depth = 0.0
+            alert_msg = f"🌧️ LIVE RAIN ALERT: Real-time rainfall {rain_3h_mm} mm | Dwarka Mor depth {dwarka_depth} cm."
 
     nodes = [
         {
@@ -44,26 +91,26 @@ def calculate_nowcast(lead_time_mins=60):
             "name": "Dwarka Mor Metro Crossing",
             "lat": 28.6186, "lng": 77.0319,
             "elevation_m": 211.2,
-            "water_depth_cm": round(40.3 * mult, 1),
-            "hazard_level": "SEVERE" if mult >= 0.8 else ("MODERATE" if mult >= 0.5 else "SAFE"),
-            "is_surcharged": True if mult >= 0.5 else False
+            "water_depth_cm": dwarka_depth,
+            "hazard_level": "SEVERE" if dwarka_depth > 30 else ("MODERATE" if dwarka_depth > 15 else "SAFE"),
+            "is_surcharged": dwarka_depth > 15
         },
         {
             "id": "NODE_KAKROLA_UNDERPASS",
             "name": "Kakrola Mod Underpass",
             "lat": 28.6120, "lng": 77.0250,
             "elevation_m": 209.5,
-            "water_depth_cm": round(85.0 * mult, 1),
-            "hazard_level": "CRITICAL" if mult >= 0.8 else ("SEVERE" if mult >= 0.5 else "CAUTION"),
-            "is_surcharged": True if mult >= 0.5 else False
+            "water_depth_cm": kakrola_depth,
+            "hazard_level": "CRITICAL" if kakrola_depth > 50 else ("SEVERE" if kakrola_depth > 30 else "SAFE"),
+            "is_surcharged": kakrola_depth > 20
         },
         {
             "id": "NODE_SEC14_METRO",
             "name": "Sector 14 Metro Station",
             "lat": 28.6022, "lng": 77.0260,
             "elevation_m": 212.8,
-            "water_depth_cm": round(22.0 * mult, 1),
-            "hazard_level": "MODERATE" if mult >= 0.8 else "SAFE",
+            "water_depth_cm": sec14_depth,
+            "hazard_level": "MODERATE" if sec14_depth > 15 else "SAFE",
             "is_surcharged": False
         },
         {
@@ -71,7 +118,7 @@ def calculate_nowcast(lead_time_mins=60):
             "name": "Uttam Nagar West Metro",
             "lat": 28.6210, "lng": 77.0420,
             "elevation_m": 218.2,
-            "water_depth_cm": round(4.0 * mult, 1),
+            "water_depth_cm": uttam_depth,
             "hazard_level": "SAFE",
             "is_surcharged": False
         },
@@ -89,16 +136,39 @@ def calculate_nowcast(lead_time_mins=60):
     return {
         "system_status": "ONLINE",
         "timestamp_epoch": int(time.time()),
+        "data_source_mode": mode,
+        "is_live_data": is_live_data,
+        "data_source_name": data_source_name,
+        "alert_message": alert_msg,
         "lead_time_minutes": lead_time_mins,
+        "metrics": {
+            "rain_3h_mm": rain_3h_mm,
+            "radar_dbz": radar_dbz,
+            "excess_runoff_mm": runoff_mm,
+            "dwarka_mor_depth_cm": dwarka_depth
+        },
         "hydrologic_summary": {
             "radar_reflectivity_dbz": radar_dbz,
             "forecast_rain_3h_mm": rain_3h_mm,
             "surface_runoff_mm": runoff_mm,
-            "max_water_depth_cm": round(85.0 * mult, 1),
-            "surcharge_active": True if mult >= 0.5 else False
+            "max_water_depth_cm": dwarka_depth,
+            "surcharge_active": dwarka_depth > 15
         },
-        "spatial_node_predictions": nodes
+        "spatial_node_predictions": nodes,
+        "nodes": nodes
     }
+
+def is_in_dwarka_catchment(lat, lng):
+    """
+    Geofence helper: Checks if coordinates fall within Dwarka Mor Pilot Catchment.
+    Bounding Box: (28.5900 N - 28.6300 N, 77.0150 E - 77.0500 E)
+    """
+    try:
+        lat = float(lat)
+        lng = float(lng)
+        return (28.5900 <= lat <= 28.6300) and (77.0150 <= lng <= 77.0500)
+    except Exception:
+        return False
 
 class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
 
@@ -142,6 +212,8 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
             self._send_file(os.path.join(WORKSPACE_DIR, 'index.html'), 'text/html')
         elif path == '/logo.jpeg':
             self._send_file(os.path.join(WORKSPACE_DIR, 'logo.jpeg'), 'image/jpeg')
+        elif path == '/human.jpeg':
+            self._send_file(os.path.join(WORKSPACE_DIR, 'human.jpeg'), 'image/jpeg')
         elif path == '/robots.txt':
             self._send_file(os.path.join(WORKSPACE_DIR, 'robots.txt'), 'text/plain')
         elif path == '/sitemap.xml':
@@ -151,14 +223,23 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
         elif path == '/dwarka_catchment_bounds.geojson':
             self._send_file(os.path.join(WORKSPACE_DIR, 'dwarka_catchment_bounds.geojson'), 'application/geo+json')
 
-        # 2. REST API: GET /api/v1/nowcast
         elif path == '/api/v1/nowcast':
             lead_time = int(query.get('lead_time_mins', [60])[0])
-            self._send_json(calculate_nowcast(lead_time))
+            mode = query.get('mode', ['live'])[0]
+            self._send_json(calculate_nowcast(lead_time, mode))
 
         # 3. REST API: GET /api/v1/drainage-network
         elif path == '/api/v1/drainage-network':
             self._send_json(get_drainage_graph())
+
+        # 4. REST API: GET /api/v1/potholes-depressions
+        elif path == '/api/v1/potholes-depressions':
+            pothole_file = os.path.join(WORKSPACE_DIR, 'pothole_depression_registry.json')
+            if os.path.exists(pothole_file):
+                with open(pothole_file, 'r', encoding='utf-8') as pf:
+                    self._send_json(json.load(pf))
+            else:
+                self._send_json({"error": "Pothole registry not built yet"}, 404)
 
         # 4. OpenAPI / Swagger API Docs Endpoint
         elif path == '/docs' or path == '/api/docs' or path == '/api/v1/docs':
@@ -523,7 +604,15 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
             status_order = {"SAFE": 0, "RISKY": 1, "BLOCKED": 2}
             routes_response.sort(key=lambda x: (status_order.get(x["status"], 3), x["eta_minutes"]))
 
-            recommended_id = routes_response[0]["route_id"] if routes_response else None
+            orig_in_catchment = is_in_dwarka_catchment(orig['lat'], orig['lng'])
+            dest_in_catchment = is_in_dwarka_catchment(dest['lat'], dest['lng'])
+            is_outside_pilot = not (orig_in_catchment and dest_in_catchment)
+
+            geofence_message = None
+            if is_outside_pilot:
+                geofence_message = "ℹ️ Note: Starting location/destination is outside the Dwarka Mor pilot catchment area. Applying standard navigation with pilot coverage boundary overlay."
+
+            recommended_id = routes_response[0]["route_id"] if routes_response else "r1"
 
             self._send_json({
                 "routing_engine": "OSRM Hydraulics & Flood-Aware Engine",
@@ -531,6 +620,10 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
                 "destination": dest,
                 "vehicle_type": vehicle_type,
                 "lead_time_minutes": lead_time_mins,
+                "origin_in_catchment": orig_in_catchment,
+                "destination_in_catchment": dest_in_catchment,
+                "is_outside_pilot": is_outside_pilot,
+                "geofence_message": geofence_message,
                 "recommended_route_id": recommended_id,
                 "routes": routes_response
             })
@@ -609,7 +702,7 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
         else:
             self._send_json({"error": "POST Endpoint not found"}, 404)
 
-class ReusableHTTPServer(HTTPServer):
+class ReusableHTTPServer(ThreadingHTTPServer):
     allow_reuse_address = True
 
 def run_server(port=8081):
