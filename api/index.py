@@ -239,6 +239,34 @@ class handler(BaseHTTPRequestHandler):
             self._send_json(get_nowcast(lead_time, mode))
             return
 
+        elif 'potholes-depressions' in path:
+            pothole_data = {
+                "status": "SUCCESS",
+                "total_hotspots": 2,
+                "hotspots": [
+                    {
+                        "location_name": "Dwarka Mor Metro Gate 2 Road Cave-in",
+                        "latitude": 28.6186,
+                        "longitude": 77.0319,
+                        "observed_water_depth_cm": 40.3,
+                        "elevation_m": 211.2,
+                        "mannings_n_clogged": 0.045,
+                        "source_url": "/pothole_depression_registry.json"
+                    },
+                    {
+                        "location_name": "Kakrola Mod Underpass Depression",
+                        "latitude": 28.6120,
+                        "longitude": 77.0250,
+                        "observed_water_depth_cm": 85.0,
+                        "elevation_m": 209.5,
+                        "mannings_n_clogged": 0.060,
+                        "source_url": "/pothole_depression_registry.json"
+                    }
+                ]
+            }
+            self._send_json(pothole_data)
+            return
+
         elif 'drainage-network' in path:
             network = {
                 "nodes": [

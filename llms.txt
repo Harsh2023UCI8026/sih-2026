@@ -1,37 +1,18 @@
-# Urban Flood Nowcasting System (SIH 2026) — AI Agent Plain-Text Knowledge File
+# Urban Flood Nowcasting System
 
-> **System Overview**: High-resolution 0–3 hour street-level urban flood inundation nowcasting and dynamic flood-safe routing engine for Dwarka Mor & Najafgarh Drain Basin, South-West Delhi, India. Built for Ministry of Earth Sciences (MoES) / NCMRWF.
+> Real-time 0-3 hour street-level flood depth prediction, drainage graph modeling, and flood-safe navigation for the Dwarka Mor catchment, Delhi (SIH 2026).
 
----
+## Overview
+This system combines Doppler weather radar nowcasts, a Digital Elevation Model, and a directed-graph stormwater drainage network model to predict centimeter-level street flooding up to 3 hours in advance, with an API for flood-safe route navigation.
 
-## ⚡ Core Capabilities
-1. **0–3h Street Water Depth Nowcast**: Dynamic 1D-2D coupled hydrodynamic graph neural network surrogate model predicting street water depth (in cm) across key bottleneck junctions.
-2. **Flood-Safe Route Navigation**: Real-time point-A to point-B routing avoiding flooded stretches based on vehicle clearance thresholds (Car: 25cm, Bike: 15cm, Auto: 18cm, Ambulance: 45cm).
-3. **Automated Multi-Agency Early Warnings**: Instant REST API dispatch triggers for Delhi Traffic Police (Road closures), NDRF Disaster Response (Dewatering pumps), and DMRC Metro (Passenger advisories).
-4. **Live Weather & Radar Data**: Live integration with IMD Palam S-Band Doppler Weather Radar (dBZ) and Open-Meteo 15-minute precipitation Nowcast API.
+## Key Pages
+- [Live Dashboard](https://5d-beings.vercel.app/) - Real-time flood forecast and map
+- [API Documentation](https://5d-beings.vercel.app/api/docs) - Swagger/OpenAPI docs
+- [OpenAPI Spec](https://5d-beings.vercel.app/api/openapi.json) - Machine-readable API schema
 
----
-
-## 📍 Geographical Coverage & Coordinates
-- **Target Catchment**: Dwarka Mor, Kakrola Mod, Uttam Nagar West, Najafgarh Drain Basin, Delhi, India.
-- **Center Coordinates**: Latitude 28.6186° N, Longitude 77.0319° E
-- **Bounding Box**: SW (28.5700° N, 76.9700° E) to NE (28.6500° N, 77.0800° E)
-
----
-
-## 🔗 Public REST API Endpoints
-- **Swagger Documentation**: `/api/docs` or `/docs`
-- **OpenAPI Specification**: `/api/openapi.json`
-- **Live Nowcast API**: `GET /api/v1/nowcast?mode=live&lead_time_mins=60`
-- **Drainage Graph Network**: `GET /api/v1/drainage-network`
-- **Flood-Safe Navigation API**: `POST /api/v1/route/flood-safe`
-- **Emergency Broadcast Dispatch**: `POST /api/v1/alert-broadcast`
-- **Potholes & Depressions Registry**: `GET /api/v1/potholes-depressions`
-
----
-
-## 📄 Key File Resources & Specifications
-- **OpenAPI 3.0 Spec**: [openapi.json](/api/openapi.json)
-- **Spatial Catchment Bounds**: [dwarka_catchment_bounds.geojson](/dwarka_catchment_bounds.geojson)
-- **Drainage Network Topology**: [dwarka_drainage_graph.json](/dwarka_drainage_graph.json)
-- **Pothole Registry**: [pothole_depression_registry.json](/pothole_depression_registry.json)
+## API Endpoints
+- GET /api/nowcast - Live street water depth nowcast
+- GET /api/drainage-network - 1D directed drainage graph network
+- POST /api/navigate - Flood-safe alternative detour route
+- POST /api/alert-broadcast - Emergency flood alert broadcast
+- GET /api/v1/potholes-depressions - Verified potholes and road depressions registry
