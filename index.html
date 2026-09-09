@@ -47,9 +47,8 @@
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
-  <link rel="preload" as="style" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <noscript>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -2582,15 +2581,15 @@
       if (actionText) actionText.innerText = actionMsg;
     }
 
-    // Initialize View Mode on Load
-    switchViewMode(currentViewMode);
-
     // Dynamic Doppler Radar Overlay Layer (RainViewer Weather Radar API + Synthetic Radar Loop fallback)
     let radarLayerGroup = L.layerGroup().addTo(map);
     let isRadarActive = true;
     let radarAnimationTimer = null;
     let radarFrames = [];
     let currentFrameIdx = 0;
+
+    // Initialize View Mode on Load
+    switchViewMode(currentViewMode);
 
     // Canvas Synthetic Doppler Storm Cell Generator for Dwarka (High-precision dBZ reflectivity simulation)
     function createSyntheticDopplerCanvas(phaseAngle, intensityMult) {
@@ -2628,7 +2627,9 @@
       currentIntensityMult = multiplier;
       if (!isRadarActive) return;
 
-      radarLayerGroup.clearLayers();
+      if (typeof radarLayerGroup !== 'undefined' && radarLayerGroup) {
+        radarLayerGroup.clearLayers();
+      }
       if (multiplier < 0.1) return; // No radar echo for clear weather
 
       const dwarkaBounds = [
