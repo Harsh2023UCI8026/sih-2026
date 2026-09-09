@@ -172,11 +172,16 @@
       align-items: center;
       justify-content: space-between;
       z-index: 1100;
+      transition: background 0.4s ease;
+    }
+
+    .alert-banner.safe {
+      background: linear-gradient(90deg, #059669, #047857) !important;
     }
 
     .alert-btn {
       background: #ffffff;
-      color: #dc2626;
+      color: #059669;
       border: none;
       padding: 4px 10px;
       border-radius: 4px;
@@ -184,6 +189,10 @@
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
+    }
+
+    .alert-banner:not(.safe) .alert-btn {
+      color: #dc2626;
     }
 
     /* Header Navbar */
@@ -313,18 +322,21 @@
       overflow: hidden;
     }
 
-    /* Compact Sidebar Panel */
+    /* Spacious Dashboard Panel */
     .sidebar {
-      width: 380px;
+      flex: 1;
+      width: 100%;
+      max-width: 100%;
       background: var(--panel-bg);
       border-right: 1px solid var(--panel-border);
       display: flex;
       flex-direction: column;
-      padding: 12px;
-      gap: 12px;
+      padding: 16px 24px;
+      gap: 14px;
       z-index: 900;
       overflow-y: auto;
       height: 100%;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     #simpleViewContainer,
@@ -456,14 +468,20 @@
 
     /* Map Box */
     .map-container {
-      flex: 1 !important;
-      position: relative !important;
-      height: 100% !important;
-      min-height: 400px !important;
+      position: absolute !important;
+      top: 0; right: 0; bottom: 0; left: 0;
       width: 100% !important;
-      min-width: 0 !important;
+      height: 100% !important;
+      z-index: 1000;
       background: #f1f5f9;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body.map-fullscreen .map-container {
       display: block !important;
+      opacity: 1 !important;
     }
 
     #map {
@@ -1447,7 +1465,7 @@
   </div>
 
   <!-- Top Alert Banner -->
-  <div class="alert-banner">
+  <div class="alert-banner safe">
     <span>🟢 <b>LIVE WEATHER:</b> Fetching real-time IMD Palam Radar & Open-Meteo rain data...</span>
     <div style="display:flex; gap:6px; align-items:center;">
       <button class="alert-btn" style="background:#ffffff; color:#dc2626;" onclick="broadcastEmergencyAlert()">📢 BROADCAST ALERT</button>
@@ -1469,6 +1487,10 @@
     </div>
     
     <div class="header-right">
+      <!-- View GIS Map Floating Button in Header -->
+      <button class="theme-toggle-btn" id="btnHeaderViewMap" onclick="toggleMapFullscreen()" style="border-color: #059669; background: #059669; color: white; font-weight:800; padding:6px 12px; box-shadow:0 2px 6px rgba(5,150,105,0.3); cursor:pointer; position:relative; z-index:1005;" title="Click to view interactive GIS map view">
+        🗺️ View GIS Map
+      </button>
       <!-- Chatbot AI Assistant Button in Top Header -->
       <button class="theme-toggle-btn" id="btnAskFloodAI" onclick="window.toggleChatbot && window.toggleChatbot()" style="border-color: var(--brand-purple); background: linear-gradient(135deg, var(--brand-purple), var(--brand-blue)); color: white; font-weight:800; padding:6px 12px; box-shadow:0 2px 6px rgba(124, 58, 237, 0.4); cursor:pointer; position:relative; z-index:1005;" title="Click to open Flood AI Assistant Chatbot">
         🤖 Ask Flood AI
@@ -1481,7 +1503,7 @@
       <button class="theme-toggle-btn" id="dataModeBtn" onclick="toggleDataMode()" style="border-color: var(--brand-blue); background: var(--card-bg);" title="Click to toggle between Real-time Live Weather & SIH Demo Simulation Mode">
         <span id="dataModeIcon">🟢</span> <span id="dataModeText">Mode: Live Weather</span>
       </button>
-      <button class="theme-toggle-btn" onclick="openModeInfoModal()" style="border-color: var(--brand-purple); background: var(--card-bg); color: var(--brand-purple); font-weight:800;" title="Click to understand Live Weather vs Demo Simulation modes">
+      <button class="theme-toggle-btn" id="btnModeGuide" onclick="window.openModeInfoModal && window.openModeInfoModal()" style="border-color: var(--brand-purple); background: var(--card-bg); color: var(--brand-purple); font-weight:800; cursor:pointer; position:relative; z-index:1005;" title="Click to understand Live Weather vs Demo Simulation modes">
         ❓ Mode Guide
       </button>
       <a href="/api/docs" target="_blank" style="text-decoration: none; padding: 6px 10px; background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-title); border-radius: 6px; font-weight: 600; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
@@ -1520,48 +1542,7 @@
         </button>
       </div>
 
-      <!-- ================================================================= -->
-      <!-- 🧪 SYSTEM MODE EXPLAINER CARD (Live Weather vs SIH Demo Simulation) -->
-      <div class="card" id="cardModeExplainer" style="margin-bottom:10px; border-left:4px solid var(--brand-purple); background:var(--card-bg);">
-        <div class="card-head" style="display:flex; justify-content:space-between; align-items:center;">
-          <h2 style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:800; color:var(--text-title); margin:0;">
-            💡 System Mode Guide: Live Weather vs Demo Simulation
-          </h2>
-          <button onclick="openModeInfoModal()" style="font-size:9px; font-weight:800; background:var(--brand-purple); color:white; border:none; padding:2px 6px; border-radius:4px; cursor:pointer;">❓ Details</button>
-        </div>
-        <div style="font-size:11px; color:var(--text-sub); line-height:1.5; margin-top:8px; display:flex; flex-direction:column; gap:6px;">
-          
-          <div id="explainerCardContent" style="display:flex; flex-direction:column; gap:6px;">
-            <div style="background:var(--panel-bg); padding:6px 8px; border-radius:6px; border:1px solid var(--panel-border);">
-              <div style="font-weight:800; font-size:11px; color:var(--safe-green); display:flex; align-items:center; gap:4px;">
-                🟢 1. Live Weather Mode (Real-Time IMD & Open-Meteo)
-              </div>
-              <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">
-                Jab Delhi mein baarish nahi ho rahi hoti, tab real-time radar data <b>0.0 mm rain</b> aur streets par <b>0.0 cm depth (Safe)</b> show karta hai.
-              </div>
-            </div>
 
-            <div style="background:var(--panel-bg); padding:6px 8px; border-radius:6px; border:1px solid var(--panel-border);">
-              <div style="font-weight:800; font-size:11px; color:var(--brand-purple); display:flex; align-items:center; gap:4px;">
-                🧪 2. Demo Simulation Mode (Heavy Storm Test for Judges)
-              </div>
-              <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">
-                Bina baarish ka wait kiye system test karne ke liye — yeh mode peak <b>65mm Cloudburst (40.3 cm Water Depth)</b> simulate karta hai taaki aap test kar sakein:
-                <ul style="margin-left:12px; margin-top:2px; line-height:1.3;">
-                  <li>🚗 <b>Vehicle Hazard Warning:</b> Car engine limit (25cm) alert.</li>
-                  <li>🔀 <b>Safe Detour Routing:</b> Flooded roads se bypass route calculation.</li>
-                  <li>📢 <b>Emergency Alerts:</b> NDRF pumps & Traffic Police dispatches.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <button onclick="toggleDataMode()" style="background:linear-gradient(135deg, var(--brand-purple), var(--brand-blue)); color:white; border:none; padding:7px 10px; border-radius:6px; font-weight:800; font-size:11px; cursor:pointer; width:100%; text-align:center; box-shadow:0 2px 6px rgba(124, 58, 237, 0.3);">
-            🔄 Switch Mode Now (<span id="explainerCurrentMode">Current: Live Weather</span>)
-          </button>
-
-        </div>
-      </div>
 
       <!-- ================================================================= -->
       <!-- 🚗 ALWAYS VISIBLE: SHARED FLOOD-SAFE ROUTE FINDER (Point A -> Point B) -->
@@ -3138,28 +3119,20 @@
       const mapContainer = document.querySelector('.map-container');
       const btnText = document.getElementById('expandMapText');
       const btnIcon = document.getElementById('expandMapIcon');
+      const headerBtn = document.getElementById('btnHeaderViewMap');
 
-      const isNativeFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
       const isCssFs = document.body.classList.contains('map-fullscreen');
 
-      if (!isNativeFs && !isCssFs) {
-        if (mapContainer && mapContainer.requestFullscreen) {
-          mapContainer.requestFullscreen().catch(() => {});
-        } else if (mapContainer && mapContainer.webkitRequestFullscreen) {
-          mapContainer.webkitRequestFullscreen();
-        }
+      if (!isCssFs) {
         document.body.classList.add('map-fullscreen');
-        if (btnText) btnText.innerText = 'Collapse Map';
-        if (btnIcon) btnIcon.innerText = '🗗';
+        if (btnText) btnText.innerText = 'Back to Dashboard';
+        if (btnIcon) btnIcon.innerText = '⬅️';
+        if (headerBtn) headerBtn.innerText = '📊 Back to Dashboard';
       } else {
-        if (document.exitFullscreen && isNativeFs) {
-          document.exitFullscreen().catch(() => {});
-        } else if (document.webkitExitFullscreen && isNativeFs) {
-          document.webkitExitFullscreen();
-        }
         document.body.classList.remove('map-fullscreen');
         if (btnText) btnText.innerText = 'Expand Map';
         if (btnIcon) btnIcon.innerText = '⛶';
+        if (headerBtn) headerBtn.innerText = '🗺️ View GIS Map';
       }
 
       if (typeof map !== 'undefined' && map) {
@@ -3170,25 +3143,6 @@
         setTimeout(() => map.invalidateSize(), 600);
       }
     }
-
-    document.addEventListener('fullscreenchange', () => {
-      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
-      const btnText = document.getElementById('expandMapText');
-      const btnIcon = document.getElementById('expandMapIcon');
-      if (!isFs) {
-        document.body.classList.remove('map-fullscreen');
-        if (btnText) btnText.innerText = 'Expand Map';
-        if (btnIcon) btnIcon.innerText = '⛶';
-      } else {
-        document.body.classList.add('map-fullscreen');
-        if (btnText) btnText.innerText = 'Collapse Map';
-        if (btnIcon) btnIcon.innerText = '🗗';
-      }
-      if (typeof map !== 'undefined' && map) {
-        setTimeout(() => map.invalidateSize(), 100);
-        setTimeout(() => map.invalidateSize(), 300);
-      }
-    });
 
     window.toggleMapFullscreen = toggleMapFullscreen;
 
@@ -3209,10 +3163,18 @@
             document.getElementById('valRain').innerText = `${rainMm} mm`;
             document.getElementById('valRunoff').innerText = `${runoffMm} mm`;
 
-            // Update Top Alert Banner Text
+            // Update Top Alert Banner Text & Background Color (Green for Safe, Red for Warning/Alert)
+            const alertBannerEl = document.querySelector('.alert-banner');
             const alertSpan = document.querySelector('.alert-banner span');
             if (alertSpan && data.alert_message) {
               alertSpan.innerHTML = data.alert_message;
+            }
+            if (alertBannerEl) {
+              if (depth > 5.0 || currentDataMode === 'simulated') {
+                alertBannerEl.classList.remove('safe');
+              } else {
+                alertBannerEl.classList.add('safe');
+              }
             }
 
             // Defer non-critical DOM/Map marker calculations to requestIdleCallback (Fix long main-thread tasks)
@@ -3251,8 +3213,16 @@
           document.getElementById('valRain').innerText = `${rainMm} mm`;
           document.getElementById('valRunoff').innerText = `${runoffMm} mm`;
 
+          const alertBannerEl = document.querySelector('.alert-banner');
           const alertSpan = document.querySelector('.alert-banner span');
           if (alertSpan) alertSpan.innerHTML = alertMsg;
+          if (alertBannerEl) {
+            if (depth > 5.0 || currentDataMode === 'simulated') {
+              alertBannerEl.classList.remove('safe');
+            } else {
+              alertBannerEl.classList.add('safe');
+            }
+          }
 
           updateRadarOverlay(depth > 0 ? (depth / 40.3) : 0.0);
           updateSimpleViewUI(depth, dbz, rainMm, leadMins);
@@ -3684,6 +3654,29 @@
   </div>
 
   <script>
+    // 💡 MODE GUIDE MODAL LOGIC
+    window.openModeInfoModal = function() {
+      console.log('openModeInfoModal triggered!');
+      const modal = document.getElementById('modeInfoModal');
+      if (modal) {
+        modal.classList.add('active');
+        const txt = document.getElementById('modalCurrentModeText');
+        if (txt) {
+          const isHi = (currentLanguage === 'hinglish');
+          if (currentDataMode === 'live') {
+            txt.innerText = isHi ? '🟢 Active Mode: Live Weather (Real-Time IMD)' : '🟢 Active Mode: Live Real-Time Weather';
+          } else {
+            txt.innerText = isHi ? '🧪 Active Mode: Demo Simulation (Cloudburst Test)' : '🧪 Active Mode: Demo Simulation (Storm Test)';
+          }
+        }
+      }
+    };
+
+    window.closeModeInfoModal = function() {
+      const modal = document.getElementById('modeInfoModal');
+      if (modal) modal.classList.remove('active');
+    };
+
     // 🤖 FLOOD AI ASSISTANT CHATBOT LOGIC (Explicitly attached to window object)
     window.toggleChatbot = function() {
       console.log('toggleChatbot triggered!');
