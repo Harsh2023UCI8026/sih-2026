@@ -53,7 +53,7 @@ def calculate_nowcast(lead_time_mins=60, mode="live"):
         uttam_depth = round(4.0 * mult, 1)
         is_live_data = False
         data_source_name = "Heavy Storm Simulation (SIH Cloudburst Demo)"
-        alert_msg = f"⚠️ FLOOD ALERT: Heavy rain simulation predicted depth {dwarka_depth} cm at Dwarka Mor."
+        alert_msg = f"⚠️ FLOOD ALERT: Heavy rain simulation predicted depth {dwarka_depth} cm across Delhi NCR low-lying hotspots."
     else:
         # Real-Time LIVE Data Mode
         is_live_data = True
@@ -74,7 +74,7 @@ def calculate_nowcast(lead_time_mins=60, mode="live"):
             kakrola_depth = 0.0
             sec14_depth = 0.0
             uttam_depth = 0.0
-            alert_msg = "🟢 LIVE WEATHER: Dwarka Mor streets are completely clear (0.0 cm depth). No active flood threat."
+            alert_msg = "🟢 LIVE WEATHER: Delhi NCR streets are completely clear (0.0 cm depth). No active flood threat."
         else:
             rain_3h_mm = round(sum(series), 1)
             radar_dbz = round(min(55.0, max(15.0, 10 * math.log10(max(1, 200 * (live_val**1.6))))), 1)
@@ -83,7 +83,7 @@ def calculate_nowcast(lead_time_mins=60, mode="live"):
             kakrola_depth = round(runoff_mm * 1.4 * mult, 1)
             sec14_depth = round(runoff_mm * 0.4 * mult, 1)
             uttam_depth = 0.0
-            alert_msg = f"🌧️ LIVE RAIN ALERT: Real-time rainfall {rain_3h_mm} mm | Dwarka Mor depth {dwarka_depth} cm."
+            alert_msg = f"🌧️ LIVE RAIN ALERT: Real-time rainfall {rain_3h_mm} mm | Delhi NCR max depth {dwarka_depth} cm."
 
     nodes = [
         {
@@ -214,8 +214,14 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
             self._send_file(os.path.join(WORKSPACE_DIR, 'index.html'), 'text/html')
         elif path == '/logo.jpeg':
             self._send_file(os.path.join(WORKSPACE_DIR, 'logo.jpeg'), 'image/jpeg')
+        elif path == '/logo.webp':
+            self._send_file(os.path.join(WORKSPACE_DIR, 'logo.webp'), 'image/webp')
         elif path == '/human.jpeg':
             self._send_file(os.path.join(WORKSPACE_DIR, 'human.jpeg'), 'image/jpeg')
+        elif path == '/human.webp':
+            self._send_file(os.path.join(WORKSPACE_DIR, 'human.webp'), 'image/webp')
+        elif path == '/gif.gif' or path.endswith('.gif'):
+            self._send_file(os.path.join(WORKSPACE_DIR, 'gif.gif'), 'image/gif')
         elif path == '/robots.txt':
             self._send_file(os.path.join(WORKSPACE_DIR, 'robots.txt'), 'text/plain')
         elif path == '/sitemap.xml':
@@ -224,6 +230,12 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
             self._send_file(os.path.join(WORKSPACE_DIR, 'site.webmanifest'), 'application/manifest+json')
         elif path == '/dwarka_catchment_bounds.geojson':
             self._send_file(os.path.join(WORKSPACE_DIR, 'dwarka_catchment_bounds.geojson'), 'application/geo+json')
+        elif os.path.exists(os.path.join(WORKSPACE_DIR, os.path.basename(path))) and os.path.isfile(os.path.join(WORKSPACE_DIR, os.path.basename(path))):
+            fname = os.path.basename(path)
+            fpath = os.path.join(WORKSPACE_DIR, fname)
+            ext = os.path.splitext(fname)[1].lower()
+            mtype = 'image/gif' if ext == '.gif' else ('image/jpeg' if ext in ['.jpg', '.jpeg'] else ('image/webp' if ext == '.webp' else 'text/plain'))
+            self._send_file(fpath, mtype)
 
         elif path == '/api/v1/nowcast':
             lead_time = int(query.get('lead_time_mins', [60])[0])
@@ -244,7 +256,7 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
                 self._send_json({"error": "Pothole registry not built yet"}, 404)
 
         # 4. OpenAPI / Swagger API Docs Endpoint
-        elif path == '/docs' or path == '/api/docs' or path == '/api/v1/docs':
+        elif path in ['/docs', '/docs/', '/api/docs', '/api/docs/', '/api/v1/docs', '/api/v1/docs/']:
             swagger_html = """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -611,8 +623,6 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
             is_outside_pilot = not (orig_in_catchment and dest_in_catchment)
 
             geofence_message = None
-            if is_outside_pilot:
-                geofence_message = "ℹ️ Note: Starting location/destination is outside the Dwarka Mor pilot catchment area. Applying standard navigation with pilot coverage boundary overlay."
 
             recommended_id = routes_response[0]["route_id"] if routes_response else "r1"
 

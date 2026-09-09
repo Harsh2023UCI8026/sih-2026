@@ -4,7 +4,7 @@
 > **SIH 2026 Problem Statement**: Urban Flood Nowcasting System  
 > **Sponsoring Body**: Ministry of Earth Sciences (MoES) / National Centre for Medium Range Weather Forecasting (NCMRWF)  
 > **Category**: Software | **Theme**: Disaster Management  
-> **Target Pilot Site**: Dwarka Mor Catchment & Najafgarh Drain Basin, South-West Delhi (`28.6186° N, 77.0319° E`)  
+> **Coverage Scope**: All-Delhi NCR Region (City-Wide Scale) | **High-Precision Pilot Site**: Dwarka Mor & Najafgarh Drain Basin (`28.6186° N, 77.0319° E`)  
 
 ---
 

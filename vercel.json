@@ -74,6 +74,10 @@
       "dest": "/human.webp"
     },
     {
+      "src": "/gif.gif",
+      "dest": "/gif.gif"
+    },
+    {
       "src": "/dwarka_catchment_bounds.geojson",
       "dest": "/dwarka_catchment_bounds.geojson"
     },

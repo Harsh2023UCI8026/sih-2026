@@ -4,32 +4,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Primary SEO Meta Tags -->
-  <title>Urban Flood Nowcasting System | Dwarka Mor Street-Level Inundation (SIH 2026)</title>
-  <meta name="description" content="Real-Time 0-3 Hour Street-Level Flood Inundation Prediction & Safe Routing System for Dwarka Mor & Najafgarh Drain Basin, Delhi by MoES / NCMRWF.">
-  <meta name="keywords" content="Urban Flood Nowcasting, Dwarka Mor Flooding, Delhi Flood Alert, IMD Palam Radar, MoES NCMRWF, Hydrodynamic Flood Routing, Street Water Depth">
+  <title>Urban Flood Nowcasting System | Delhi NCR Street-Level Inundation (SIH 2026)</title>
+  <meta name="description" content="Real-Time 0-3 Hour Street-Level Flood Inundation Prediction & Safe Routing System for All Delhi NCR Region by MoES / NCMRWF.">
+  <meta name="keywords" content="Urban Flood Nowcasting, Delhi Flood Alert, Delhi NCR Inundation, IMD Palam Radar, MoES NCMRWF, Hydrodynamic Flood Routing, Street Water Depth">
   <meta name="author" content="Ministry of Earth Sciences (MoES) / NCMRWF">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#2563eb">
   <link rel="canonical" href="https://urban-flood-nowcast.moes.gov.in/">
 
   <!-- GEO & Spatial Search Meta Tags (100% GEO Optimization) -->
-  <meta name="geo.position" content="28.6186;77.0319">
+  <meta name="geo.position" content="28.6139;77.2090">
   <meta name="geo.region" content="IN-DL">
-  <meta name="geo.placename" content="Dwarka Mor, South West Delhi, India">
-  <meta name="ICBM" content="28.6186, 77.0319">
-  <link rel="alternate" type="application/geo+json" href="dwarka_catchment_bounds.geojson" title="Dwarka Catchment Spatial Bounds">
+  <meta name="geo.placename" content="Delhi NCR Region, India">
+  <meta name="ICBM" content="28.6139, 77.2090">
+  <link rel="alternate" type="application/geo+json" href="dwarka_catchment_bounds.geojson" title="Delhi NCR Spatial Bounds">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://urban-flood-nowcast.moes.gov.in/">
-  <meta property="og:title" content="Urban Flood Nowcasting System | Street-Level Flood Warnings">
-  <meta property="og:description" content="0-3 Hour forward-looking street inundation predictions and flood-safe emergency routing engine for Dwarka Mor, Delhi.">
+  <meta property="og:title" content="Urban Flood Nowcasting System | Delhi NCR Street-Level Flood Warnings">
+  <meta property="og:description" content="0-3 Hour forward-looking street inundation predictions and flood-safe emergency routing engine for Delhi NCR.">
   <meta property="og:image" content="https://urban-flood-nowcast.moes.gov.in/logo.jpeg">
   <meta property="og:locale" content="en_IN">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Urban Flood Nowcasting System | Dwarka Mor">
+  <meta name="twitter:title" content="Urban Flood Nowcasting System | Delhi NCR Region">
   <meta name="twitter:description" content="Real-time 0-3h street water depth predictions & flood-safe navigation API by MoES.">
   <meta name="twitter:image" content="https://urban-flood-nowcast.moes.gov.in/logo.jpeg">
 
@@ -64,8 +64,8 @@
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "All modern web browsers",
       "url": "https://urban-flood-nowcast.moes.gov.in/",
-      "description": "Real-time 0-3 hour street-level flood depth prediction and flood-safe navigation for Dwarka Mor, Delhi.",
-      "areaServed": "Dwarka Mor, Delhi, India"
+      "description": "Real-time 0-3 hour street-level flood depth prediction and flood-safe navigation for all of Delhi NCR, India.",
+      "areaServed": "Delhi NCR, India"
     },
     {
       "@context": "https://schema.org",
@@ -79,14 +79,14 @@
       },
       "areaServed": {
         "@type": "Place",
-        "name": "Dwarka Mor Catchment, South West Delhi",
+        "name": "Delhi NCR Urban Drainage Region",
         "geo": {
           "@type": "GeoCoordinates",
-          "latitude": 28.6186,
-          "longitude": 77.0319
+          "latitude": 28.6139,
+          "longitude": 77.2090
         }
       },
-      "description": "Real-time 0-3 hour street-level flood inundation prediction and dynamic flood-safe routing engine for Dwarka Mor."
+      "description": "Real-time 0-3 hour street-level flood inundation prediction and dynamic flood-safe routing engine for all of Delhi NCR."
     }
   ]
   </script>
@@ -1176,34 +1176,58 @@
       transition: background 0.2s;
     }
 
-    /* 🤖 Flood AI Chatbot Widget Styles */
+    /* 🤖 HydroCore AI Floating Organic Distorted Blob Widget */
+    @keyframes hydroMorph {
+      0% { border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; transform: scale(1) rotate(0deg); }
+      33% { border-radius: 70% 30% 46% 54% / 30% 60% 40% 70%; transform: scale(1.05) rotate(120deg); }
+      66% { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; transform: scale(0.96) rotate(240deg); }
+      100% { border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; transform: scale(1) rotate(360deg); }
+    }
+
+    @keyframes hydroGlowPulse {
+      0%, 100% { box-shadow: 0 8px 30px rgba(37, 99, 235, 0.5), 0 0 20px rgba(124, 58, 237, 0.4); }
+      50% { box-shadow: 0 14px 40px rgba(37, 99, 235, 0.8), 0 0 35px rgba(6, 182, 212, 0.7); }
+    }
+
     .chatbot-fab {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      z-index: 999999 !important;
-      background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
-      color: #ffffff;
-      border: none;
-      border-radius: 30px;
-      padding: 10px 18px;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: fixed !important;
+      bottom: 25px !important;
+      right: 25px !important;
+      width: 65px !important;
+      height: 65px !important;
+      z-index: 2147483647 !important;
+      background: linear-gradient(135deg, #2563eb, #06b6d4, #7c3aed) !important;
+      color: #ffffff !important;
+      border: 3px solid #ffffff !important;
+      border-radius: 42% 58% 70% 30% / 45% 45% 55% 55% !important;
+      font-size: 28px !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-shadow: 0 10px 30px rgba(37, 99, 235, 0.6) !important;
+      animation: hydroMorph 8s infinite ease-in-out !important;
+      transition: transform 0.3s ease, box-shadow 0.3s ease !important;
     }
+
     .chatbot-fab:hover {
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.5);
+      transform: scale(1.12) !important;
+      box-shadow: 0 14px 40px rgba(124, 58, 237, 0.8) !important;
     }
+
+    .chatbot-fab span {
+      display: inline-block !important;
+      pointer-events: none !important;
+    }
+
     .chatbot-fab-pulse {
-      width: 10px;
-      height: 10px;
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 14px;
+      height: 14px;
       background-color: #10b981;
+      border: 2px solid #ffffff;
       border-radius: 50%;
       box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
       animation: fabPulse 1.8s infinite;
@@ -1215,9 +1239,9 @@
     }
 
     .chatbot-window {
-      position: fixed;
-      bottom: 80px;
-      right: 25px;
+      position: fixed !important;
+      bottom: 85px !important;
+      right: 25px !important;
       width: 380px;
       max-width: calc(100vw - 30px);
       height: 520px;
@@ -1225,19 +1249,28 @@
       background: var(--panel-bg);
       border: 1px solid var(--panel-border);
       border-radius: 16px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-      z-index: 999999 !important;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      z-index: 2147483647 !important;
       display: none;
       flex-direction: column;
       overflow: hidden;
-      animation: chatSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .chatbot-window.active {
       display: flex !important;
+      opacity: 1 !important;
+      animation: chatWindowPop 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    @keyframes chatSlideUp {
-      from { opacity: 0; transform: translateY(20px) scale(0.95); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+    @keyframes chatWindowPop {
+      0% { 
+        opacity: 0; 
+        transform: translateY(35px) scale(0.92);
+        filter: blur(8px);
+      }
+      100% { 
+        opacity: 1; 
+        transform: translateY(0) scale(1);
+        filter: blur(0px);
+      }
     }
 
     .chat-header {
@@ -1272,8 +1305,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: transform 0.2s, background 0.2s;
     }
-    .chat-close-btn:hover { background: rgba(255,255,255,0.35); }
+    .chat-close-btn:hover { background: rgba(255,255,255,0.35); transform: rotate(90deg); }
 
     .chat-body {
       flex: 1;
@@ -1283,29 +1317,146 @@
       flex-direction: column;
       gap: 10px;
       background: var(--bg-body);
+      scroll-behavior: smooth;
     }
 
     .chat-msg {
-      max-width: 85%;
-      padding: 10px 12px;
-      border-radius: 12px;
-      font-size: 11px;
+      max-width: 88%;
+      padding: 11px 14px;
+      border-radius: 14px;
+      font-size: 11.5px;
       line-height: 1.5;
       word-wrap: break-word;
+      transition: transform 0.2s ease;
     }
     .chat-msg.bot {
       background: var(--panel-bg);
       border: 1px solid var(--panel-border);
       color: var(--text-title);
       align-self: flex-start;
-      border-bottom-left-radius: 2px;
+      border-bottom-left-radius: 3px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
     .chat-msg.user {
-      background: var(--brand-blue);
+      background: linear-gradient(135deg, var(--brand-blue), #1d4ed8);
       color: #ffffff;
       align-self: flex-end;
-      border-bottom-right-radius: 2px;
+      border-bottom-right-radius: 3px;
       font-weight: 600;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+
+    /* 🎨 ULTRA-SMOOTH STAGGERED ENTRANCE ANIMATION */
+    .chat-msg-animated {
+      animation: chatMsgSmoothEntrance 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes chatMsgSmoothEntrance {
+      0% { 
+        opacity: 0; 
+        transform: translateY(22px) scale(0.95);
+        filter: blur(4px);
+      }
+      100% { 
+        opacity: 1; 
+        transform: translateY(0) scale(1);
+        filter: blur(0px);
+      }
+    }
+
+    /* Vertical Interactive Option Cards Stack */
+    .chat-options-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-top: 4px;
+      width: 100%;
+    }
+    .chat-option-card {
+      background: var(--panel-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 14px;
+      padding: 11px 14px;
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      position: relative;
+      overflow: hidden;
+    }
+    .chat-option-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.08), transparent);
+      transition: left 0.6s ease;
+    }
+    .chat-option-card:hover::before {
+      left: 100%;
+    }
+    .chat-option-card:hover {
+      border-color: #6366f1;
+      transform: translateY(-3px) scale(1.015);
+      box-shadow: 0 10px 24px rgba(99, 102, 241, 0.18);
+      background: linear-gradient(135deg, var(--panel-bg), rgba(99, 102, 241, 0.04));
+    }
+    .chat-option-card:active {
+      transform: translateY(-1px) scale(0.99);
+    }
+    .chat-option-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--brand-blue);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .chat-option-arrow {
+      font-size: 12px;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      color: var(--brand-blue);
+    }
+    .chat-option-card:hover .chat-option-arrow {
+      transform: translateX(6px) scale(1.2);
+    }
+    .chat-option-sub {
+      font-size: 10.5px;
+      color: var(--text-sub);
+      line-height: 1.35;
+      font-weight: 500;
+    }
+
+    /* Smooth Typing Indicator */
+    .chat-typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 12px;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 14px;
+      align-self: flex-start;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--brand-blue);
+      border-radius: 50%;
+      animation: typingBounce 1.2s infinite ease-in-out;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typingBounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1.1); opacity: 1; }
     }
 
     .chat-action-btn {
@@ -1458,6 +1609,15 @@
 </head>
 <body class="desktop-view mobile-view-controls">
 
+  <!-- 🤖 HIGH-VISIBILITY FLOATING HYDROCORE AI WIDGET -->
+  <div id="hydroFabContainer" onclick="toggleChatbot(event)" style="position: fixed !important; bottom: 25px !important; right: 25px !important; z-index: 2147483647 !important; cursor: pointer; display: flex !important; align-items: center; gap: 10px; background: linear-gradient(135deg, #1e1b4b, #312e81); border: 2px solid #6366f1; padding: 6px 14px 6px 8px; border-radius: 40px; box-shadow: 0 10px 30px rgba(99, 102, 241, 0.6); pointer-events: auto !important; transition: transform 0.25s ease;" title="Click to open HydroCore AI Assistant">
+    <div class="chatbot-fab" id="chatbotFab" style="position:relative !important; bottom:0 !important; right:0 !important; width:48px !important; height:48px !important; margin:0 !important; pointer-events:none !important; display:flex !important; align-items:center !important; justify-content:center !important;">
+      <div class="chatbot-fab-pulse" style="pointer-events:none !important;"></div>
+      <img src="logo.jpeg" alt="HydroCore AI Logo" onerror="this.onerror=null; this.src='/logo.jpeg';" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border: 1.5px solid #818cf8; pointer-events:none !important;">
+    </div>
+    <span style="color: #ffffff; font-weight: 800; font-size: 13px; font-family: 'Outfit', sans-serif; letter-spacing: 0.3px; white-space: nowrap; pointer-events:none !important;">Ask HydroCore AI</span>
+  </div>
+
   <!-- Mobile Debug / Error Toast Notification Banner -->
   <div id="mobileErrorToast" style="display:none; position:fixed; bottom:70px; left:50%; transform:translateX(-50%); z-index:999999; max-width:92%; width:340px; background:#dc2626; color:white; padding:10px 14px; border-radius:8px; font-size:11px; font-weight:700; box-shadow:0 6px 20px rgba(0,0,0,0.3); text-align:center; transition:all 0.3s;">
     <span id="mobileErrorToastMsg">Error message</span>
@@ -1482,7 +1642,7 @@
       </picture>
       <div class="brand-title">
         <h1>Urban Flood Nowcasting</h1>
-        <p>Dwarka Mor Catchment | SIH 2026</p>
+        <p>Delhi NCR Region | SIH 2026</p>
       </div>
     </div>
     
@@ -1491,14 +1651,9 @@
       <button class="theme-toggle-btn" id="btnHeaderViewMap" onclick="toggleMapFullscreen()" style="border-color: #059669; background: #059669; color: white; font-weight:800; padding:6px 12px; box-shadow:0 2px 6px rgba(5,150,105,0.3); cursor:pointer; position:relative; z-index:1005;" title="Click to view interactive GIS map view">
         🗺️ View GIS Map
       </button>
-      <!-- Chatbot AI Assistant Button in Top Header -->
-      <button class="theme-toggle-btn" id="btnAskFloodAI" onclick="window.toggleChatbot && window.toggleChatbot()" style="border-color: var(--brand-purple); background: linear-gradient(135deg, var(--brand-purple), var(--brand-blue)); color: white; font-weight:800; padding:6px 12px; box-shadow:0 2px 6px rgba(124, 58, 237, 0.4); cursor:pointer; position:relative; z-index:1005;" title="Click to open Flood AI Assistant Chatbot">
-        🤖 Ask Flood AI
-      </button>
-      <!-- Language Switcher Button (Prominently at the Top) -->
-      <button class="theme-toggle-btn" id="headerLangToggleBtn" onclick="toggleLanguage()" style="border-color: var(--brand-blue); background: var(--brand-blue); color: white; font-weight:800; padding:6px 12px; box-shadow:0 2px 6px rgba(37,99,235,0.3);" title="Click to switch language between English & Hinglish">
-        🌐 Language: Hinglish (Switch to English)
-      </button>
+
+
+
       <!-- Live Real-Time Weather vs Demo Simulation Mode Toggle Button -->
       <button class="theme-toggle-btn" id="dataModeBtn" onclick="toggleDataMode()" style="border-color: var(--brand-blue); background: var(--card-bg);" title="Click to toggle between Real-time Live Weather & SIH Demo Simulation Mode">
         <span id="dataModeIcon">🟢</span> <span id="dataModeText">Mode: Live Weather</span>
@@ -1598,21 +1753,17 @@
       <!-- 👨‍👩‍👧 SIMPLE VIEW CONTAINER (Default Mode for Citizens & Commuters) -->
       <div id="simpleViewContainer" style="display: flex; flex-direction: column; gap: 10px;">
         
-        <!-- Language Switcher Bar -->
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
           <span style="font-size:11px; font-weight:800; color:var(--text-sub);" id="txtCommuterHeader">COMMUTER SAFETY DASHBOARD</span>
-          <button class="lang-toggle-btn" id="btnLangToggle" onclick="toggleLanguage()" style="padding:5px 9px; font-size:11px; font-weight:800; background:var(--card-bg); border:1px solid var(--brand-blue); border-radius:6px; cursor:pointer; color:var(--brand-blue);">
-            🌐 Hinglish / English
-          </button>
         </div>
 
         <!-- A) Hero Status Card (Big & Prominent) -->
         <div class="simple-hero-card" id="simpleHeroCard">
           <div class="hero-status-icon" id="heroStatusIcon">🚨</div>
           <div class="hero-status-content">
-            <div class="hero-status-title" id="heroStatusTitle">Dwarka Mor abhi KHATARNAAK hai</div>
-            <div class="hero-status-subtitle" id="heroStatusSubtitle">Paani: Ghutno tak (Knee-deep) - 40.3 cm</div>
-            <div class="hero-status-trend" id="heroStatusTrend">⏱️ Agla 1 ghanta aur badhega</div>
+            <div class="hero-status-title" id="heroStatusTitle">Critical Water Depth Warning</div>
+            <div class="hero-status-subtitle" id="heroStatusSubtitle">Water Level: Knee-Deep (40.3 cm)</div>
+            <div class="hero-status-trend" id="heroStatusTrend">⏱️ Projected to rise over next 1 hour</div>
           </div>
         </div>
 
@@ -1672,13 +1823,13 @@
         <!-- C) Rain Intensity — Plain Language + Icon -->
         <div class="card" id="cardSimpleRain">
           <div class="card-head">
-            <h2 id="lblRainTitle" style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:800; color:var(--text-title); margin:0;">🌧️ Baarish ki Stithi (Rain Intensity)</h2>
+            <h2 id="lblRainTitle" style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:800; color:var(--text-title); margin:0;">🌧️ Rain Intensity & Radar Status</h2>
           </div>
           <div style="display:flex; align-items:center; gap:12px; margin-top:8px;">
             <div style="font-size:32px;" id="simpleRainIcon">⛈️</div>
             <div>
-              <div style="font-size:15px; font-weight:800; color:var(--text-title);" id="simpleRainLabel">Tez Baarish</div>
-              <div style="font-size:11px; color:#334155; font-weight:600;" id="simpleRainSub">Radar Intensity: 48.5 dBZ | Total: 65mm</div>
+              <div style="font-size:15px; font-weight:800; color:var(--text-title);" id="simpleRainLabel">Heavy Rain (48.5 dBZ)</div>
+              <div style="font-size:11px; color:#334155; font-weight:600;" id="simpleRainSub">Radar Intensity: 48.5 dBZ | Total Expected: 65 mm</div>
             </div>
           </div>
         </div>
@@ -1686,10 +1837,10 @@
         <!-- D) "What Should I Do?" Action Advice Card -->
         <div class="card" id="cardActionAdvice" style="border-left:4px solid #ef4444;">
           <div class="card-head">
-            <h2 id="lblActionTitle" style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:800; color:var(--text-title); margin:0;">🎯 Aapko Kya Karna Chahiye (Commuter Advice)</h2>
+            <h2 id="lblActionTitle" style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:800; color:var(--text-title); margin:0;">🎯 Recommended Commuter Safety Advice</h2>
           </div>
           <div style="margin-top:6px; font-size:12px; font-weight:700; line-height:1.5; color:var(--text-title);" id="simpleActionText">
-            🚫 Ghar par rukein! Agle 2 ghante Dwarka Mor metro crossing avoid karein. Paani ghutno se upar hai.
+            ✅ Safe to commute — no active waterlogging threat.
           </div>
         </div>
 
@@ -1750,7 +1901,7 @@
               <div class="metric-num" id="valRunoff">59.8 <span style="font-size:10px; color:var(--text-muted)">mm</span></div>
             </div>
             <div class="metric-item">
-              <div class="metric-lbl">Dwarka Mor Water Height</div>
+              <div class="metric-lbl">Regional Max Water Depth</div>
               <div class="metric-num" id="valDepth" style="color: var(--severe-red)">40.3 <span style="font-size:10px; color:var(--text-muted)">cm</span></div>
             </div>
           </div>
@@ -1807,13 +1958,43 @@
         <button class="expand-map-btn" id="btnExpandMap" onclick="toggleMapFullscreen()" title="Expand Map to Fullscreen">
           <span id="expandMapIcon">⛶</span> <span id="expandMapText">Expand Map</span>
         </button>
-      </div>
     </div>
 
   </main>
 
   <!-- Leaflet JS & Script -->
   <script>
+    // Global Immediate Access Chatbot Handler
+    window.toggleChatbot = function(e) {
+      if (e && e.stopPropagation) e.stopPropagation();
+      console.log('toggleChatbot executed!');
+      const win = document.getElementById('chatbotWindow');
+      if (win) {
+        const isHidden = (win.style.display === 'none' || !win.style.display || !win.classList.contains('active'));
+        if (isHidden) {
+          win.style.display = 'flex';
+          win.classList.add('active');
+          if (window.renderChatbotWelcome) window.renderChatbotWelcome();
+          const input = document.getElementById('chatInput');
+          if (input) input.focus();
+        } else {
+          win.style.display = 'none';
+          win.classList.remove('active');
+        }
+      } else {
+        console.error('chatbotWindow element not found');
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const fab = document.getElementById('hydroFabContainer');
+      if (fab) {
+        fab.onclick = function(e) {
+          window.toggleChatbot(e);
+        };
+      }
+    });
+
     // Mobile Tab Switcher Single Source of Truth Logic
     let activeMobileTab = 'controls'; // Default = 'controls' (Dashboard & Controls)
 
@@ -1854,10 +2035,11 @@
     let map, lightTiles, darkTiles, currentTileLayer;
     let currentTheme = 'light';
 
-    map = L.map('map').setView([28.6186, 77.0319], 14);
+    // Initialize Leaflet Map centered over all Delhi NCR region
+    map = L.map('map').setView([28.6139, 77.2090], 11);
 
     lightTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors | SIH 2026',
+      attribution: '&copy; OpenStreetMap contributors | SIH 2026 Delhi Flood Routing',
       maxZoom: 19
     });
 
@@ -1868,23 +2050,6 @@
 
     lightTiles.addTo(map);
     currentTileLayer = lightTiles;
-
-    // Dwarka Mor Pilot Catchment Boundary Polygon Overlay
-    const catchmentPolygon = L.polygon([
-      [28.6280, 77.0150],
-      [28.6280, 77.0500],
-      [28.5900, 77.0500],
-      [28.5900, 77.0150]
-    ], {
-      color: '#2563eb',
-      weight: 2,
-      dashArray: '6, 6',
-      fillColor: '#3b82f6',
-      fillOpacity: 0.07,
-      interactive: true
-    }).addTo(map);
-
-    catchmentPolygon.bindTooltip("<b>Dwarka Mor Pilot Catchment Zone</b><br>MoES / NCMRWF High-Resolution Flood Model", { permanent: false, direction: "center" });
 
     // Anchor Depth & Radar Legend to Bottom-Right Corner of Leaflet Map
     const legendControl = L.control({ position: 'bottomright' });
@@ -2063,23 +2228,28 @@
     let selectedRouteId = null;
     let autocompleteDebounceTimer = null;
 
-    // Comprehensive Curated Dwarka & Delhi Regional Hotspots Database
+    // Comprehensive Delhi-Wide Regional Hotspots & Metro Hubs Database
     const LOCAL_LOCATION_PRESETS = [
+      { name: "Dwarka Mor Metro Station", area: "Najafgarh Road, South West Delhi", lat: 28.6186, lng: 77.0319 },
       { name: "Uttam Nagar West Metro Station", area: "Najafgarh Road, West Delhi", lat: 28.6210, lng: 77.0420 },
-      { name: "Dwarka Mor Metro Station", area: "Najafgarh Road, Crossing", lat: 28.6186, lng: 77.0319 },
       { name: "Kakrola Mod Underpass", area: "Najafgarh Drain, Dwarka", lat: 28.6120, lng: 77.0250 },
-      { name: "Netaji Subhas University of Technology (NSUT)", area: "Sector 3, Dwarka", lat: 28.6090, lng: 77.0360 },
-      { name: "Dwarka Sector 6 Central Market", area: "Sector 6 Ridge Area, Dwarka", lat: 28.5910, lng: 77.0610 },
-      { name: "Sector 14 Metro Station", area: "Sector 14, Dwarka", lat: 28.6022, lng: 77.0260 },
-      { name: "Sector 21 Metro Station / ISBT", area: "Sector 21, Dwarka", lat: 28.5522, lng: 77.0583 },
-      { name: "Vikas Puri Block A", area: "Outer Ring Road, West Delhi", lat: 28.6350, lng: 77.0710 },
-      { name: "Dabri Flyover Crossing", area: "Pankha Road, Janakpuri West", lat: 28.6080, lng: 77.0850 },
-      { name: "Janakpuri West Metro Interchange", area: "Blue Line / Magenta Line", lat: 28.6294, lng: 77.0778 },
-      { name: "Najafgarh Bus Terminal", area: "Main Najafgarh Road", lat: 28.6125, lng: 76.9850 },
-      { name: "Palam Railway Station", area: "Palam Colony, South West Delhi", lat: 28.5860, lng: 77.0820 },
+      { name: "Connaught Place (Rajiv Chowk)", area: "Central Delhi", lat: 28.6315, lng: 77.2167 },
+      { name: "New Delhi Railway Station (NDLS)", area: "Paharganj / Ajmeri Gate, Central Delhi", lat: 28.6430, lng: 77.2194 },
+      { name: "Old Delhi Railway Station (DLI)", area: "Chandni Chowk, North Delhi", lat: 28.6619, lng: 77.2274 },
+      { name: "Kashmere Gate ISBT & Metro Interchange", area: "Ring Road, North Delhi", lat: 28.6675, lng: 77.2285 },
+      { name: "Anand Vihar ISBT & Railway Station", area: "Trans-Yamuna, East Delhi", lat: 28.6469, lng: 77.3160 },
+      { name: "AIIMS Hospital & Safdarjung", area: "Ring Road, South Delhi", lat: 28.5672, lng: 77.2100 },
       { name: "Indira Gandhi International Airport (Terminal 3)", area: "Aerocity, New Delhi", lat: 28.5562, lng: 77.1000 },
-      { name: "Connaught Place (CP / Rajiv Chowk)", area: "Central Delhi", lat: 28.6315, lng: 77.2167 },
-      { name: "AIIMS Hospital & Safdarjung", area: "Ring Road, South Delhi", lat: 28.5672, lng: 77.2100 }
+      { name: "Lajpat Nagar Central Market", area: "Ring Road, South Delhi", lat: 28.5700, lng: 77.2400 },
+      { name: "Rohini Sector 18 & 19 Metro Station", area: "North West Delhi", lat: 28.7397, lng: 77.1350 },
+      { name: "Pitampura TV Tower / Netaji Subhash Place", area: "Ring Road, North West Delhi", lat: 28.6967, lng: 77.1525 },
+      { name: "Hauz Khas Metro Station / IIT Delhi", area: "Outer Ring Road, South Delhi", lat: 28.5431, lng: 77.2064 },
+      { name: "Akshardham Temple / Mayur Vihar", area: "NH-9, East Delhi", lat: 28.6127, lng: 77.2773 },
+      { name: "Dhaula Kuan Interchange", area: "Ring Road / Airport Expressway", lat: 28.5918, lng: 77.1616 },
+      { name: "Janakpuri West Metro Interchange", area: "Blue Line / Magenta Line", lat: 28.6294, lng: 77.0778 },
+      { name: "Netaji Subhas University of Technology (NSUT)", area: "Sector 3, Dwarka", lat: 28.6090, lng: 77.0360 },
+      { name: "Sector 21 Metro Station / ISBT", area: "Sector 21, Dwarka", lat: 28.5522, lng: 77.0583 },
+      { name: "Najafgarh Bus Terminal", area: "Main Najafgarh Road", lat: 28.6125, lng: 76.9850 }
     ];
 
     function onLocationInput(field, query) {
@@ -2433,8 +2603,8 @@
       const handleRouteSuccess = (data) => {
         if (btn) btn.innerText = '⚡ Find Flood-Safe Route';
 
-        if (data && data.is_outside_pilot) {
-          showMobileToast(data.geofence_message || "ℹ️ Origin/Destination outside pilot catchment area. Applying standard navigation rules with pilot coverage boundary overlay.", "warning");
+        if (data && data.geofence_message) {
+          showMobileToast(data.geofence_message, "info");
         }
 
         if (data && data.routes && data.routes.length > 0) {
@@ -2738,132 +2908,52 @@
     }
 
     function updateLanguageUI() {
-      const isHi = (currentLanguage === 'hinglish');
-
-      const headerLangBtn = document.getElementById('headerLangToggleBtn');
-      const sidebarLangBtn = document.getElementById('btnLangToggle');
-
-      const langText = isHi ? '🌐 Language: Hinglish (Switch to English)' : '🌐 Language: English (Switch to Hinglish)';
-
-      if (headerLangBtn) headerLangBtn.innerText = langText;
-      if (sidebarLangBtn) sidebarLangBtn.innerText = langText;
-
-      // Update Mode Explainer Card Text based on active language
+      // Update Mode Explainer Card Text
       const explainerCardBody = document.getElementById('explainerCardContent');
       if (explainerCardBody) {
-        if (isHi) {
-          explainerCardBody.innerHTML = `
-            <div style="background:var(--panel-bg); padding:6px 8px; border-radius:6px; border:1px solid var(--panel-border);">
-              <div style="font-weight:800; font-size:11px; color:var(--safe-green); display:flex; align-items:center; gap:4px;">
-                🟢 1. Live Weather Mode (Real-Time IMD & Open-Meteo)
-              </div>
-              <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">
-                Jab Delhi mein baarish nahi ho rahi hoti, tab real-time radar data <b>0.0 mm rain</b> aur streets par <b>0.0 cm depth (Safe)</b> show karta hai.
-              </div>
+        explainerCardBody.innerHTML = `
+          <div style="background:var(--panel-bg); padding:6px 8px; border-radius:6px; border:1px solid var(--panel-border);">
+            <div style="font-weight:800; font-size:11px; color:var(--safe-green); display:flex; align-items:center; gap:4px;">
+              🟢 1. Live Weather Mode (Real-Time IMD & Open-Meteo)
             </div>
+            <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">
+              When it is dry or clear in Delhi, real-time radar displays <b>0.0 mm rainfall</b> and street water depth shows <b>0.0 cm (Completely Safe)</b>.
+            </div>
+          </div>
 
-            <div style="background:var(--panel-bg); padding:6px 8px; border-radius:6px; border:1px solid var(--panel-border);">
-              <div style="font-weight:800; font-size:11px; color:var(--brand-purple); display:flex; align-items:center; gap:4px;">
-                🧪 2. Demo Simulation Mode (Heavy Storm Test for Judges)
-              </div>
-              <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">
-                Bina baarish ka wait kiye system test karne ke liye — yeh mode peak <b>65mm Cloudburst (40.3 cm Water Depth)</b> simulate karta hai taaki aap test kar sakein:
-                <ul style="margin-left:12px; margin-top:2px; line-height:1.3;">
-                  <li>🚗 <b>Vehicle Hazard Warning:</b> Car engine limit (25cm) alert.</li>
-                  <li>🔀 <b>Safe Detour Routing:</b> Flooded roads se bypass route calculation.</li>
-                  <li>📢 <b>Emergency Alerts:</b> NDRF pumps & Traffic Police dispatches.</li>
-                </ul>
-              </div>
+          <div style="background:var(--panel-bg); padding:6px 8px; border-radius:6px; border:1px solid var(--panel-border);">
+            <div style="font-weight:800; font-size:11px; color:var(--brand-purple); display:flex; align-items:center; gap:4px;">
+              🧪 2. Demo Simulation Mode (Heavy Storm Test for Judges)
             </div>
-          `;
-        } else {
-          explainerCardBody.innerHTML = `
-            <div style="background:var(--panel-bg); padding:6px 8px; border-radius:6px; border:1px solid var(--panel-border);">
-              <div style="font-weight:800; font-size:11px; color:var(--safe-green); display:flex; align-items:center; gap:4px;">
-                🟢 1. Live Weather Mode (Real-Time IMD & Open-Meteo)
-              </div>
-              <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">
-                When it is dry or clear in Delhi, real-time radar displays <b>0.0 mm rainfall</b> and street water depth shows <b>0.0 cm (Completely Safe)</b>.
-              </div>
+            <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">
+              To test the system without waiting for an actual storm — this mode simulates a peak <b>65mm/hr Cloudburst Storm (40.3 cm Water Depth)</b> so you can evaluate:
+              <ul style="margin-left:12px; margin-top:2px; line-height:1.3;">
+                <li>🚗 <b>Vehicle Hazard Warning:</b> Car engine limit (25cm) safety alert.</li>
+                <li>🔀 <b>Safe Detour Routing:</b> Automatic bypass navigation around flooded roads.</li>
+                <li>📢 <b>Emergency Alerts:</b> Multi-agency SMS dispatches to NDRF pumps & Traffic Police.</li>
+              </ul>
             </div>
-
-            <div style="background:var(--panel-bg); padding:6px 8px; border-radius:6px; border:1px solid var(--panel-border);">
-              <div style="font-weight:800; font-size:11px; color:var(--brand-purple); display:flex; align-items:center; gap:4px;">
-                🧪 2. Demo Simulation Mode (Heavy Storm Test for Judges)
-              </div>
-              <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">
-                To test the system without waiting for an actual storm — this mode simulates a peak <b>65mm/hr Cloudburst Storm (40.3 cm Water Depth)</b> so you can evaluate:
-                <ul style="margin-left:12px; margin-top:2px; line-height:1.3;">
-                  <li>🚗 <b>Vehicle Hazard Warning:</b> Car engine limit (25cm) safety alert.</li>
-                  <li>🔀 <b>Safe Detour Routing:</b> Automatic bypass navigation around flooded roads.</li>
-                  <li>📢 <b>Emergency Alerts:</b> Multi-agency SMS dispatches to NDRF pumps & Traffic Police.</li>
-                </ul>
-              </div>
-            </div>
-          `;
-        }
+          </div>
+        `;
       }
 
-      // Update Modal Content based on active language
+      // Update Modal Content
       const modalBodyContent = document.getElementById('modalModeBodyContent');
       if (modalBodyContent) {
-        if (isHi) {
-          modalBodyContent.innerHTML = `
-            <div style="background:var(--panel-bg); border:1px solid var(--panel-border); border-left:4px solid var(--safe-green); border-radius:8px; padding:12px;">
-              <div style="font-weight:800; font-size:13px; color:var(--safe-green); display:flex; align-items:center; gap:6px;">
-                🟢 Mode 1: Live Real-Time Weather (Default)
-              </div>
-              <div style="font-size:11px; color:var(--text-sub); margin-top:6px; line-height:1.5;">
-                <b>Kaise kaam karta hai?</b> Yeh mode IMD Palam Radar station aur Open-Meteo Weather API se live 0-3 hour rainfall feed fetch karta hai.<br>
-                <b>Result during clear weather:</b> Jab Delhi mein dhoop/sookha hota hai, tab real-time rain <b>0.0 mm</b> aur street depth <b>0.0 cm (Bilkul Safe)</b> render hoti hai.
-              </div>
+        modalBodyContent.innerHTML = `
+          <div style="background:var(--panel-bg); border:1px solid var(--panel-border); border-left:4px solid var(--safe-green); border-radius:8px; padding:12px;">
+            <div style="font-weight:800; font-size:13px; color:var(--safe-green); display:flex; align-items:center; gap:6px;">
+              🟢 Mode 1: Live Real-Time Weather (Default)
             </div>
+            <div style="font-size:11px; color:var(--text-sub); margin-top:6px; line-height:1.5;">
+              <b>How it works:</b> Fetches live 0-3 hour rainfall feed from IMD Palam Radar station & Open-Meteo Weather API.<br>
+              <b>Result during clear weather:</b> Renders <b>0.0 mm rain</b> and <b>0.0 cm depth (Completely Safe)</b>.
+            </div>
+          </div>
 
-            <div style="background:var(--panel-bg); border:1px solid var(--panel-border); border-left:4px solid var(--brand-purple); border-radius:8px; padding:12px;">
-              <div style="font-weight:800; font-size:13px; color:var(--brand-purple); display:flex; align-items:center; gap:6px;">
-                🧪 Mode 2: Demo Simulation (Heavy Storm Testing)
-              </div>
-              <div style="font-size:11px; color:var(--text-sub); margin-top:6px; line-height:1.5;">
-                <b>Kyu banaya gaya hai?</b> SIH Judges aur Users ko bina monsoon storm ka wait kiye system ki saari advanced features test karwane ke liye.<br>
-                <b>Kya simulate hota hai?</b> Peak <b>65mm/hr Cloudburst Storm Event (48.5 dBZ Radar Reflectivity)</b> over Dwarka Mor Catchment, jisse:<br>
-                <ul style="margin-left:16px; margin-top:4px; line-height:1.4;">
-                  <li>🚨 Dwarka Mor Metro Crossing par <b>40.3 cm Water Inundation Warning</b> trigger hoti hai.</li>
-                  <li>🚗 Car engine intake hazard limit (25cm) exceed hone ka alert milta hai.</li>
-                  <li>🔀 Alternate detour route (Dabri Flyover) auto-calculate hota hai.</li>
-                  <li>📢 Automated Multi-Agency Dispatches (NDRF pumps, Traffic Police, DMRC SMS) active hote hain.</li>
-                </ul>
-              </div>
-            </div>
-          `;
-        } else {
-          modalBodyContent.innerHTML = `
-            <div style="background:var(--panel-bg); border:1px solid var(--panel-border); border-left:4px solid var(--safe-green); border-radius:8px; padding:12px;">
-              <div style="font-weight:800; font-size:13px; color:var(--safe-green); display:flex; align-items:center; gap:6px;">
-                🟢 Mode 1: Live Real-Time Weather (Default)
-              </div>
-              <div style="font-size:11px; color:var(--text-sub); margin-top:6px; line-height:1.5;">
-                <b>How it works:</b> Fetches live 0-3 hour rainfall feed from IMD Palam Radar station & Open-Meteo Weather API.<br>
-                <b>Result during clear weather:</b> When weather is clear in Delhi, real-time rain displays <b>0.0 mm</b> and street water depth shows <b>0.0 cm (Completely Safe)</b>.
-              </div>
-            </div>
-
-            <div style="background:var(--panel-bg); border:1px solid var(--panel-border); border-left:4px solid var(--brand-purple); border-radius:8px; padding:12px;">
-              <div style="font-weight:800; font-size:13px; color:var(--brand-purple); display:flex; align-items:center; gap:6px;">
-                🧪 Mode 2: Demo Simulation (Heavy Storm Testing)
-              </div>
-              <div style="font-size:11px; color:var(--text-sub); margin-top:6px; line-height:1.5;">
-                <b>Why it exists:</b> Allows SIH Judges and Users to test all advanced system features without waiting for an actual monsoon storm.<br>
-                <b>What is simulated?</b> A peak <b>65mm/hr Cloudburst Storm Event (48.5 dBZ Radar Reflectivity)</b> over Dwarka Mor Catchment, which triggers:<br>
-                <ul style="margin-left:16px; margin-top:4px; line-height:1.4;">
-                  <li>🚨 <b>40.3 cm Water Inundation Warning</b> at Dwarka Mor Metro Crossing.</li>
-                  <li>🚗 <b>Vehicle Hazard Warning:</b> Car engine intake limit (25cm) safety alert.</li>
-                  <li>🔀 <b>Safe Detour Routing:</b> Automatic bypass navigation around flooded roads via Dabri Flyover.</li>
-                  <li>📢 <b>Emergency Alerts:</b> Multi-agency SMS dispatches to NDRF pumps, Traffic Police & DMRC.</li>
-                </ul>
-              </div>
-            </div>
-          `;
-        }
+          <div style="background:var(--panel-bg); border:1px solid var(--panel-border); border-left:4px solid var(--brand-purple); border-radius:8px; padding:12px;">
+          </div>
+        `;
       }
     }
 
@@ -2872,8 +2962,6 @@
     window.updateLanguageUI = updateLanguageUI;
 
     function updateSimpleViewUI(depthCm, radarDbz, rain3hMm, leadMins) {
-      const isHi = (currentLanguage === 'hinglish');
-
       // 1. Hero Status Card & Depth Mapping
       const heroCard = document.getElementById('simpleHeroCard');
       const heroIcon = document.getElementById('heroStatusIcon');
@@ -2882,37 +2970,37 @@
       const heroTrend = document.getElementById('heroStatusTrend');
 
       let icon = '✅';
-      let title = isHi ? 'Bilkul Safe' : 'Completely Safe';
-      let sub = isHi ? `Paani Nahi Hai (${depthCm} cm)` : `No Water Accumulation (${depthCm} cm)`;
+      let title = 'Completely Safe';
+      let sub = `No Water Accumulation (${depthCm} cm)`;
       let bg = 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)';
       let border = '#10b981';
       let textColor = '#065f46';
 
       if (depthCm > 50.0) {
         icon = '🚨';
-        title = isHi ? 'Bahut Khatarnaak — Raasta Band!' : 'Extremely Dangerous — Road Closed!';
-        sub = isHi ? `Bahut Gehra Paani (${depthCm} cm) - High Risk` : `Deep Water Inundation (${depthCm} cm)`;
+        title = 'Extremely Dangerous — Road Closed!';
+        sub = `Deep Water Inundation (${depthCm} cm)`;
         bg = 'linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%)';
         border = '#991b1b';
         textColor = '#7f1d1d';
       } else if (depthCm > 30.0) {
         icon = '🔴';
-        title = isHi ? 'Kamar tak Paani — MAT JAAYEIN!' : 'Waist-Deep Water — DO NOT ENTER!';
-        sub = isHi ? `Kamar / Ghutno tak Paani (${depthCm} cm)` : `Waist/Knee Level Water (${depthCm} cm)`;
+        title = 'Waist-Deep Water — DO NOT ENTER!';
+        sub = `Waist/Knee Level Water (${depthCm} cm)`;
         bg = 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)';
         border = '#ef4444';
         textColor = '#991b1b';
       } else if (depthCm > 15.0) {
         icon = '🟠';
-        title = isHi ? 'Ghutno tak Paani — Do baar sochein' : 'Knee-Deep Water — Think Twice';
-        sub = isHi ? `Ghutno tak Paani (${depthCm} cm)` : `Knee-Level Water (${depthCm} cm)`;
+        title = 'Knee-Deep Water — Think Twice';
+        sub = `Knee-Level Water (${depthCm} cm)`;
         bg = 'linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%)';
         border = '#f97316';
         textColor = '#9a3412';
       } else if (depthCm > 5.0) {
         icon = '🟡';
-        title = isHi ? 'Halka Paani — Savdhani se jaayein' : 'Light Waterlogging — Proceed with Caution';
-        sub = isHi ? `Takhno tak Paani (${depthCm} cm)` : `Ankle-Level Water (${depthCm} cm)`;
+        title = 'Light Waterlogging — Proceed with Caution';
+        sub = `Ankle-Level Water (${depthCm} cm)`;
         bg = 'linear-gradient(135deg, #fef9c3 0%, #fef08a 100%)';
         border = '#eab308';
         textColor = '#854d0e';
@@ -2933,11 +3021,11 @@
       }
       if (heroTrend) {
         if (leadMins > 60) {
-          heroTrend.innerText = isHi ? '⏱️ Paani dheere dheere kam ho raha hai' : '⏱️ Water level receding gradually';
+          heroTrend.innerText = '⏱️ Water level receding gradually';
         } else if (leadMins > 0) {
-          heroTrend.innerText = isHi ? '⏱️ Agla 1 ghanta paani aur badhega' : '⏱️ Water level rising over next 1 hour';
+          heroTrend.innerText = '⏱️ Water level rising over next 1 hour';
         } else {
-          heroTrend.innerText = isHi ? '⏱️ Abhi ki stithi (Current Baseline)' : '⏱️ Current Baseline Status';
+          heroTrend.innerText = '⏱️ Current Baseline Status';
         }
       }
 
@@ -2954,19 +3042,17 @@
       }
       if (depthBadge) {
         let badgeLabel = `${depthCm} cm`;
-        if (depthCm > 60) badgeLabel += isHi ? ' (Kamar tak)' : ' (Waist Level)';
-        else if (depthCm > 25) badgeLabel += isHi ? ' (Ghutno tak)' : ' (Knee Level)';
-        else if (depthCm > 5) badgeLabel += isHi ? ' (Takhne tak)' : ' (Ankle Level)';
-        else badgeLabel += isHi ? ' (Bilkul Safe)' : ' (Safe)';
+        if (depthCm > 60) badgeLabel += ' (Waist Level)';
+        else if (depthCm > 25) badgeLabel += ' (Knee Level)';
+        else if (depthCm > 5) badgeLabel += ' (Ankle Level)';
+        else badgeLabel += ' (Safe)';
         depthBadge.innerText = badgeLabel;
       }
 
       if (carWarning) {
         if (depthCm >= 25.0) {
           carWarning.style.display = 'block';
-          carWarning.innerHTML = isHi 
-            ? `🚗 <b>Car Engine Hazard:</b> Paani ${depthCm}cm hai! Car engine/exhaust mein paani jane ka khatra hai (Engine Limit: 25cm).` 
-            : `🚗 <b>Car Engine Hazard:</b> Water depth is ${depthCm}cm! Exceeds car engine intake limit (25cm).`;
+          carWarning.innerHTML = `🚗 <b>Car Engine Hazard:</b> Water depth is ${depthCm}cm! Exceeds car engine intake limit (25cm).`;
         } else {
           carWarning.style.display = 'none';
         }
@@ -2978,44 +3064,38 @@
       const rainSub = document.getElementById('simpleRainSub');
 
       let rIcon = '🌦️';
-      let rLabel = isHi ? 'Halki Baarish' : 'Light Rain';
+      let rLabel = 'Light Rain';
 
       if (radarDbz >= 50.0) {
         rIcon = '🌊⛈️';
-        rLabel = isHi ? 'Bahut Tez / Toofani Baarish' : 'Torrential Downpour / Storm';
+        rLabel = 'Torrential Downpour / Storm';
       } else if (radarDbz >= 35.0) {
         rIcon = '⛈️';
-        rLabel = isHi ? 'Tez Baarish' : 'Heavy Rain';
+        rLabel = 'Heavy Rain';
       } else if (radarDbz >= 20.0) {
         rIcon = '🌧️';
-        rLabel = isHi ? 'Normal Baarish' : 'Moderate Rain';
+        rLabel = 'Moderate Rain';
       }
 
       if (rainIcon) rainIcon.innerText = rIcon;
       if (rainLabel) rainLabel.innerText = `${rLabel} (${radarDbz} dBZ)`;
-      if (rainSub) rainSub.innerText = isHi ? `Radar Intensity: ${radarDbz} dBZ | Total Expected: ${rain3hMm} mm` : `Radar Intensity: ${radarDbz} dBZ | Total Expected: ${rain3hMm} mm`;
+      if (rainSub) rainSub.innerText = `Radar Intensity: ${radarDbz} dBZ | Total Expected: ${rain3hMm} mm`;
 
       // 4. "What Should I Do?" Action Advice Card
       const actionCard = document.getElementById('cardActionAdvice');
       const actionText = document.getElementById('simpleActionText');
 
-      let actionMsg = isHi ? '✅ Ghar se abhi nikal sakte hain — koi khatra nahi.' : '✅ Safe to commute — no waterlogging threat.';
+      let actionMsg = '✅ Safe to commute — no waterlogging threat.';
       let actionBorder = '#10b981';
 
       if (depthCm > 30.0) {
-        actionMsg = isHi 
-          ? `🚫 Ghar par rukein! Agle 2 ghante Dwarka Mor metro crossing avoid karein. Paani ghutno se upar (${depthCm}cm) hai.` 
-          : `🚫 Stay indoors! Avoid Dwarka Mor metro crossing for next 2 hours. Water depth is knee-high (${depthCm}cm).`;
+        actionMsg = `🚫 Stay indoors! Avoid low-lying flooded junctions in Delhi NCR for next 2 hours. Water depth is knee-high (${depthCm}cm).`;
         actionBorder = '#ef4444';
       } else if (depthCm > 15.0) {
-        actionMsg = isHi 
-          ? `⚠️ Zaroori ho tabhi nikalein! Najafgarh Road avoid karein aur alternate safe detour route use karein.` 
-          : `⚠️ Travel only if necessary! Avoid Najafgarh Road and use the alternate safe detour route.`;
+        actionMsg = `⚠️ Travel only if necessary! Avoid Najafgarh Road and use the alternate safe detour route.`;
         actionBorder = '#f97316';
       } else if (depthCm > 5.0) {
-        actionMsg = isHi 
-          ? `🟡 Halka paani hai. Dheere gaadi chalayein aur potholes se bachein.` 
-          : `🟡 Minor water accumulation. Drive cautiously and watch for road depressions.`;
+        actionMsg = `🟡 Minor water accumulation. Drive cautiously and watch for road depressions.`;
         actionBorder = '#eab308';
       }
 
@@ -3197,7 +3277,7 @@
           console.log("Using local calculation fallback:", err);
           // Fallback calculation if backend is unreachable
           let depth = 0.0, dbz = 0.0, rainMm = 0.0, runoffMm = 0.0;
-          let alertMsg = "🟢 LIVE WEATHER: Dwarka Mor streets are completely clear (0.0 cm depth). No active flood threat.";
+          let alertMsg = "🟢 LIVE WEATHER: Delhi NCR streets are completely clear (0.0 cm depth). No active flood threat.";
           
           if (currentDataMode === 'simulated') {
             let mult = leadMins <= 0 ? 0.2 : (leadMins <= 15 ? 0.5 : (leadMins <= 30 ? 0.8 : (leadMins <= 60 ? 1.0 : (leadMins <= 120 ? 0.65 : 0.3))));
@@ -3205,7 +3285,7 @@
             dbz = Math.round(48.5 * mult * 10) / 10;
             rainMm = Math.round(65.0 * mult * 10) / 10;
             runoffMm = Math.round(59.8 * mult * 10) / 10;
-            alertMsg = `⚠️ FLOOD ALERT: Heavy rain simulation predicted depth ${depth} cm at Dwarka Mor.`;
+            alertMsg = `⚠️ FLOOD ALERT: Heavy rain simulation predicted depth ${depth} cm across Delhi NCR low-lying hotspots.`;
           }
           
           document.getElementById('valDepth').innerText = `${depth} cm`;
@@ -3464,7 +3544,7 @@
         <!-- Explanation Info Box for Users & Judges -->
         <div style="background:var(--card-bg); border:1px solid var(--card-border); border-left:4px solid var(--brand-blue); padding:10px 12px; border-radius:8px; font-size:11px; color:var(--text-sub); line-height:1.5;">
           💡 <b>What is this section? (SIH Problem Statement Requirement)</b><br>
-          Jab AI model kisi street (tulna mein Dwarka Mor) par flood predict karta hai, toh yeh system automatically <b>Delhi Traffic Police</b>, <b>NDRF Disaster Response</b>, aur <b>DMRC Metro</b> ko instant SMS/API alerts bejta hai taaki sadak pehle hi block ho sake aur public safe rahe.
+          When the AI model predicts street-level flooding across Delhi low-lying hotspots, this system automatically sends instant SMS/API warnings to the <b>Delhi Traffic Police</b>, <b>NDRF Disaster Response</b>, and <b>DMRC Metro</b> to proactively block inundated roads and safeguard commuters.
         </div>
 
         <!-- View Selector Tabs -->
@@ -3481,7 +3561,7 @@
         <div id="modalAlertBanner" style="display:flex; justify-content:space-between; align-items:center; background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.3); padding:12px; border-radius:8px;">
           <div>
             <div id="modalAlertTitle" style="font-size:13px; font-weight:800; color:var(--severe-red);">🚨 CRITICAL FLOOD EMERGENCY ALERT</div>
-            <div id="modalAlertSub" style="font-size:11px; color:var(--text-sub); margin-top:2px;">Location: Dwarka Mor Metro Crossing</div>
+            <div id="modalAlertSub" style="font-size:11px; color:var(--text-sub); margin-top:2px;">Location: Delhi Low-Lying Hotspots (Dwarka Mor / Kakrola Junction)</div>
           </div>
           <span style="background:#dc2626; color:white; font-size:10px; font-weight:800; padding:5px 10px; border-radius:20px; letter-spacing:0.5px;">3 AGENCIES AUTO-NOTIFIED</span>
         </div>
@@ -3558,8 +3638,10 @@
             <span style="font-weight:700; font-size:11px; color:var(--text-title);">📄 Live REST API Payload (`POST /api/v1/alert-broadcast`):</span>
             <button onclick="copyAlertJson()" style="font-size:10px; padding:4px 10px; background:var(--brand-blue); color:white; border:none; border-radius:4px; cursor:pointer; font-weight:700;">📋 Copy API JSON</button>
           </div>
-          <pre class="json-code-box" id="jsonPayloadDisplay">Loading payload...</pre>
         </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Detailed System Mode Info Modal (Live Weather vs Demo Simulation) -->
   <div class="modal-overlay" id="modeInfoModal" onclick="if(event.target===this) closeModeInfoModal()">
@@ -3582,14 +3664,25 @@
         <!-- Mode Comparison Grid -->
         <div id="modalModeBodyContent" style="display:flex; flex-direction:column; gap:10px;">
           
+          <!-- SIH Architecture Strategy Card for Judges -->
+          <div style="background:var(--card-bg); border:1px solid var(--brand-blue); border-left:4px solid var(--brand-blue); border-radius:8px; padding:12px;">
+            <div style="font-weight:800; font-size:12px; color:var(--brand-blue); display:flex; align-items:center; gap:6px;">
+              🏆 SIH 2026 Strategy: Delhi NCR Scope vs High-Precision Pilot Catchment
+            </div>
+            <div style="font-size:11px; color:var(--text-sub); margin-top:6px; line-height:1.5;">
+              <b>1. City-Wide Scale (Delhi NCR):</b> Real-time 0–3h nowcasting & OSRM flood-aware navigation active across <b>all regions of Delhi NCR</b> (Central, South, North, East, West Delhi).<br>
+              <b>2. Micro-Precision Pilot (Dwarka Mor & Najafgarh Basin):</b> Used as the ground-truth verified 1D-2D SWMM Hydrodynamic Pilot Catchment (PWD Hotspot #147) following official MoES / NCMRWF iFLOWS architecture.
+            </div>
+          </div>
+
           <!-- Mode 1 Card -->
           <div style="background:var(--panel-bg); border:1px solid var(--panel-border); border-left:4px solid var(--safe-green); border-radius:8px; padding:12px;">
             <div style="font-weight:800; font-size:13px; color:var(--safe-green); display:flex; align-items:center; gap:6px;">
               🟢 Mode 1: Live Real-Time Weather (Default)
             </div>
             <div style="font-size:11px; color:var(--text-sub); margin-top:6px; line-height:1.5;">
-              <b>Kaise kaam karta hai?</b> Yeh mode IMD Palam Radar station aur Open-Meteo Weather API se live 0-3 hour rainfall feed fetch karta hai.<br>
-              <b>Result during clear weather:</b> Jab Delhi mein dhoop/sookha hota hai, tab real-time rain <b>0.0 mm</b> aur street depth <b>0.0 cm (Bilkul Safe)</b> render hoti hai.
+              <b>How does it work?</b> This mode fetches live 0-3 hour precipitation feeds from IMD Palam Radar station and Open-Meteo Weather API.<br>
+              <b>Result during clear weather:</b> When Delhi experiences clear weather, real-time rain is <b>0.0 mm</b> and street depth is <b>0.0 cm (Completely Safe)</b>.
             </div>
           </div>
 
@@ -3599,53 +3692,37 @@
               🧪 Mode 2: Demo Simulation (Heavy Storm Testing)
             </div>
             <div style="font-size:11px; color:var(--text-sub); margin-top:6px; line-height:1.5;">
-              <b>Kyu banaya gaya hai?</b> SIH Judges aur Users ko bina monsoon storm ka wait kiye system ki saari advanced features test karwane ke liye.<br>
-              <b>Kya simulate hota hai?</b> Peak <b>65mm/hr Cloudburst Storm Event (48.5 dBZ Radar Reflectivity)</b> over Dwarka Mor Catchment, jisse:<br>
+              <b>Why was this created?</b> Enables evaluators, judges, and citizens to test all advanced system features without waiting for an active monsoon storm.<br>
+              <b>What is simulated?</b> A peak <b>65mm/hr Cloudburst Storm Event (48.5 dBZ Radar Reflectivity)</b> over Delhi NCR Catchment & low-lying hotspots, resulting in:<br>
               <ul style="margin-left:16px; margin-top:4px; line-height:1.4;">
-                <li>🚨 Dwarka Mor Metro Crossing par <b>40.3 cm Water Inundation Warning</b> trigger hoti hai.</li>
-                <li>🚗 Car engine intake hazard limit (25cm) exceed hone ka alert milta hai.</li>
-                <li>🔀 Alternate detour route (Dabri Flyover) auto-calculate hota hai.</li>
-                <li>📢 Automated Multi-Agency Dispatches (NDRF pumps, Traffic Police, DMRC SMS) active hote hain.</li>
+                <li>🚨 <b>40.3 cm Water Inundation Warning</b> triggered at low-lying flood hotspots in Delhi.</li>
+                <li>🚗 Car engine intake hazard limit (25cm) exceed alert issued.</li>
+                <li>🔀 Alternate detour route (Dabri Flyover) automatically calculated.</li>
+                <li>📢 Automated Multi-Agency Dispatches (NDRF pumps, Traffic Police, DMRC SMS) activated.</li>
               </ul>
             </div>
           </div>
 
         </div>
-
       </div>
     </div>
   </div>
 
-  <!-- 🤖 FLOOD AI ASSISTANT CHATBOT WIDGET -->
-  <button class="chatbot-fab" id="chatbotFab" onclick="toggleChatbot()" title="Click to open Flood AI Assistant Chatbot">
-    <div class="chatbot-fab-pulse"></div>
-    <span>🤖 Flood AI Assistant</span>
-  </button>
+
 
   <div class="chatbot-window" id="chatbotWindow">
     <div class="chat-header">
-      <div>
-        <div class="chat-header-title">🤖 Flood AI Assistant</div>
-        <div class="chat-header-sub">SIH 2026 Instant Help & Q&A</div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <img src="logo.jpeg" alt="HydroCore AI Logo" onerror="this.onerror=null; this.src='/logo.jpeg';" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1.5px solid rgba(255,255,255,0.8); box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+        <div>
+          <div class="chat-header-title">HydroCore AI Assistant</div>
+          <div class="chat-header-sub">Hydrodynamic Graph Solver & Flood Q&A</div>
+        </div>
       </div>
       <button class="chat-close-btn" onclick="toggleChatbot()">✕</button>
     </div>
 
-    <!-- Quick Preset Chips -->
-    <div class="chat-chips-container">
-      <button class="chat-chip" onclick="sendChatMsg('What does this website do?')">🌊 What it does</button>
-      <button class="chat-chip" onclick="sendChatMsg('How to use this website?')">🧭 How to use</button>
-      <button class="chat-chip" onclick="sendChatMsg('What is the basis of results and accuracy?')">📊 Accuracy & Basis</button>
-      <button class="chat-chip" onclick="sendChatMsg('Is my car safe to drive?')">🚗 Vehicle Safety</button>
-      <button class="chat-chip" onclick="sendChatMsg('Tell me about Emergency Dispatches')">📢 Emergency Alerts</button>
-      <button class="chat-chip" onclick="sendChatMsg('Explain Live vs Demo Mode')">🧪 System Modes</button>
-    </div>
-
-    <div class="chat-body" id="chatBody">
-      <div class="chat-msg bot">
-        👋 Hi! I am the <b>Flood AI Assistant</b>.<br>How can I help you today? Select a quick question above or type your query below!
-      </div>
-    </div>
+    <div class="chat-body" id="chatBody"></div>
 
     <div class="chat-footer">
       <input type="text" id="chatInput" class="chat-input" placeholder="Ask a question (e.g. How does it work?)..." onkeydown="if(event.key==='Enter') sendChatMsg()">
@@ -3677,19 +3754,52 @@
       if (modal) modal.classList.remove('active');
     };
 
-    // 🤖 FLOOD AI ASSISTANT CHATBOT LOGIC (Explicitly attached to window object)
-    window.toggleChatbot = function() {
-      console.log('toggleChatbot triggered!');
-      const win = document.getElementById('chatbotWindow');
-      if (win) {
-        win.classList.toggle('active');
-        if (win.classList.contains('active')) {
-          const input = document.getElementById('chatInput');
-          if (input) input.focus();
-        }
-      } else {
-        console.error('chatbotWindow element not found!');
-      }
+    // 🤖 FLOOD AI ASSISTANT CHATBOT LOGIC
+    let isWelcomeRendered = false;
+
+    window.renderChatbotWelcome = function(force = false) {
+      const body = document.getElementById('chatBody');
+      if (!body) return;
+      if (isWelcomeRendered && !force && body.children.length > 0) return;
+      isWelcomeRendered = true;
+
+      body.innerHTML = `
+        <div class="chat-banner-gif chat-msg-animated" style="animation-delay: 0.10s; width: 100%; text-align: center; margin-bottom: 6px;">
+          <img src="/gif.gif" alt="HydroCore AI Flood Simulation" onerror="this.onerror=null; this.src='gif.gif';" style="width: 100%; max-height: 140px; object-fit: cover; border-radius: 12px; border: 1.5px solid var(--card-border); box-shadow: 0 4px 12px rgba(0,0,0,0.06); display: block;">
+        </div>
+
+        <div class="chat-options-stack">
+          <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.22s;" onclick="sendChatMsg('What does this website do?')">
+            <div class="chat-option-title"><span>🌊 What does this website do?</span> <span class="chat-option-arrow">➔</span></div>
+            <div class="chat-option-sub">0–3h real-time street flood depth nowcasts & hydraulic navigation across Delhi.</div>
+          </div>
+
+          <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.34s;" onclick="sendChatMsg('How to use this website?')">
+            <div class="chat-option-title"><span>🧭 How to use this system?</span> <span class="chat-option-arrow">➔</span></div>
+            <div class="chat-option-sub">Guide to search routes, set vehicle intake limits & view emergency alerts.</div>
+          </div>
+
+          <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.46s;" onclick="sendChatMsg('What is the basis of results and accuracy?')">
+            <div class="chat-option-title"><span>📊 Prediction Accuracy & Data Basis</span> <span class="chat-option-arrow">➔</span></div>
+            <div class="chat-option-sub">Powered by IMD Doppler Radar, 30m DEM Elevation Grid & 1D-2D SWMM Solver.</div>
+          </div>
+
+          <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.58s;" onclick="sendChatMsg('Is my car safe to drive?')">
+            <div class="chat-option-title"><span>🚗 Vehicle Water Depth Limits</span> <span class="chat-option-arrow">➔</span></div>
+            <div class="chat-option-sub">Engine intake safety limits: Cars (25cm), Bikes (15cm), Ambulances (45cm) & Detours.</div>
+          </div>
+
+          <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.70s;" onclick="sendChatMsg('Tell me about Emergency Dispatches')">
+            <div class="chat-option-title"><span>📢 Multi-Agency Emergency Alerts</span> <span class="chat-option-arrow">➔</span></div>
+            <div class="chat-option-sub">Automated warning dispatches for Delhi Police, NDRF Pumps & DMRC Metro.</div>
+          </div>
+
+          <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.82s;" onclick="sendChatMsg('Explain Live vs Demo Mode')">
+            <div class="chat-option-title"><span>🧪 Live Weather vs Demo Simulation</span> <span class="chat-option-arrow">➔</span></div>
+            <div class="chat-option-sub">Real-time clear weather monitoring vs peak 65mm storm cloudburst testing.</div>
+          </div>
+        </div>
+      `;
     };
 
     window.sendChatMsg = function(customText = null) {
@@ -3701,91 +3811,82 @@
 
       const body = document.getElementById('chatBody');
 
-      // User Message
+      // User Message (Animated)
       const userDiv = document.createElement('div');
-      userDiv.className = 'chat-msg user';
+      userDiv.className = 'chat-msg user chat-msg-animated';
       userDiv.innerText = text;
       body.appendChild(userDiv);
+      body.scrollTo({ top: body.scrollHeight, behavior: 'smooth' });
 
-      body.scrollTop = body.scrollHeight;
+      // Show Typing Indicator
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'chat-typing-indicator chat-msg-animated';
+      typingDiv.id = 'chatTypingIndicator';
+      typingDiv.innerHTML = `
+        <span style="font-weight:700;">⚡ HydroCore AI is analyzing</span>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      `;
+      body.appendChild(typingDiv);
+      body.scrollTo({ top: body.scrollHeight, behavior: 'smooth' });
 
-      // Generate Bot Response
+      // Generate Bot Response with Smooth Entrance Animation
       setTimeout(() => {
-        const botDiv = document.createElement('div');
-        botDiv.className = 'chat-msg bot';
+        const indicator = document.getElementById('chatTypingIndicator');
+        if (indicator) indicator.remove();
 
-        const isHi = (currentLanguage === 'hinglish');
-        const reply = getChatbotResponse(text, isHi);
+        const botDiv = document.createElement('div');
+        botDiv.className = 'chat-msg bot chat-msg-animated';
+
+        const reply = getChatbotResponse(text);
 
         botDiv.innerHTML = reply;
         body.appendChild(botDiv);
-        body.scrollTop = body.scrollHeight;
-      }, 300);
-    }
+        body.scrollTo({ top: body.scrollHeight, behavior: 'smooth' });
+      }, 550);
+    };
 
-    function getChatbotResponse(q, isHi) {
+    function getChatbotResponse(q) {
       const query = q.toLowerCase();
 
       // 1. What does this website do?
       if (query.includes('do') || query.includes('kya') || query.includes('purpose') || query.includes('about') || query.includes('website')) {
-        if (isHi) {
-          return `<b>🌊 Yeh website kya karti hai?</b><br>Yeh <b>Urban Flood Nowcasting System (Dwarka Mor, Delhi)</b> hai. Yeh IMD Doppler Radar aur Hydrodynamic Graph Models ke through 0-3 hour pehle street-level flood depth predict karta hai aur commuters ko safe detour routes batata hai.<br><button class="chat-action-btn" onclick="toggleChatbot(); showDetourOnMobile();">🚗 Try Safe Route Finder</button>`;
-        } else {
-          return `<b>🌊 What does this website do?</b><br>This is the <b>Urban Flood Nowcasting System</b> for Dwarka Mor, Delhi (MoES / NCMRWF / SIH 2026). It predicts 0–3 hour street-level water inundation depths using Doppler Radar & SWMM Hydrodynamic graph solvers, providing real-time flood-safe navigation.<br><button class="chat-action-btn" onclick="toggleChatbot(); showDetourOnMobile();">🚗 Try Safe Route Finder</button>`;
-        }
+        return `<b>🌊 What does this website do?</b><br>This is the <b>Urban Flood Nowcasting System</b> for all of Delhi NCR (MoES / NCMRWF / SIH 2026). It predicts 0–3 hour street-level water inundation depths using Doppler Radar & SWMM Hydrodynamic graph solvers, providing real-time flood-safe navigation.<br><button class="chat-action-btn" onclick="toggleChatbot(); showDetourOnMobile();">🚗 Try Safe Route Finder</button>`;
       }
 
       // 2. How to use it?
       if (query.includes('use') || query.includes('kaise') || query.includes('route') || query.includes('navigate') || query.includes('find') || query.includes('how')) {
-        if (isHi) {
-          return `<b>🧭 Website kaise use karein?</b><br>1. Top bar par current water depth (jaise 40.3cm) check karein.<br>2. <b>Safe Route Finder</b> mein start & destination daalein.<br>3. Vehicle type (Car, Bike, Rickshaw) choose karein.<br>4. <b>Find Flood-Safe Route</b> click karein taaki flooded roads se safe bypass detour mil sake!`;
-        } else {
-          return `<b>🧭 How to use this website?</b><br>1. Check the top alert bar for live water inundation depth.<br>2. Enter your starting point & destination in the <b>Safe Route Finder</b>.<br>3. Select your vehicle type (Car, Bike, Rickshaw).<br>4. Click <b>Find Flood-Safe Route</b> to generate a real-time safe detour route!`;
-        }
+        return `<b>🧭 How to use this website?</b><br>1. Check the top alert bar for live water inundation depth.<br>2. Enter your starting point & destination in the <b>Safe Route Finder</b>.<br>3. Select your vehicle type (Car, Bike, Rickshaw).<br>4. Click <b>Find Flood-Safe Route</b> to generate a real-time safe detour route!`;
       }
 
       // 3. Basis of results & accuracy
       if (query.includes('basis') || query.includes('result') || query.includes('accuracy') || query.includes('chance') || query.includes('data') || query.includes('radar') || query.includes('model')) {
-        if (isHi) {
-          return `<b>📊 Results kis basis pe milte hain & Accuracy:</b><br>System 4 layers par kaam karta hai:<br>1. 📡 <b>IMD Palam Doppler Weather Radar</b> (dBZ intensity)<br>2. 🌧️ <b>Open-Meteo 0-3h Rain Forecast</b><br>3. 🏔️ <b>Open-DEM 30m Terrain Elevation Grid</b><br>4. 🌊 <b>1D-2D SWMM Drainage Graph Network</b><br><br><b>Accuracy & Confidence:</b> ~88%-92% accurate prediction, validated against ground-truth road depression logs (vashu.csv).`;
-        } else {
-          return `<b>📊 Prediction Basis & Accuracy:</b><br>Calculations are powered by 4 coupled layers:<br>1. 📡 <b>IMD Palam Doppler Radar</b> (dBZ reflectivity)<br>2. 🌧️ <b>Open-Meteo 0–3h Precipitation API</b><br>3. 🏔️ <b>Open-DEM 30m Elevation Grid</b><br>4. 🌊 <b>SWMM 1D-2D Directed Graph Solver</b><br><br><b>Accuracy & Model Confidence:</b> ~88%–92% model confidence, verified against ground-truth road depression logs (vashu.csv).`;
-        }
+        return `<b>📊 Prediction Basis & Accuracy:</b><br>Calculations are powered by 4 coupled layers:<br>1. 📡 <b>IMD Palam Doppler Radar</b> (dBZ reflectivity)<br>2. 🌧️ <b>Open-Meteo 0–3h Precipitation API</b><br>3. 🏔️ <b>Open-DEM 30m Elevation Grid</b><br>4. 🌊 <b>SWMM 1D-2D Directed Graph Solver</b><br><br><b>Accuracy & Model Confidence:</b> ~88%–92% model confidence, verified against ground-truth road depression logs (vashu.csv).`;
       }
 
       // 4. Vehicle safety / Car hazard
       if (query.includes('car') || query.includes('vehicle') || query.includes('bike') || query.includes('engine') || query.includes('safe')) {
-        if (isHi) {
-          return `<b>🚗 Vehicle Safety Limits:</b><br>Car engine intake limit <b>25.0 cm</b> hoti hai. Agar paani 25cm se gehra hai (jaise 40.3cm), toh gaadi band hone ka heavy risk hota hai. Route Finder car select hone par automatically safe flyover detour calculate karta hai.`;
-        } else {
-          return `<b>🚗 Vehicle Safety Limits:</b><br>Car engine intake limit is <b>25.0 cm</b>. If water depth exceeds 25cm (e.g. 40.3cm at Dwarka Mor), driving carries a high risk of engine hydrostatic lock. The Route Finder automatically routes cars via Dabri Flyover!`;
-        }
+        return `<b>🚗 Vehicle Safety Limits:</b><br>Car engine intake limit is <b>25.0 cm</b>. If water depth exceeds 25cm (e.g. 40.3cm during peak storm events), driving carries a high risk of engine hydrostatic lock. The Route Finder automatically routes cars via safe flyovers!`;
       }
 
       // 5. Emergency & Multi-Agency Alerts
       if (query.includes('alert') || query.includes('ndrf') || query.includes('police') || query.includes('dmrc') || query.includes('emergency') || query.includes('help')) {
-        if (isHi) {
-          return `<b>📢 Multi-Agency Emergency Dispatches:</b><br>Jab flood depth >30cm hoti hai, system automatically SMS & API dispatches bhejta hai:<br>1. 🚓 <b>Delhi Traffic Police:</b> Road closure & Dabri diversion<br>2. 🦺 <b>NDRF:</b> Dewatering pumps at Kakrola<br>3. 🚇 <b>DMRC Metro:</b> Passenger Gate 1 guidance<br><br>Emergency rescue ke liye <b>112</b> call karein.`;
-        } else {
-          return `<b>📢 Multi-Agency Emergency Dispatches:</b><br>When flood depth >30cm, automated API/SMS dispatches trigger for:<br>1. 🚓 <b>Delhi Traffic Police:</b> Road closure & Dabri diversion<br>2. 🦺 <b>NDRF:</b> Mobilize dewatering pumps at Kakrola<br>3. 🚇 <b>DMRC Metro:</b> Passenger Gate 1 guidance<br><br>Call <b>112</b> for emergency rescue!`;
-        }
+        return `<b>📢 Multi-Agency Emergency Dispatches:</b><br>When flood depth >30cm, automated API/SMS dispatches trigger for:<br>1. 🚓 <b>Delhi Traffic Police:</b> Road closure & Dabri diversion<br>2. 🦺 <b>NDRF:</b> Mobilize dewatering pumps at Kakrola<br>3. 🚇 <b>DMRC Metro:</b> Passenger Gate 1 guidance<br><br>Call <b>112</b> for emergency rescue!`;
       }
 
       // 6. Live vs Demo Mode
       if (query.includes('mode') || query.includes('demo') || query.includes('simulat') || query.includes('live')) {
-        if (isHi) {
-          return `<b>🧪 System Modes Explained:</b><br><b>🟢 Live Mode:</b> Real-time weather reads (0.0 cm during clear weather).<br><b>🧪 Demo Mode:</b> Simulates 65mm Cloudburst (40.3 cm depth) so SIH judges and users can test alerts & routing features anytime!`;
-        } else {
-          return `<b>🧪 System Modes Explained:</b><br><b>🟢 Live Mode:</b> Real-time weather data (0.0 cm during dry weather).<br><b>🧪 Demo Mode:</b> Simulates peak 65mm Cloudburst (40.3 cm depth) so judges & users can evaluate routing & alert features anytime!`;
-        }
+        return `<b>🧪 System Modes Explained:</b><br><b>🟢 Live Mode:</b> Real-time weather data (0.0 cm during dry weather).<br><b>🧪 Demo Mode:</b> Simulates peak 65mm Cloudburst (40.3 cm depth) so judges & users can evaluate routing & alert features anytime!`;
+      }
+
+      // 7. Area Coverage / Delhi vs Dwarka
+      if (query.includes('dwarka') || query.includes('area') || query.includes('location') || query.includes('delhi') || query.includes('cover') || query.includes('where')) {
+        return `<b>🗺️ All-Delhi Area Coverage:</b><br>This system covers <b>all areas of Delhi NCR</b> (Central Delhi, South Delhi, North Delhi, West Delhi, East Delhi, Dwarka, Rohini, Connaught Place, AIIMS, IGIA Airport, etc.). You can search flood-safe routes between ANY two locations across Delhi NCR!`;
       }
 
       // Fallback response
-      if (isHi) {
-        return `🤖 Main Flood AI Assistant hu. Aap mujhse pooch sakte hain:<br>• Website kya karti hai?<br>• Safe route kaise nikalein?<br>• Result kis basis pe milte hain?<br>• Car ke liye paani kitna safe hai?`;
-      } else {
-        return `🤖 I am the Flood AI Assistant! Ask me anything about:<br>• What this website does<br>• How to calculate safe routes<br>• Prediction accuracy & data sources<br>• Vehicle safety limits`;
-      }
+      return `⚡ I am <b>HydroCore AI</b>! Ask me anything about:<br>• What this website does<br>• How to calculate flood-safe routes across Delhi<br>• Prediction accuracy & hydraulic data sources<br>• Vehicle water depth limits`;
     }
   </script>
 </body>
