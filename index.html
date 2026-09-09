@@ -1203,6 +1203,9 @@
       <button class="theme-toggle-btn" id="dataModeBtn" onclick="toggleDataMode()" style="border-color: var(--brand-blue); background: var(--card-bg);" title="Click to toggle between Real-time Live Weather & SIH Demo Simulation Mode">
         <span id="dataModeIcon">🟢</span> <span id="dataModeText">Mode: Live Weather</span>
       </button>
+      <button class="theme-toggle-btn" onclick="openModeInfoModal()" style="border-color: var(--brand-purple); background: var(--card-bg); color: var(--brand-purple); font-weight:800;" title="Click to understand Live Weather vs Demo Simulation modes">
+        ❓ Mode Guide
+      </button>
       <!-- Light / Dark Mode Toggle Button (Sun / Moon) -->
       <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">
         <span id="themeIcon">☀️</span> <span id="themeText">Light</span>
@@ -1230,6 +1233,47 @@
         <button class="view-mode-btn" id="btnViewTechnical" onclick="switchViewMode('technical')">
           📊 Technical View (SIH/Experts)
         </button>
+      </div>
+
+      <!-- ================================================================= -->
+      <!-- 🧪 SYSTEM MODE EXPLAINER CARD (Live Weather vs SIH Demo Simulation) -->
+      <div class="card" id="cardModeExplainer" style="margin-bottom:10px; border-left:4px solid var(--brand-purple); background:var(--card-bg);">
+        <div class="card-head" style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:800; color:var(--text-title); margin:0;">
+            💡 System Mode Guide: Live Weather vs Demo Simulation
+          </h2>
+          <button onclick="openModeInfoModal()" style="font-size:9px; font-weight:800; background:var(--brand-purple); color:white; border:none; padding:2px 6px; border-radius:4px; cursor:pointer;">❓ Details</button>
+        </div>
+        <div style="font-size:11px; color:var(--text-sub); line-height:1.5; margin-top:8px; display:flex; flex-direction:column; gap:6px;">
+          
+          <div style="background:var(--panel-bg); padding:6px 8px; border-radius:6px; border:1px solid var(--panel-border);">
+            <div style="font-weight:800; font-size:11px; color:var(--safe-green); display:flex; align-items:center; gap:4px;">
+              🟢 1. Live Weather Mode (Real-Time IMD & Open-Meteo)
+            </div>
+            <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">
+              Jab Delhi mein baarish nahi ho rahi hoti, tab real-time radar data <b>0.0 mm rain</b> aur streets par <b>0.0 cm depth (Safe)</b> show karta hai.
+            </div>
+          </div>
+
+          <div style="background:var(--panel-bg); padding:6px 8px; border-radius:6px; border:1px solid var(--panel-border);">
+            <div style="font-weight:800; font-size:11px; color:var(--brand-purple); display:flex; align-items:center; gap:4px;">
+              🧪 2. Demo Simulation Mode (Heavy Storm Test for Judges)
+            </div>
+            <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">
+              Bina baarish ka wait kiye system test karne ke liye — yeh mode peak <b>65mm Cloudburst (40.3 cm Water Depth)</b> simulate karta hai taaki aap test kar sakein:
+              <ul style="margin-left:12px; margin-top:2px; line-height:1.3;">
+                <li>🚗 <b>Vehicle Hazard Warning:</b> Car engine limit (25cm) alert.</li>
+                <li>🔀 <b>Safe Detour Routing:</b> Flooded roads se bypass route calculation.</li>
+                <li>📢 <b>Emergency Alerts:</b> NDRF pumps & Traffic Police dispatches.</li>
+              </ul>
+            </div>
+          </div>
+
+          <button onclick="toggleDataMode()" style="background:linear-gradient(135deg, var(--brand-purple), var(--brand-blue)); color:white; border:none; padding:7px 10px; border-radius:6px; font-weight:800; font-size:11px; cursor:pointer; width:100%; text-align:center; box-shadow:0 2px 6px rgba(124, 58, 237, 0.3);">
+            🔄 Switch Mode Now (<span id="explainerCurrentMode">Current: Live Weather</span>)
+          </button>
+
+        </div>
       </div>
 
       <!-- ================================================================= -->
@@ -2847,18 +2891,41 @@
       updateDataModeBtnUI();
       const sliderVal = parseInt(document.getElementById('timeSlider')?.value || 60);
       fetchNowcastData(sliderVal);
+
+      if (currentDataMode === 'simulated') {
+        showMobileToast("🧪 Switched to Heavy Storm Demo Simulation (65mm Rain / 40.3cm Depth for Testing)", "info");
+      } else {
+        showMobileToast("🟢 Switched to Real-Time Live Weather Mode (IMD Palam & Open-Meteo Data)", "info");
+      }
     }
 
     function updateDataModeBtnUI() {
       const btnIcon = document.getElementById('dataModeIcon');
       const btnText = document.getElementById('dataModeText');
+      const explainerMode = document.getElementById('explainerCurrentMode');
+      const modalModeText = document.getElementById('modalCurrentModeText');
+
       if (currentDataMode === 'live') {
         if (btnIcon) btnIcon.innerText = '🟢';
         if (btnText) btnText.innerText = 'Mode: Live Weather';
+        if (explainerMode) explainerMode.innerText = 'Current: Live Weather (0.0 cm)';
+        if (modalModeText) modalModeText.innerText = '🟢 Active Mode: Real-Time Live Weather';
       } else {
         if (btnIcon) btnIcon.innerText = '🧪';
         if (btnText) btnText.innerText = 'Mode: Demo Simulation';
+        if (explainerMode) explainerMode.innerText = 'Current: Heavy Storm Simulation (40.3 cm)';
+        if (modalModeText) modalModeText.innerText = '🧪 Active Mode: Heavy Storm Demo Simulation';
       }
+    }
+
+    function openModeInfoModal() {
+      const modal = document.getElementById('modeInfoModal');
+      if (modal) modal.classList.add('active');
+    }
+
+    function closeModeInfoModal() {
+      const modal = document.getElementById('modeInfoModal');
+      if (modal) modal.classList.remove('active');
     }
 
     // Initial Setup & Responsive Leaflet Resizing
@@ -3106,9 +3173,58 @@
           <pre class="json-code-box" id="jsonPayloadDisplay">Loading payload...</pre>
         </div>
 
+  <!-- Detailed System Mode Info Modal (Live Weather vs Demo Simulation) -->
+  <div class="modal-overlay" id="modeInfoModal" onclick="if(event.target===this) closeModeInfoModal()">
+    <div class="modal-card">
+      <div class="modal-header" style="background:linear-gradient(135deg, var(--brand-purple), var(--brand-blue)); color:white;">
+        <div>
+          <h3 style="margin:0; font-size:15px;">💡 System Mode Guide: Live Weather vs Demo Simulation</h3>
+          <div style="font-size:11px; opacity:0.9; margin-top:2px;">Explanation for SIH Evaluators, Judges & Citizens</div>
+        </div>
+        <button class="modal-close-btn" onclick="closeModeInfoModal()">✕</button>
       </div>
-    </div>
-  </div>
+      <div class="modal-body" style="gap:12px;">
+        
+        <!-- Currently Active Mode Status Banner -->
+        <div style="background:var(--card-bg); border:1px solid var(--card-border); padding:10px 14px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:12px; font-weight:800; color:var(--text-title);" id="modalCurrentModeText">🟢 Active Mode: Real-Time Live Weather</span>
+          <button onclick="toggleDataMode(); updateDataModeBtnUI();" style="padding:6px 12px; font-size:11px; font-weight:800; background:linear-gradient(135deg, var(--brand-purple), var(--brand-blue)); color:white; border:none; border-radius:6px; cursor:pointer;">🔄 Toggle Mode</button>
+        </div>
+
+        <!-- Mode Comparison Grid -->
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          
+          <!-- Mode 1 Card -->
+          <div style="background:var(--panel-bg); border:1px solid var(--panel-border); border-left:4px solid var(--safe-green); border-radius:8px; padding:12px;">
+            <div style="font-weight:800; font-size:13px; color:var(--safe-green); display:flex; align-items:center; gap:6px;">
+              🟢 Mode 1: Live Real-Time Weather (Default)
+            </div>
+            <div style="font-size:11px; color:var(--text-sub); margin-top:6px; line-height:1.5;">
+              <b>Kaise kaam karta hai?</b> Yeh mode IMD Palam Radar station aur Open-Meteo Weather API se live 0-3 hour rainfall feed fetch karta hai.<br>
+              <b>Result during clear weather:</b> Jab Delhi mein dhoop/sookha hota hai, tab real-time rain <b>0.0 mm</b> aur street depth <b>0.0 cm (Bilkul Safe)</b> render hoti hai.
+            </div>
+          </div>
+
+          <!-- Mode 2 Card -->
+          <div style="background:var(--panel-bg); border:1px solid var(--panel-border); border-left:4px solid var(--brand-purple); border-radius:8px; padding:12px;">
+            <div style="font-weight:800; font-size:13px; color:var(--brand-purple); display:flex; align-items:center; gap:6px;">
+              🧪 Mode 2: Demo Simulation (Heavy Storm Testing)
+            </div>
+            <div style="font-size:11px; color:var(--text-sub); margin-top:6px; line-height:1.5;">
+              <b>Kyu banaya gaya hai?</b> SIH Judges aur Users ko bina monsoon storm ka wait kiye system ki saari advanced features test karwane ke liye.<br>
+              <b>Kya simulate hota hai?</b> Peak <b>65mm/hr Cloudburst Storm Event (48.5 dBZ Radar Reflectivity)</b> over Dwarka Mor Catchment, jisse:<br>
+              <ul style="margin-left:16px; margin-top:4px; line-height:1.4;">
+                <li>🚨 Dwarka Mor Metro Crossing par <b>40.3 cm Water Inundation Warning</b> trigger hoti hai.</li>
+                <li>🚗 Car engine intake hazard limit (25cm) exceed hone ka alert milta hai.</li>
+                <li>🔀 Alternate detour route (Dabri Flyover) auto-calculate hota hai.</li>
+                <li>📢 Automated Multi-Agency Dispatches (NDRF pumps, Traffic Police, DMRC SMS) active hote hain.</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
     </div>
   </div>
 </body>
