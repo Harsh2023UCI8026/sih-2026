@@ -1470,7 +1470,7 @@
     
     <div class="header-right">
       <!-- Chatbot AI Assistant Button in Top Header -->
-      <button class="theme-toggle-btn" onclick="toggleChatbot()" style="border-color: var(--brand-purple); background: linear-gradient(135deg, var(--brand-purple), var(--brand-blue)); color: white; font-weight:800; padding:6px 12px; box-shadow:0 2px 6px rgba(124, 58, 237, 0.4);" title="Click to open Flood AI Assistant Chatbot">
+      <button class="theme-toggle-btn" id="btnAskFloodAI" onclick="window.toggleChatbot && window.toggleChatbot()" style="border-color: var(--brand-purple); background: linear-gradient(135deg, var(--brand-purple), var(--brand-blue)); color: white; font-weight:800; padding:6px 12px; box-shadow:0 2px 6px rgba(124, 58, 237, 0.4); cursor:pointer; position:relative; z-index:1005;" title="Click to open Flood AI Assistant Chatbot">
         🤖 Ask Flood AI
       </button>
       <!-- Language Switcher Button (Prominently at the Top) -->
@@ -3684,8 +3684,9 @@
   </div>
 
   <script>
-    // 🤖 FLOOD AI ASSISTANT CHATBOT LOGIC
-    function toggleChatbot() {
+    // 🤖 FLOOD AI ASSISTANT CHATBOT LOGIC (Explicitly attached to window object)
+    window.toggleChatbot = function() {
+      console.log('toggleChatbot triggered!');
       const win = document.getElementById('chatbotWindow');
       if (win) {
         win.classList.toggle('active');
@@ -3693,10 +3694,12 @@
           const input = document.getElementById('chatInput');
           if (input) input.focus();
         }
+      } else {
+        console.error('chatbotWindow element not found!');
       }
-    }
+    };
 
-    function sendChatMsg(customText = null) {
+    window.sendChatMsg = function(customText = null) {
       const input = document.getElementById('chatInput');
       const text = (customText || (input ? input.value : '') || '').trim();
       if (!text) return;
