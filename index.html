@@ -1543,24 +1543,20 @@
     let map, lightTiles, darkTiles, currentTileLayer;
     let currentTheme = 'light';
 
-    document.addEventListener('DOMContentLoaded', () => {
-      map = L.map('map').setView([28.6186, 77.0319], 14);
+    map = L.map('map').setView([28.6186, 77.0319], 14);
 
-      lightTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors | SIH 2026',
-        maxZoom: 19
-      });
-
-      darkTiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri | SIH 2026',
-        maxZoom: 16
-      });
-
-      lightTiles.addTo(map);
-      currentTileLayer = lightTiles;
+    lightTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors | SIH 2026',
+      maxZoom: 19
     });
 
-    let currentTheme = 'light';
+    darkTiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri | SIH 2026',
+      maxZoom: 16
+    });
+
+    lightTiles.addTo(map);
+    currentTileLayer = lightTiles;
 
     // Dwarka Mor Pilot Catchment Boundary Polygon Overlay
     const catchmentPolygon = L.polygon([
