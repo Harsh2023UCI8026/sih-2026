@@ -1609,13 +1609,10 @@
 </head>
 <body class="desktop-view mobile-view-controls">
 
-  <!-- 🤖 HIGH-VISIBILITY FLOATING HYDROCORE AI WIDGET -->
-  <div id="hydroFabContainer" onclick="toggleChatbot(event)" style="position: fixed !important; bottom: 25px !important; right: 25px !important; z-index: 2147483647 !important; cursor: pointer; display: flex !important; align-items: center; gap: 10px; background: linear-gradient(135deg, #1e1b4b, #312e81); border: 2px solid #6366f1; padding: 6px 14px 6px 8px; border-radius: 40px; box-shadow: 0 10px 30px rgba(99, 102, 241, 0.6); pointer-events: auto !important; transition: transform 0.25s ease;" title="Click to open HydroCore AI Assistant">
-    <div class="chatbot-fab" id="chatbotFab" style="position:relative !important; bottom:0 !important; right:0 !important; width:48px !important; height:48px !important; margin:0 !important; pointer-events:none !important; display:flex !important; align-items:center !important; justify-content:center !important;">
-      <div class="chatbot-fab-pulse" style="pointer-events:none !important;"></div>
-      <img src="logo.jpeg" alt="HydroCore AI Logo" onerror="this.onerror=null; this.src='/logo.jpeg';" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border: 1.5px solid #818cf8; pointer-events:none !important;">
-    </div>
-    <span style="color: #ffffff; font-weight: 800; font-size: 13px; font-family: 'Outfit', sans-serif; letter-spacing: 0.3px; white-space: nowrap; pointer-events:none !important;">Ask HydroCore AI</span>
+  <!-- 🤖 HIGH-VISIBILITY FLOATING HYDROCORE AI CIRCULAR WIDGET -->
+  <div class="chatbot-fab" id="chatbotFab" onclick="toggleChatbot(event)" title="Click to open HydroCore AI Assistant">
+    <div class="chatbot-fab-pulse"></div>
+    <img src="logo.jpeg" alt="HydroCore AI Logo" onerror="this.onerror=null; this.src='/logo.jpeg';" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border: 1.5px solid #ffffff; pointer-events:none !important;">
   </div>
 
   <!-- Mobile Debug / Error Toast Notification Banner -->
@@ -1987,7 +1984,7 @@
     };
 
     document.addEventListener('DOMContentLoaded', function() {
-      const fab = document.getElementById('hydroFabContainer');
+      const fab = document.getElementById('chatbotFab');
       if (fab) {
         fab.onclick = function(e) {
           window.toggleChatbot(e);
