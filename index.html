@@ -1192,13 +1192,10 @@
     </div>
     
     <div class="header-right">
-      <a href="/api/docs" target="_blank" style="text-decoration: none; padding: 6px 12px; background: var(--brand-blue); color: white; border-radius: 6px; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
-        ⚡ API Docs (Swagger)
-      </a>
-      <div class="status-badge">
-        <div class="dot-live"></div>
-        <span id="liveClockDisplay">Live</span>
-      </div>
+      <!-- Language Switcher Button (Prominently at the Top) -->
+      <button class="theme-toggle-btn" id="headerLangToggleBtn" onclick="toggleLanguage()" style="border-color: var(--brand-blue); background: var(--brand-blue); color: white; font-weight:800; padding:6px 12px; box-shadow:0 2px 6px rgba(37,99,235,0.3);" title="Click to switch language between English & Hinglish">
+        🌐 Language: Hinglish (Switch to English)
+      </button>
       <!-- Live Real-Time Weather vs Demo Simulation Mode Toggle Button -->
       <button class="theme-toggle-btn" id="dataModeBtn" onclick="toggleDataMode()" style="border-color: var(--brand-blue); background: var(--card-bg);" title="Click to toggle between Real-time Live Weather & SIH Demo Simulation Mode">
         <span id="dataModeIcon">🟢</span> <span id="dataModeText">Mode: Live Weather</span>
@@ -1206,10 +1203,13 @@
       <button class="theme-toggle-btn" onclick="openModeInfoModal()" style="border-color: var(--brand-purple); background: var(--card-bg); color: var(--brand-purple); font-weight:800;" title="Click to understand Live Weather vs Demo Simulation modes">
         ❓ Mode Guide
       </button>
-      <!-- Language Switcher Button in Header -->
-      <button class="theme-toggle-btn" id="headerLangToggleBtn" onclick="toggleLanguage()" style="border-color: var(--brand-blue); background: var(--card-bg); font-weight:800; color: var(--brand-blue);" title="Click to switch language between English & Hinglish">
-        🌐 Language: Hinglish (Switch to English)
-      </button>
+      <a href="/api/docs" target="_blank" style="text-decoration: none; padding: 6px 10px; background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-title); border-radius: 6px; font-weight: 600; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
+        ⚡ API Docs
+      </a>
+      <div class="status-badge">
+        <div class="dot-live"></div>
+        <span id="liveClockDisplay">Live</span>
+      </div>
       <!-- Light / Dark Mode Toggle Button (Sun / Moon) -->
       <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">
         <span id="themeIcon">☀️</span> <span id="themeText">Light</span>
