@@ -1200,9 +1200,9 @@
         <div class="dot-live"></div>
         <span id="liveClockDisplay">Live</span>
       </div>
-      <!-- Live Real-Time Weather vs Heavy Storm Simulation Mode Toggle Button -->
-      <button class="theme-toggle-btn" id="dataModeBtn" onclick="toggleDataMode()" style="border-color: var(--brand-blue); background: var(--card-bg);" title="Switch between Live Real-Time Weather & Heavy Storm Simulation">
-        <span id="dataModeIcon">🟢</span> <span id="dataModeText">Live Weather</span>
+      <!-- Live Real-Time Weather vs Demo Simulation Mode Toggle Button -->
+      <button class="theme-toggle-btn" id="dataModeBtn" onclick="toggleDataMode()" style="border-color: var(--brand-blue); background: var(--card-bg);" title="Click to toggle between Real-time Live Weather & SIH Demo Simulation Mode">
+        <span id="dataModeIcon">🟢</span> <span id="dataModeText">Mode: Live Weather</span>
       </button>
       <!-- Light / Dark Mode Toggle Button (Sun / Moon) -->
       <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">
@@ -2857,10 +2857,10 @@
       const btnText = document.getElementById('dataModeText');
       if (currentDataMode === 'live') {
         if (btnIcon) btnIcon.innerText = '🟢';
-        if (btnText) btnText.innerText = 'Live Weather';
+        if (btnText) btnText.innerText = 'Mode: Live Weather';
       } else {
-        if (btnIcon) btnIcon.innerText = '⛈️';
-        if (btnText) btnText.innerText = 'Storm Simulation';
+        if (btnIcon) btnIcon.innerText = '🧪';
+        if (btnText) btnText.innerText = 'Mode: Demo Simulation';
       }
     }
 
