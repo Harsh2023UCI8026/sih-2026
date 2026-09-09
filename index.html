@@ -913,6 +913,10 @@
         padding: 4px 6px !important;
       }
 
+      #btnHeaderViewMap {
+        display: none !important;
+      }
+
       .mobile-tab-bar {
         display: flex;
         position: sticky;
@@ -947,10 +951,12 @@
 
       body.mobile-view-map .map-container {
         display: block !important;
+        opacity: 1 !important;
         position: relative !important;
         height: calc(100vh - 115px) !important;
         width: 100vw !important;
         min-height: 380px !important;
+        z-index: 1000 !important;
       }
 
       body.mobile-view-map #map,
@@ -3239,6 +3245,14 @@
     }
 
     function toggleMapFullscreen() {
+      // On mobile screen sizes (< 767px), switch to Interactive Map tab directly
+      if (window.innerWidth <= 767) {
+        if (typeof switchMobileTab === 'function') {
+          switchMobileTab('map');
+          return;
+        }
+      }
+
       const mapContainer = document.querySelector('.map-container');
       const btnText = document.getElementById('expandMapText');
       const btnIcon = document.getElementById('expandMapIcon');
