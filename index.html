@@ -721,7 +721,9 @@
 
     /* ========================================================= */
     /* 🖥️ DESKTOP SIDE-BY-SIDE LAYOUT (Min-Width 769px) */
-    @media (min-width: 769px) {
+    /* ========================================================= */
+    /* 💻 1. LAPTOP & DESKTOP LAYOUT (Min-Width 1025px) */
+    @media (min-width: 1025px) {
       html, body {
         height: 100vh !important;
         overflow: hidden !important;
@@ -734,7 +736,7 @@
       .app-main {
         display: flex !important;
         flex-direction: row !important;
-        height: calc(100vh - 105px) !important;
+        height: calc(100vh - 100px) !important;
         width: 100% !important;
         overflow: hidden !important;
       }
@@ -744,14 +746,14 @@
       body.mobile-view-controls .sidebar {
         display: flex !important;
         flex-direction: column !important;
-        width: 380px !important;
-        min-width: 380px !important;
-        max-width: 380px !important;
+        width: 400px !important;
+        min-width: 400px !important;
+        max-width: 400px !important;
         height: 100% !important;
         overflow-y: auto !important;
         border-right: 1px solid var(--panel-border) !important;
         box-sizing: border-box !important;
-        padding: 12px !important;
+        padding: 14px !important;
         gap: 12px !important;
         flex-shrink: 0 !important;
       }
@@ -769,8 +771,74 @@
     }
 
     /* ========================================================= */
-    /* 📱 100% MOBILE RESPONSIVE UI (Max-Width 768px & Small Screens) */
-    @media (max-width: 768px) {
+    /* 📱 2. TABLET LAYOUT (Min-Width 768px & Max-Width 1024px) */
+    @media (min-width: 768px) and (max-width: 1024px) {
+      html, body {
+        height: 100vh !important;
+        overflow: hidden !important;
+      }
+
+      .mobile-tab-bar {
+        display: none !important;
+      }
+
+      header {
+        padding: 6px 12px !important;
+      }
+
+      .brand-title h1 {
+        font-size: 14px !important;
+      }
+
+      .header-right {
+        gap: 5px !important;
+      }
+
+      .header-right button, .header-right a {
+        font-size: 11px !important;
+        padding: 5px 8px !important;
+      }
+
+      .app-main {
+        display: flex !important;
+        flex-direction: row !important;
+        height: calc(100vh - 95px) !important;
+        width: 100% !important;
+        overflow: hidden !important;
+      }
+
+      .sidebar,
+      body.mobile-view-map .sidebar,
+      body.mobile-view-controls .sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 320px !important;
+        min-width: 320px !important;
+        max-width: 320px !important;
+        height: 100% !important;
+        overflow-y: auto !important;
+        border-right: 1px solid var(--panel-border) !important;
+        box-sizing: border-box !important;
+        padding: 10px !important;
+        gap: 10px !important;
+        flex-shrink: 0 !important;
+      }
+
+      .map-container,
+      body.mobile-view-map .map-container,
+      body.mobile-view-controls .map-container {
+        display: block !important;
+        flex: 1 !important;
+        width: auto !important;
+        height: 100% !important;
+        min-width: 0 !important;
+        position: relative !important;
+      }
+    }
+
+    /* ========================================================= */
+    /* 📱 3. MOBILE SMARTPHONES (Max-Width 767px) */
+    @media (max-width: 767px) {
       html, body {
         height: auto !important;
         min-height: 100vh !important;
@@ -786,27 +854,27 @@
       }
 
       .alert-banner {
-        font-size: 11px;
-        padding: 8px 10px;
+        font-size: 10px;
+        padding: 6px 8px;
         flex-wrap: wrap;
-        gap: 6px;
+        gap: 4px;
         justify-content: center;
         text-align: center;
       }
 
       .alert-banner button {
-        padding: 4px 8px;
+        padding: 3px 6px;
         font-size: 10px;
       }
 
       header {
         padding: 6px 10px;
-        min-height: 50px;
+        min-height: 48px;
       }
 
       .brand-logo-img {
-        width: 32px;
-        height: 32px;
+        width: 30px;
+        height: 30px;
       }
 
       .brand-title h1 {
@@ -819,11 +887,12 @@
 
       .header-right {
         gap: 4px;
+        flex-wrap: wrap;
       }
 
-      .header-right a {
-        font-size: 11px !important;
-        padding: 4px 8px !important;
+      .header-right button, .header-right a {
+        font-size: 10px !important;
+        padding: 4px 6px !important;
       }
 
       .mobile-tab-bar {
@@ -863,7 +932,7 @@
         position: relative !important;
         height: calc(100vh - 115px) !important;
         width: 100vw !important;
-        min-height: 400px !important;
+        min-height: 380px !important;
       }
 
       body.mobile-view-map #map,
@@ -894,7 +963,7 @@
 
       .radar-toggle-btn {
         padding: 6px 10px;
-        font-size: 11px;
+        font-size: 10px;
       }
 
       body.mobile-view-controls .map-legend {
