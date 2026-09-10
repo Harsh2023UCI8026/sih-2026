@@ -1,3 +1,1 @@
-# Presentation Slides Placeholder
-
-*(Add your presentation slides here or link to a PDF.)*
+[# Presentation PDF](SIH_2026_Idea_Submission_Presentation.pdf)

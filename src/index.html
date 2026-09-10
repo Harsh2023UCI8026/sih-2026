@@ -20,7 +20,7 @@
   <meta name="geo.region" content="IN-DL">
   <meta name="geo.placename" content="Delhi NCR Region, India">
   <meta name="ICBM" content="28.6139, 77.2090">
-  <link rel="alternate" type="application/geo+json" href="dwarka_catchment_bounds.geojson"
+  <link rel="alternate" type="application/geo+json" href="data/dwarka_catchment_bounds.geojson"
     title="Delhi NCR Spatial Bounds">
 
   <!-- Open Graph / Facebook -->
@@ -2309,8 +2309,8 @@
 
       <!-- Floating Map Control Bar (Doppler Radar Toggle & Expand Fullscreen) -->
       <div class="map-floating-controls">
-        <button class="radar-toggle-btn active" id="btnRadarToggle" onclick="toggleDopplerRadar()">
-          <span class="radar-ping"></span> 📡 Doppler Radar Overlay (dBZ)
+        <button class="radar-toggle-btn" id="btnRadarToggle" onclick="toggleDopplerRadar()">
+          📡 Enable Doppler Radar
         </button>
         <button class="expand-map-btn" id="btnExpandMap" onclick="toggleMapFullscreen()"
           title="Expand Map to Fullscreen">
@@ -2509,7 +2509,7 @@
       });
     }
 
-    // Ground-Truth Potholes & Road Depressions Layer (vashu.csv)
+    // Ground-Truth Potholes & Road Depressions Layer (data/vashu.csv)
     let potholeMarkers = [];
     function fetchPotholesAndRender() {
       fetch('/api/v1/potholes-depressions')
@@ -3465,7 +3465,7 @@
 
     // Dynamic Doppler Radar Overlay Layer (RainViewer Weather Radar API + Synthetic Radar Loop fallback)
     let radarLayerGroup = L.layerGroup().addTo(map);
-    let isRadarActive = true;
+    let isRadarActive = false;
     let radarAnimationTimer = null;
     let radarFrames = [];
     let currentFrameIdx = 0;
@@ -3524,7 +3524,9 @@
         opacity: 0.65,
         interactive: false
       });
+      console.log('Adding radar overlay with intensity', currentIntensityMult, 'phase', radarPhase);
       radarLayerGroup.addLayer(radarOverlay);
+      console.log('Radar overlay added, layer count:', radarLayerGroup.getLayers().length);
     }
 
     // Dynamic Radar Loop Animation (Smoothed 1.2s frame steps)
@@ -3539,8 +3541,16 @@
     }
 
     function toggleDopplerRadar() {
+      console.log('toggleDopplerRadar called');
+      console.log('Current isRadarActive before toggle:', isRadarActive);
       const btn = document.getElementById('btnRadarToggle');
       isRadarActive = !isRadarActive;
+      console.log('isRadarActive after toggle:', isRadarActive);
+      if (isRadarActive) {
+        console.log('Enabling radar overlay');
+      } else {
+        console.log('Disabling radar overlay');
+      }
 
       if (isRadarActive) {
         btn.classList.add('active');
@@ -4326,7 +4336,7 @@
 
       // 3. Basis of results & accuracy
       if (query.includes('basis') || query.includes('result') || query.includes('accuracy') || query.includes('chance') || query.includes('data') || query.includes('radar') || query.includes('model')) {
-        return `<b>📊 Prediction Basis & Accuracy:</b><br>Calculations are powered by 4 coupled layers:<br>1. 📡 <b>IMD Palam Doppler Radar</b> (dBZ reflectivity)<br>2. 🌧️ <b>Open-Meteo 0–3h Precipitation API</b><br>3. 🏔️ <b>Open-DEM 30m Elevation Grid</b><br>4. 🌊 <b>SWMM 1D-2D Directed Graph Solver</b><br><br><b>Accuracy & Model Confidence:</b> ~88%–92% model confidence, verified against ground-truth road depression logs (vashu.csv).`;
+        return `<b>📊 Prediction Basis & Accuracy:</b><br>Calculations are powered by 4 coupled layers:<br>1. 📡 <b>IMD Palam Doppler Radar</b> (dBZ reflectivity)<br>2. 🌧️ <b>Open-Meteo 0–3h Precipitation API</b><br>3. 🏔️ <b>Open-DEM 30m Elevation Grid</b><br>4. 🌊 <b>SWMM 1D-2D Directed Graph Solver</b><br><br><b>Accuracy & Model Confidence:</b> ~88%–92% model confidence, verified against ground-truth road depression logs (data/vashu.csv).`;
       }
 
       // 4. Vehicle safety / Car hazard
