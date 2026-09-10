@@ -2071,6 +2071,8 @@
           win.style.display = 'flex';
           win.classList.add('active');
           if (window.renderChatbotWelcome) window.renderChatbotWelcome();
+          const body = document.getElementById('chatBody');
+          if (body) body.scrollTop = 0;
           const input = document.getElementById('chatInput');
           if (input) input.focus();
         } else {
@@ -3529,7 +3531,8 @@
       const modal = document.getElementById('alertModal');
       modal.classList.add('active');
 
-      const currentDepth = parseFloat(document.getElementById('valDepth').innerText) || 40.3;
+      const depthEl = document.getElementById('valDepth');
+const currentDepth = depthEl ? parseFloat(depthEl.innerText) : 40.3;
 
       const payload = {
         "alert_status": "BROADCASTED",
@@ -3557,7 +3560,8 @@
         }
       };
 
-      document.getElementById('jsonPayloadDisplay').innerText = JSON.stringify(payload, null, 2);
+      const payloadDisplay = document.getElementById('jsonPayloadDisplay');
+if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(payload, null, 2);
 
       // Attempt backend API call if server is running
       fetch('/api/v1/alert-broadcast', {
@@ -3569,7 +3573,8 @@
         })
       }).then(res => res.json()).then(data => {
         if(data && data.alert_status) {
-          document.getElementById('jsonPayloadDisplay').innerText = JSON.stringify(data, null, 2);
+          const payloadDisplay = document.getElementById('jsonPayloadDisplay');
+if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(data, null, 2);
         }
       }).catch(err => console.log("Offline mode: using simulated alert payload."));
     }
@@ -3826,7 +3831,43 @@
       <button class="chat-close-btn" onclick="toggleChatbot()">✕</button>
     </div>
 
-    <div class="chat-body" id="chatBody"></div>
+    <div class="chat-body" id="chatBody">
+      <div class="chat-banner-gif chat-msg-animated" style="animation-delay: 0.10s; width: 100%; text-align: center; margin-bottom: 8px; overflow: hidden; border-radius: 12px; border: 1.5px solid var(--card-border); box-shadow: 0 4px 12px rgba(0,0,0,0.06); background: rgba(0,0,0,0.02);">
+        <img src="/hello.gif" alt="HydroCore AI Flood Simulation" onerror="this.onerror=null; this.src='/hello.gif';" style="width: 100%; height: auto; max-height: 280px; object-fit: contain; display: block; border-radius: 10px;">
+      </div>
+
+      <div class="chat-options-stack">
+        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.22s;" onclick="sendChatMsg('What does this website do?')">
+          <div class="chat-option-title"><span>🌊 What does this website do?</span> <span class="chat-option-arrow">➔</span></div>
+          <div class="chat-option-sub">0–3h real-time street flood depth nowcasts & hydraulic navigation across Delhi.</div>
+        </div>
+
+        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.34s;" onclick="sendChatMsg('How to use this website?')">
+          <div class="chat-option-title"><span>🧭 How to use this system?</span> <span class="chat-option-arrow">➔</span></div>
+          <div class="chat-option-sub">Guide to search routes, set vehicle intake limits & view emergency alerts.</div>
+        </div>
+
+        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.46s;" onclick="sendChatMsg('What is the basis of results and accuracy?')">
+          <div class="chat-option-title"><span>📊 Prediction Accuracy & Data Basis</span> <span class="chat-option-arrow">➔</span></div>
+          <div class="chat-option-sub">Powered by IMD Doppler Radar, 30m DEM Elevation Grid & 1D-2D SWMM Solver.</div>
+        </div>
+
+        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.58s;" onclick="sendChatMsg('Is my car safe to drive?')">
+          <div class="chat-option-title"><span>🚗 Vehicle Water Depth Limits</span> <span class="chat-option-arrow">➔</span></div>
+          <div class="chat-option-sub">Engine intake safety limits: Cars (25cm), Bikes (15cm), Ambulances (45cm) & Detours.</div>
+        </div>
+
+        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.70s;" onclick="sendChatMsg('Tell me about Emergency Dispatches')">
+          <div class="chat-option-title"><span>📢 Multi-Agency Emergency Alerts</span> <span class="chat-option-arrow">➔</span></div>
+          <div class="chat-option-sub">Automated warning dispatches for Delhi Police, NDRF Pumps & DMRC Metro.</div>
+        </div>
+
+        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.82s;" onclick="sendChatMsg('Explain Live vs Demo Mode')">
+          <div class="chat-option-title"><span>🧪 Live Weather vs Demo Simulation</span> <span class="chat-option-arrow">➔</span></div>
+          <div class="chat-option-sub">Real-time clear weather monitoring vs peak 65mm storm cloudburst testing.</div>
+        </div>
+      </div>
+    </div>
 
     <div class="chat-footer">
       <input type="text" id="chatInput" class="chat-input" placeholder="Ask a question (e.g. How does it work?)..." onkeydown="if(event.key==='Enter') sendChatMsg()">
@@ -3859,17 +3900,17 @@
     };
 
     // 🤖 FLOOD AI ASSISTANT CHATBOT LOGIC
-    let isWelcomeRendered = false;
+    let isWelcomeRendered = true;
 
     window.renderChatbotWelcome = function(force = false) {
       const body = document.getElementById('chatBody');
       if (!body) return;
-      if (isWelcomeRendered && !force && body.children.length > 0) return;
-      isWelcomeRendered = true;
+      // If not forced and a greeting banner already exists, skip rendering
+      if (!force && body.querySelector('.chat-banner-gif')) return;
 
       body.innerHTML = `
-        <div class="chat-banner-gif chat-msg-animated" style="animation-delay: 0.10s; width: 100%; text-align: center; margin-bottom: 6px; overflow: hidden; border-radius: 12px; border: 1.5px solid var(--card-border); box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
-          <img src="/hello.gif" alt="HydroCore AI Flood Simulation" onerror="this.onerror=null; this.src='hello.gif';" style="width: 100%; height: auto; max-height: 280px; object-fit: contain; display: block; border-radius: 10px; background: rgba(0,0,0,0.02);">
+        <div class="chat-banner-gif chat-msg-animated" style="animation-delay: 0.10s; width: 100%; text-align: center; margin-bottom: 8px; overflow: hidden; border-radius: 12px; border: 1.5px solid var(--card-border); box-shadow: 0 4px 12px rgba(0,0,0,0.06); background: rgba(0,0,0,0.02);">
+          <img src="hello.gif" alt="HydroCore AI Flood Simulation" onerror="this.onerror=null; this.src='/hello.gif';" style="width: 100%; height: auto; max-height: 280px; object-fit: contain; display: block; border-radius: 10px;">
         </div>
 
         <div class="chat-options-stack">

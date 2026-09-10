@@ -220,9 +220,16 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
             self._send_file(os.path.join(WORKSPACE_DIR, 'human.jpeg'), 'image/jpeg')
         elif path == '/human.webp':
             self._send_file(os.path.join(WORKSPACE_DIR, 'human.webp'), 'image/webp')
-        elif path == '/hello.gif' or path == '/gif.gif' or path.endswith('.gif'):
-            gif_path = os.path.join(WORKSPACE_DIR, 'hello.gif') if os.path.exists(os.path.join(WORKSPACE_DIR, 'hello.gif')) else os.path.join(WORKSPACE_DIR, 'gif.gif')
-            self._send_file(gif_path, 'image/gif')
+        elif path.lower().endswith('.gif'):
+            # Serve any .gif file from the workspace directory
+            gif_name = os.path.basename(path)
+            gif_path = os.path.join(WORKSPACE_DIR, gif_name)
+            if os.path.exists(gif_path):
+                self._send_file(gif_path, 'image/gif')
+            else:
+                # Fallback to hello.gif if the requested file is missing
+                default_gif = os.path.join(WORKSPACE_DIR, 'hello.gif')
+                self._send_file(default_gif, 'image/gif')
         elif path == '/robots.txt':
             self._send_file(os.path.join(WORKSPACE_DIR, 'robots.txt'), 'text/plain')
         elif path == '/sitemap.xml':
