@@ -29,7 +29,7 @@
   <meta property="og:title" content="Urban Flood Nowcasting System | Delhi NCR Street-Level Flood Warnings">
   <meta property="og:description"
     content="0-3 Hour forward-looking street inundation predictions and flood-safe emergency routing engine for Delhi NCR.">
-  <meta property="og:image" content="https://urban-flood-nowcast.moes.gov.in/logo.jpeg">
+  <meta property="og:image" content="https://urban-flood-nowcast.moes.gov.in/logo.webp">
   <meta property="og:locale" content="en_IN">
 
   <!-- Twitter Card -->
@@ -37,11 +37,11 @@
   <meta name="twitter:title" content="Urban Flood Nowcasting System | Delhi NCR Region">
   <meta name="twitter:description"
     content="Real-time 0-3h street water depth predictions & flood-safe navigation API by MoES.">
-  <meta name="twitter:image" content="https://urban-flood-nowcast.moes.gov.in/logo.jpeg">
+  <meta name="twitter:image" content="https://urban-flood-nowcast.moes.gov.in/logo.webp">
 
   <!-- Favicon & PWA Manifest -->
-  <link rel="icon" type="image/jpeg" href="logo.jpeg" />
-  <link rel="shortcut icon" type="image/jpeg" href="logo.jpeg" />
+  <link rel="icon" type="image/webp" href="logo.webp" />
+  <link rel="shortcut icon" type="image/webp" href="logo.webp" />
   <link rel="manifest" href="site.webmanifest" />
 
   <!-- Google Fonts Preconnect (Lighthouse Performance) -->
@@ -1906,7 +1906,7 @@
   <!-- 🤖 HIGH-VISIBILITY FLOATING HYDROCORE AI CIRCULAR WIDGET -->
   <div class="chatbot-fab" id="chatbotFab" onclick="toggleChatbot(event)" title="Click to open HydroCore AI Assistant">
     <div class="chatbot-fab-pulse"></div>
-    <img src="logo.jpeg" alt="HydroCore AI Logo" onerror="this.onerror=null; this.src='/logo.jpeg';"
+    <img src="logo.webp" alt="HydroCore AI Logo" onerror="this.onerror=null; this.src='/logo.webp';"
       style="width:38px; height:38px; border-radius:50%; object-fit:cover; border: 1.5px solid #ffffff; pointer-events:none !important;">
   </div>
 
@@ -1933,7 +1933,7 @@
     <div class="brand">
       <picture>
         <source srcset="/logo.webp" type="image/webp">
-        <img src="/logo.jpeg" alt="Urban Flood Nowcasting System Logo" width="44" height="49" fetchpriority="high"
+        <img src="/logo.webp" alt="Urban Flood Nowcasting System Logo" width="44" height="49" fetchpriority="high"
           class="brand-logo-img">
       </picture>
       <div class="brand-title">
@@ -4267,6 +4267,14 @@
           </div>
         </div>
       `;
+    // Attach click handlers to chat option cards
+    document.querySelectorAll('.chat-option-card').forEach(card => {
+      const titleSpan = card.querySelector('.chat-option-title span');
+      if (titleSpan) {
+        const question = titleSpan.textContent.trim();
+        card.addEventListener('click', () => sendChatMsg(question));
+      }
+    });
     };
 
     window.sendChatMsg = function (customText = null) {
