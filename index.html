@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Primary SEO Meta Tags -->
   <title>Urban Flood Nowcasting System | Delhi NCR Street-Level Inundation (SIH 2026)</title>
-  <meta name="description" content="Real-Time 0-3 Hour Street-Level Flood Inundation Prediction & Safe Routing System for All Delhi NCR Region by MoES / NCMRWF.">
-  <meta name="keywords" content="Urban Flood Nowcasting, Delhi Flood Alert, Delhi NCR Inundation, IMD Palam Radar, MoES NCMRWF, Hydrodynamic Flood Routing, Street Water Depth">
+  <meta name="description"
+    content="Real-Time 0-3 Hour Street-Level Flood Inundation Prediction & Safe Routing System for All Delhi NCR Region by MoES / NCMRWF.">
+  <meta name="keywords"
+    content="Urban Flood Nowcasting, Delhi Flood Alert, Delhi NCR Inundation, IMD Palam Radar, MoES NCMRWF, Hydrodynamic Flood Routing, Street Water Depth">
   <meta name="author" content="Ministry of Earth Sciences (MoES) / NCMRWF">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#2563eb">
@@ -17,20 +20,23 @@
   <meta name="geo.region" content="IN-DL">
   <meta name="geo.placename" content="Delhi NCR Region, India">
   <meta name="ICBM" content="28.6139, 77.2090">
-  <link rel="alternate" type="application/geo+json" href="dwarka_catchment_bounds.geojson" title="Delhi NCR Spatial Bounds">
+  <link rel="alternate" type="application/geo+json" href="dwarka_catchment_bounds.geojson"
+    title="Delhi NCR Spatial Bounds">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://urban-flood-nowcast.moes.gov.in/">
   <meta property="og:title" content="Urban Flood Nowcasting System | Delhi NCR Street-Level Flood Warnings">
-  <meta property="og:description" content="0-3 Hour forward-looking street inundation predictions and flood-safe emergency routing engine for Delhi NCR.">
+  <meta property="og:description"
+    content="0-3 Hour forward-looking street inundation predictions and flood-safe emergency routing engine for Delhi NCR.">
   <meta property="og:image" content="https://urban-flood-nowcast.moes.gov.in/logo.jpeg">
   <meta property="og:locale" content="en_IN">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Urban Flood Nowcasting System | Delhi NCR Region">
-  <meta name="twitter:description" content="Real-time 0-3h street water depth predictions & flood-safe navigation API by MoES.">
+  <meta name="twitter:description"
+    content="Real-time 0-3h street water depth predictions & flood-safe navigation API by MoES.">
   <meta name="twitter:image" content="https://urban-flood-nowcast.moes.gov.in/logo.jpeg">
 
   <!-- Favicon & PWA Manifest -->
@@ -44,13 +50,17 @@
   <link rel="preload" as="image" href="/human.jpeg" fetchpriority="high">
 
   <!-- Async Non-Render Blocking Stylesheets -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    media="print" onload="this.media='all'">
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <noscript>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   </noscript>
 
@@ -90,7 +100,7 @@
     }
   ]
   </script>
-  
+
   <style>
     /* CSS Variables for Light Mode (Default) & Dark Mode */
     :root[data-theme="light"] {
@@ -100,22 +110,22 @@
       --panel-border: #e2e8f0;
       --card-bg: #f1f5f9;
       --card-border: #cbd5e1;
-      
+
       --text-title: #0f172a;
       --text-sub: #334155;
       --text-muted: #334155;
-      
+
       --brand-blue: #2563eb;
       --brand-purple: #7c3aed;
-      
+
       --safe-green: #059669;
       --caution-yellow: #d97706;
       --moderate-orange: #ea580c;
       --severe-red: #dc2626;
       --critical-dark: #991b1b;
-      
-      --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
-      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
     }
 
     :root[data-theme="dark"] {
@@ -125,22 +135,22 @@
       --panel-border: #1f2937;
       --card-bg: #1f2937;
       --card-border: #374151;
-      
+
       --text-title: #f9fafb;
       --text-sub: #e5e7eb;
       --text-muted: #9ca3af;
-      
+
       --brand-blue: #3b82f6;
       --brand-purple: #a855f7;
-      
+
       --safe-green: #10b981;
       --caution-yellow: #f59e0b;
       --moderate-orange: #f97316;
       --severe-red: #ef4444;
       --critical-dark: #b91c1c;
-      
-      --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
-      --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
     }
 
     * {
@@ -357,6 +367,7 @@
       color: #ffffff !important;
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     }
+
     .explainer-box b {
       color: #60a5fa !important;
       font-weight: 800;
@@ -451,8 +462,19 @@
       padding: 6px 8px;
     }
 
-    .metric-lbl { font-size: 10px; color: var(--text-muted); font-weight: 600; }
-    .metric-num { font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 800; color: var(--text-title); margin-top: 2px; }
+    .metric-lbl {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .metric-num {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-title);
+      margin-top: 2px;
+    }
 
     .route-item {
       background: var(--panel-bg);
@@ -467,14 +489,38 @@
       border-color: var(--brand-blue);
     }
 
-    .route-title { font-size: 11px; font-weight: 700; display: flex; justify-content: space-between; }
-    .badge-blocked { background: #fee2e2; color: #dc2626; padding: 2px 4px; border-radius: 4px; font-size: 9px; font-weight: 700; }
-    .badge-safe { background: #d1fae5; color: #059669; padding: 2px 4px; border-radius: 4px; font-size: 9px; font-weight: 700; }
+    .route-title {
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .badge-blocked {
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .badge-safe {
+      background: #d1fae5;
+      color: #059669;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 700;
+    }
 
     /* Map Box */
     .map-container {
       position: absolute !important;
-      top: 0; right: 0; bottom: 0; left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
       width: 100% !important;
       height: 100% !important;
       z-index: 1000;
@@ -631,8 +677,15 @@
     }
 
     @keyframes radarPulse {
-      0% { transform: scale(1); opacity: 1; }
-      100% { transform: scale(3.5); opacity: 0; }
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(3.5);
+        opacity: 0;
+      }
     }
 
     /* Floating Legend Inside Leaflet Map Control Container */
@@ -747,7 +800,9 @@
     /* ========================================================= */
     /* 💻 1. LAPTOP & DESKTOP LAYOUT (Min-Width 1025px) - Full-Bleed Command Center UI */
     @media (min-width: 1025px) {
-      html, body {
+
+      html,
+      body {
         height: 100vh !important;
         overflow: hidden !important;
       }
@@ -805,7 +860,9 @@
     /* ========================================================= */
     /* 📱 2. TABLET LAYOUT (Min-Width 768px & Max-Width 1024px) */
     @media (min-width: 768px) and (max-width: 1024px) {
-      html, body {
+
+      html,
+      body {
         height: 100vh !important;
         overflow: hidden !important;
       }
@@ -826,7 +883,8 @@
         gap: 5px !important;
       }
 
-      .header-right button, .header-right a {
+      .header-right button,
+      .header-right a {
         font-size: 11px !important;
         padding: 5px 8px !important;
       }
@@ -880,7 +938,9 @@
     /* ========================================================= */
     /* 📱 3. MOBILE SMARTPHONES (Max-Width 767px) */
     @media (max-width: 767px) {
-      html, body {
+
+      html,
+      body {
         height: auto !important;
         min-height: 100vh !important;
         overflow-x: hidden !important;
@@ -931,7 +991,8 @@
         flex-wrap: wrap;
       }
 
-      .header-right button, .header-right a {
+      .header-right button,
+      .header-right a {
         font-size: 10px !important;
         padding: 4px 6px !important;
       }
@@ -1029,7 +1090,7 @@
         background: var(--panel-bg) !important;
         border: 1px solid var(--panel-border) !important;
         border-radius: 8px !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
       }
 
       .modal-card {
@@ -1059,13 +1120,16 @@
         left: 0 !important;
         width: 100vw !important;
         max-width: 100vw !important;
-        height: 100vh !important;
+
         height: 100dvh !important;
-        max-height: 100vh !important;
+
         max-height: 100dvh !important;
         border-radius: 0 !important;
         box-shadow: none !important;
         z-index: 2147483647 !important;
+        flex-direction: column !important;
+        display: none !important;
+        overflow: hidden !important;
       }
 
       .chatbot-window .chat-header {
@@ -1076,9 +1140,10 @@
       .chatbot-window .chat-footer {
         padding: 10px 14px;
         padding-bottom: max(10px, env(safe-area-inset-bottom));
-        position: sticky;
-        bottom: 0;
+        position: relative;
+        bottom: auto;
         background: var(--panel-bg);
+        flex-shrink: 0;
       }
 
       .chatbot-window .chat-input {
@@ -1088,16 +1153,16 @@
     }
 
     /* Universal Touch & Clickability Optimizations for Mobile & Tablet */
-    button, 
-    a, 
-    .tab-btn, 
-    .chatbot-fab, 
-    .chat-close-btn, 
-    .modal-close-btn, 
-    .radar-toggle-btn, 
-    .expand-map-btn, 
-    .autocomplete-item, 
-    .route-item, 
+    button,
+    a,
+    .tab-btn,
+    .chatbot-fab,
+    .chat-close-btn,
+    .modal-close-btn,
+    .radar-toggle-btn,
+    .expand-map-btn,
+    .autocomplete-item,
+    .route-item,
     .card-head-accordion {
       touch-action: manipulation !important;
       -webkit-tap-highlight-color: transparent !important;
@@ -1105,9 +1170,10 @@
 
     /* Fix iOS automatic zoom on text field focus */
     @media (max-width: 767px) {
-      input[type="text"], 
-      input[type="number"], 
-      select, 
+
+      input[type="text"],
+      input[type="number"],
+      select,
       textarea {
         font-size: 16px !important;
       }
@@ -1236,8 +1302,15 @@
     }
 
     @keyframes modalSlideUp {
-      from { transform: translateY(30px) scale(0.97); opacity: 0; }
-      to { transform: translateY(0) scale(1); opacity: 1; }
+      from {
+        transform: translateY(30px) scale(0.97);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
     }
 
     .modal-header {
@@ -1260,7 +1333,7 @@
     }
 
     .modal-close-btn {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
       border: none;
       color: #ffffff;
       width: 30px;
@@ -1277,15 +1350,37 @@
 
     /* 🤖 HydroCore AI Floating Organic Distorted Blob Widget */
     @keyframes hydroMorph {
-      0% { border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; transform: scale(1) rotate(0deg); }
-      33% { border-radius: 70% 30% 46% 54% / 30% 60% 40% 70%; transform: scale(1.05) rotate(120deg); }
-      66% { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; transform: scale(0.96) rotate(240deg); }
-      100% { border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; transform: scale(1) rotate(360deg); }
+      0% {
+        border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+        transform: scale(1) rotate(0deg);
+      }
+
+      33% {
+        border-radius: 70% 30% 46% 54% / 30% 60% 40% 70%;
+        transform: scale(1.05) rotate(120deg);
+      }
+
+      66% {
+        border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%;
+        transform: scale(0.96) rotate(240deg);
+      }
+
+      100% {
+        border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+        transform: scale(1) rotate(360deg);
+      }
     }
 
     @keyframes hydroGlowPulse {
-      0%, 100% { box-shadow: 0 8px 30px rgba(37, 99, 235, 0.5), 0 0 20px rgba(124, 58, 237, 0.4); }
-      50% { box-shadow: 0 14px 40px rgba(37, 99, 235, 0.8), 0 0 35px rgba(6, 182, 212, 0.7); }
+
+      0%,
+      100% {
+        box-shadow: 0 8px 30px rgba(37, 99, 235, 0.5), 0 0 20px rgba(124, 58, 237, 0.4);
+      }
+
+      50% {
+        box-shadow: 0 14px 40px rgba(37, 99, 235, 0.8), 0 0 35px rgba(6, 182, 212, 0.7);
+      }
     }
 
     .chatbot-fab {
@@ -1331,10 +1426,22 @@
       box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
       animation: fabPulse 1.8s infinite;
     }
+
     @keyframes fabPulse {
-      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-      70% { transform: scale(1.2); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      }
+
+      70% {
+        transform: scale(1.2);
+        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+      }
+
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
     }
 
     .chatbot-window {
@@ -1353,20 +1460,24 @@
       display: none;
       flex-direction: column;
       overflow: hidden;
+      min-height: 0;
     }
+
     .chatbot-window.active {
       display: flex !important;
       opacity: 1 !important;
       animation: chatWindowPop 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
+
     @keyframes chatWindowPop {
-      0% { 
-        opacity: 0; 
+      0% {
+        opacity: 0;
         transform: translateY(35px) scale(0.92);
         filter: blur(8px);
       }
-      100% { 
-        opacity: 1; 
+
+      100% {
+        opacity: 1;
         transform: translateY(0) scale(1);
         filter: blur(0px);
       }
@@ -1380,6 +1491,14 @@
       align-items: center;
       justify-content: space-between;
     }
+
+    .chat-body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
     .chat-header-title {
       font-family: 'Outfit', sans-serif;
       font-size: 14px;
@@ -1388,12 +1507,14 @@
       align-items: center;
       gap: 6px;
     }
+
     .chat-header-sub {
       font-size: 10px;
       opacity: 0.9;
     }
+
     .chat-close-btn {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
       border: none;
       color: white;
       width: 26px;
@@ -1406,17 +1527,25 @@
       justify-content: center;
       transition: transform 0.2s, background 0.2s;
     }
-    .chat-close-btn:hover { background: rgba(255,255,255,0.35); transform: rotate(90deg); }
+
+    .chat-close-btn:hover {
+      background: rgba(255, 255, 255, 0.35);
+      transform: rotate(90deg);
+    }
 
     .chat-body {
-      flex: 1;
+      flex: 1 1 auto;
+      min-height: 0;
+      min-width: 0;
       padding: 12px;
       overflow-y: auto;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       gap: 10px;
       background: var(--bg-body);
       scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
     }
 
     .chat-msg {
@@ -1428,6 +1557,7 @@
       word-wrap: break-word;
       transition: transform 0.2s ease;
     }
+
     .chat-msg.bot {
       background: var(--panel-bg);
       border: 1px solid var(--panel-border);
@@ -1436,6 +1566,7 @@
       border-bottom-left-radius: 3px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
+
     .chat-msg.user {
       background: linear-gradient(135deg, var(--brand-blue), #1d4ed8);
       color: #ffffff;
@@ -1449,14 +1580,16 @@
     .chat-msg-animated {
       animation: chatMsgSmoothEntrance 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
+
     @keyframes chatMsgSmoothEntrance {
-      0% { 
-        opacity: 0; 
+      0% {
+        opacity: 0;
         transform: translateY(22px) scale(0.95);
         filter: blur(4px);
       }
-      100% { 
-        opacity: 1; 
+
+      100% {
+        opacity: 1;
         transform: translateY(0) scale(1);
         filter: blur(0px);
       }
@@ -1470,6 +1603,7 @@
       margin-top: 4px;
       width: 100%;
     }
+
     .chat-option-card {
       background: var(--panel-bg);
       border: 1.5px solid var(--card-border);
@@ -1484,26 +1618,33 @@
       position: relative;
       overflow: hidden;
     }
+
     .chat-option-card::before {
       content: '';
       position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
       background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.08), transparent);
       transition: left 0.6s ease;
     }
+
     .chat-option-card:hover::before {
       left: 100%;
     }
+
     .chat-option-card:hover {
       border-color: #6366f1;
       transform: translateY(-3px) scale(1.015);
       box-shadow: 0 10px 24px rgba(99, 102, 241, 0.18);
       background: linear-gradient(135deg, var(--panel-bg), rgba(99, 102, 241, 0.04));
     }
+
     .chat-option-card:active {
       transform: translateY(-1px) scale(0.99);
     }
+
     .chat-option-title {
       font-family: 'Outfit', sans-serif;
       font-size: 12px;
@@ -1513,14 +1654,17 @@
       align-items: center;
       justify-content: space-between;
     }
+
     .chat-option-arrow {
       font-size: 12px;
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       color: var(--brand-blue);
     }
+
     .chat-option-card:hover .chat-option-arrow {
       transform: translateX(6px) scale(1.2);
     }
+
     .chat-option-sub {
       font-size: 10.5px;
       color: var(--text-sub);
@@ -1541,8 +1685,9 @@
       font-size: 11px;
       color: var(--text-muted);
       font-weight: 700;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
     }
+
     .typing-dot {
       width: 6px;
       height: 6px;
@@ -1550,12 +1695,28 @@
       border-radius: 50%;
       animation: typingBounce 1.2s infinite ease-in-out;
     }
-    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
 
     @keyframes typingBounce {
-      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-      40% { transform: scale(1.1); opacity: 1; }
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0.6);
+        opacity: 0.4;
+      }
+
+      40% {
+        transform: scale(1.1);
+        opacity: 1;
+      }
     }
 
     .chat-action-btn {
@@ -1571,6 +1732,7 @@
       cursor: pointer;
       text-decoration: none;
     }
+
     .chat-action-btn:hover {
       background: #1d4ed8;
     }
@@ -1586,6 +1748,7 @@
       white-space: nowrap;
       -webkit-overflow-scrolling: touch;
     }
+
     .chat-chip {
       background: var(--panel-bg);
       border: 1px solid var(--card-border);
@@ -1597,6 +1760,7 @@
       cursor: pointer;
       transition: all 0.15s;
     }
+
     .chat-chip:hover {
       background: var(--brand-blue);
       color: #ffffff;
@@ -1608,7 +1772,9 @@
       display: flex;
       gap: 6px;
       align-items: center;
+      flex-shrink: 0;
     }
+
     .chat-input {
       flex: 1;
       padding: 8px 12px;
@@ -1618,6 +1784,7 @@
       background: var(--bg-body);
       color: var(--text-title);
     }
+
     .chat-send-btn {
       background: var(--brand-blue);
       color: white;
@@ -1632,10 +1799,13 @@
       font-size: 14px;
       transition: transform 0.15s;
     }
-    .chat-send-btn:hover { transform: scale(1.08); }
+
+    .chat-send-btn:hover {
+      transform: scale(1.08);
+    }
 
     .modal-close-btn:hover {
-      background: rgba(255,255,255,0.4);
+      background: rgba(255, 255, 255, 0.4);
     }
 
     .modal-body {
@@ -1659,12 +1829,36 @@
       border-left: 4px solid var(--brand-blue);
     }
 
-    .agency-card.ndrf { border-left-color: #ea580c; }
-    .agency-card.police { border-left-color: #dc2626; }
-    .agency-card.dmrc { border-left-color: #0284c7; }
+    .agency-card.ndrf {
+      border-left-color: #ea580c;
+    }
 
-    .agency-title { font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; color: var(--text-title); }
-    .agency-badge { font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700; background: #d1fae5; color: #059669; }
+    .agency-card.police {
+      border-left-color: #dc2626;
+    }
+
+    .agency-card.dmrc {
+      border-left-color: #0284c7;
+    }
+
+    .agency-title {
+      font-weight: 800;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      color: var(--text-title);
+    }
+
+    .agency-badge {
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      background: #d1fae5;
+      color: #059669;
+    }
 
     .json-code-box {
       background: #0f172a;
@@ -1706,25 +1900,30 @@
     }
   </style>
 </head>
+
 <body class="desktop-view mobile-view-controls">
 
   <!-- 🤖 HIGH-VISIBILITY FLOATING HYDROCORE AI CIRCULAR WIDGET -->
   <div class="chatbot-fab" id="chatbotFab" onclick="toggleChatbot(event)" title="Click to open HydroCore AI Assistant">
     <div class="chatbot-fab-pulse"></div>
-    <img src="logo.jpeg" alt="HydroCore AI Logo" onerror="this.onerror=null; this.src='/logo.jpeg';" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border: 1.5px solid #ffffff; pointer-events:none !important;">
+    <img src="logo.jpeg" alt="HydroCore AI Logo" onerror="this.onerror=null; this.src='/logo.jpeg';"
+      style="width:38px; height:38px; border-radius:50%; object-fit:cover; border: 1.5px solid #ffffff; pointer-events:none !important;">
   </div>
 
   <!-- Mobile Debug / Error Toast Notification Banner -->
-  <div id="mobileErrorToast" style="display:none; position:fixed; bottom:70px; left:50%; transform:translateX(-50%); z-index:999999; max-width:92%; width:340px; background:#dc2626; color:white; padding:10px 14px; border-radius:8px; font-size:11px; font-weight:700; box-shadow:0 6px 20px rgba(0,0,0,0.3); text-align:center; transition:all 0.3s;">
+  <div id="mobileErrorToast"
+    style="display:none; position:fixed; bottom:70px; left:50%; transform:translateX(-50%); z-index:999999; max-width:92%; width:340px; background:#dc2626; color:white; padding:10px 14px; border-radius:8px; font-size:11px; font-weight:700; box-shadow:0 6px 20px rgba(0,0,0,0.3); text-align:center; transition:all 0.3s;">
     <span id="mobileErrorToastMsg">Error message</span>
-    <button onclick="this.parentElement.style.display='none'" style="margin-left:8px; background:transparent; border:none; color:white; font-weight:800; cursor:pointer;">✕</button>
+    <button onclick="this.parentElement.style.display='none'"
+      style="margin-left:8px; background:transparent; border:none; color:white; font-weight:800; cursor:pointer;">✕</button>
   </div>
 
   <!-- Top Alert Banner -->
   <div class="alert-banner safe">
     <span>🟢 <b>LIVE WEATHER:</b> Fetching real-time IMD Palam Radar & Open-Meteo rain data...</span>
     <div style="display:flex; gap:6px; align-items:center;">
-      <button class="alert-btn" style="background:#ffffff; color:#dc2626;" onclick="broadcastEmergencyAlert()">📢 BROADCAST ALERT</button>
+      <button class="alert-btn" style="background:#ffffff; color:#dc2626;" onclick="broadcastEmergencyAlert()">📢
+        BROADCAST ALERT</button>
       <button class="alert-btn" onclick="showDetourOnMobile()">🔀 Alternate Safe Route</button>
     </div>
   </div>
@@ -1734,30 +1933,39 @@
     <div class="brand">
       <picture>
         <source srcset="/logo.webp" type="image/webp">
-        <img src="/logo.jpeg" alt="Urban Flood Nowcasting System Logo" width="44" height="49" fetchpriority="high" class="brand-logo-img">
+        <img src="/logo.jpeg" alt="Urban Flood Nowcasting System Logo" width="44" height="49" fetchpriority="high"
+          class="brand-logo-img">
       </picture>
       <div class="brand-title">
         <h1>Urban Flood Nowcasting</h1>
         <p>Delhi NCR Region | SIH 2026</p>
       </div>
     </div>
-    
+
     <div class="header-right">
       <!-- View GIS Map Floating Button in Header -->
-      <button class="theme-toggle-btn" id="btnHeaderViewMap" onclick="toggleMapFullscreen()" style="border-color: #059669; background: #059669; color: white; font-weight:800; padding:6px 12px; box-shadow:0 2px 6px rgba(5,150,105,0.3); cursor:pointer; position:relative; z-index:1005;" title="Click to view interactive GIS map view">
+      <button class="theme-toggle-btn" id="btnHeaderViewMap" onclick="toggleMapFullscreen()"
+        style="border-color: #059669; background: #059669; color: white; font-weight:800; padding:6px 12px; box-shadow:0 2px 6px rgba(5,150,105,0.3); cursor:pointer; position:relative; z-index:1005;"
+        title="Click to view interactive GIS map view">
         🗺️ View GIS Map
       </button>
 
 
 
       <!-- Live Real-Time Weather vs Demo Simulation Mode Toggle Button -->
-      <button class="theme-toggle-btn" id="dataModeBtn" onclick="toggleDataMode()" style="border-color: var(--brand-blue); background: var(--card-bg);" title="Click to toggle between Real-time Live Weather & SIH Demo Simulation Mode">
+      <button class="theme-toggle-btn" id="dataModeBtn" onclick="toggleDataMode()"
+        style="border-color: var(--brand-blue); background: var(--card-bg);"
+        title="Click to toggle between Real-time Live Weather & SIH Demo Simulation Mode">
         <span id="dataModeIcon">🟢</span> <span id="dataModeText">Mode: Live Weather</span>
       </button>
-      <button class="theme-toggle-btn" id="btnModeGuide" onclick="window.openModeInfoModal && window.openModeInfoModal()" style="border-color: var(--brand-purple); background: var(--card-bg); color: var(--brand-purple); font-weight:800; cursor:pointer; position:relative; z-index:1005;" title="Click to understand Live Weather vs Demo Simulation modes">
+      <button class="theme-toggle-btn" id="btnModeGuide"
+        onclick="window.openModeInfoModal && window.openModeInfoModal()"
+        style="border-color: var(--brand-purple); background: var(--card-bg); color: var(--brand-purple); font-weight:800; cursor:pointer; position:relative; z-index:1005;"
+        title="Click to understand Live Weather vs Demo Simulation modes">
         ❓ Mode Guide
       </button>
-      <a href="/api/docs" target="_blank" style="text-decoration: none; padding: 6px 10px; background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-title); border-radius: 6px; font-weight: 600; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
+      <a href="/api/docs" target="_blank"
+        style="text-decoration: none; padding: 6px 10px; background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-title); border-radius: 6px; font-weight: 600; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
         ⚡ API Docs
       </a>
       <div class="status-badge">
@@ -1773,16 +1981,17 @@
 
   <!-- Mobile Segmented View Switcher -->
   <div class="mobile-tab-bar">
-    <button class="tab-btn active" id="tabBtnControls" onclick="switchMobileTab('controls')">📊 Dashboard & Controls</button>
+    <button class="tab-btn active" id="tabBtnControls" onclick="switchMobileTab('controls')">📊 Dashboard &
+      Controls</button>
     <button class="tab-btn" id="tabBtnMap" onclick="switchMobileTab('map')">🗺️ Interactive Map</button>
   </div>
 
   <!-- Main App Container (Accessibility Main Landmark) -->
   <main class="app-main" id="main-content" role="main">
-    
+
     <!-- Left Sidebar Control Panel -->
     <div class="sidebar">
-      
+
       <!-- Top View Mode Switcher (Simple View ↔ Technical View) -->
       <div class="view-mode-bar">
         <button class="view-mode-btn active" id="btnViewSimple" onclick="switchViewMode('simple')">
@@ -1799,33 +2008,51 @@
       <!-- 🚗 ALWAYS VISIBLE: SHARED FLOOD-SAFE ROUTE FINDER (Point A -> Point B) -->
       <div class="card" id="cardRouteFinder" style="margin-bottom:10px; border:2px solid var(--brand-blue);">
         <div class="card-head">
-          <h2 id="lblRouteFinderTitle" style="font-family:'Outfit',sans-serif; font-size:14px; font-weight:800; color:var(--text-title); margin:0;">🚗 Safe Route Finder (Avoid Flooded Roads)</h2>
+          <h2 id="lblRouteFinderTitle"
+            style="font-family:'Outfit',sans-serif; font-size:14px; font-weight:800; color:var(--text-title); margin:0;">
+            🚗 Safe Route Finder (Avoid Flooded Roads)</h2>
         </div>
-        
+
         <!-- Input Form -->
         <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px; position:relative;">
-          
+
           <!-- Origin Input -->
           <div style="position:relative;">
-            <label for="inputOrigin" class="sr-only" style="position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0;">Starting Point Location</label>
+            <label for="inputOrigin" class="sr-only"
+              style="position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0;">Starting
+              Point Location</label>
             <div style="display:flex; gap:4px; align-items:center;">
-              <input type="text" id="inputOrigin" aria-label="Starting Point Location" placeholder="Enter starting point (e.g. Uttam Nagar West)" value="" style="flex:1; padding:7px 9px; font-size:11px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); border-radius:6px;" oninput="onLocationInput('origin', this.value)">
-              <button onclick="useCurrentLocation()" aria-label="Use Current GPS Location" title="Use Current GPS Location" style="padding:7px 9px; font-size:11px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:6px; cursor:pointer; color:var(--brand-blue); font-weight:700; white-space:nowrap;">📍 GPS</button>
+              <input type="text" id="inputOrigin" aria-label="Starting Point Location"
+                placeholder="Enter starting point (e.g. Uttam Nagar West)" value=""
+                style="flex:1; padding:7px 9px; font-size:11px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); border-radius:6px;"
+                oninput="onLocationInput('origin', this.value)">
+              <button onclick="useCurrentLocation()" aria-label="Use Current GPS Location"
+                title="Use Current GPS Location"
+                style="padding:7px 9px; font-size:11px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:6px; cursor:pointer; color:var(--brand-blue); font-weight:700; white-space:nowrap;">📍
+                GPS</button>
             </div>
             <div id="autocompleteOrigin" class="autocomplete-dropdown" style="display:none;"></div>
           </div>
 
           <!-- Destination Input -->
           <div style="position:relative;">
-            <label for="inputDestination" class="sr-only" style="position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0;">Destination Location</label>
-            <input type="text" id="inputDestination" aria-label="Destination Location" placeholder="Enter destination (e.g. Dwarka Sector 6)" value="" style="width:100%; padding:7px 9px; font-size:11px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); border-radius:6px;" oninput="onLocationInput('dest', this.value)">
+            <label for="inputDestination" class="sr-only"
+              style="position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0;">Destination
+              Location</label>
+            <input type="text" id="inputDestination" aria-label="Destination Location"
+              placeholder="Enter destination (e.g. Dwarka Sector 6)" value=""
+              style="width:100%; padding:7px 9px; font-size:11px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); border-radius:6px;"
+              oninput="onLocationInput('dest', this.value)">
             <div id="autocompleteDest" class="autocomplete-dropdown" style="display:none;"></div>
           </div>
 
           <!-- Vehicle Type Selector -->
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-            <label for="selectVehicle" style="font-size:10px; font-weight:700; color:var(--text-sub);">Choose Your Vehicle:</label>
-            <select id="selectVehicle" aria-label="Choose Your Vehicle" style="padding:6px 8px; font-size:11px; border-radius:6px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); font-weight:700; max-width:180px;" onchange="triggerRouteCalculation()">
+            <label for="selectVehicle" style="font-size:10px; font-weight:700; color:var(--text-sub);">Choose Your
+              Vehicle:</label>
+            <select id="selectVehicle" aria-label="Choose Your Vehicle"
+              style="padding:6px 8px; font-size:11px; border-radius:6px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); font-weight:700; max-width:180px;"
+              onchange="triggerRouteCalculation()">
               <option value="car" selected>🚗 Car (Max 25cm limit)</option>
               <option value="bike">🏍️ Bike / Scooter (Max 15cm limit)</option>
               <option value="rickshaw">🛺 Auto / E-Rickshaw (Max 18cm limit)</option>
@@ -1848,9 +2075,12 @@
       <!-- ================================================================= -->
       <!-- 👨‍👩‍👧 SIMPLE VIEW CONTAINER (Default Mode for Citizens & Commuters) -->
       <div id="simpleViewContainer" style="display: flex; flex-direction: column; gap: 10px;">
-        
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px; margin-bottom:10px; background:rgba(37, 99, 235, 0.08); padding:6px 12px; border-radius:6px; border:1px solid rgba(37, 99, 235, 0.2);">
-          <span style="font-size:12px; font-weight:800; color:var(--brand-blue); font-family:'Outfit',sans-serif; letter-spacing:0.5px;" id="txtCommuterHeader">🛡️ COMMUTER SAFETY DASHBOARD</span>
+
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-top:6px; margin-bottom:10px; background:rgba(37, 99, 235, 0.08); padding:6px 12px; border-radius:6px; border:1px solid rgba(37, 99, 235, 0.2);">
+          <span
+            style="font-size:12px; font-weight:800; color:var(--brand-blue); font-family:'Outfit',sans-serif; letter-spacing:0.5px;"
+            id="txtCommuterHeader">🛡️ COMMUTER SAFETY DASHBOARD</span>
         </div>
 
         <!-- A) Hero Status Card (Big & Prominent) -->
@@ -1866,43 +2096,54 @@
         <!-- B) Human-Figure & Vehicle Water Level Illustration (human.jpeg Image Visualizer) -->
         <div class="card" id="cardWaterIllustration">
           <div class="card-head">
-            <h2 id="lblWaterIllustrationTitle" style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:800; color:var(--text-title); margin:0;">🚶 Water Level Visualizer (Knee / Car Level)</h2>
+            <h2 id="lblWaterIllustrationTitle"
+              style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:800; color:var(--text-title); margin:0;">
+              🚶 Water Level Visualizer (Knee / Car Level)</h2>
           </div>
           <div style="text-align:center; padding:6px 0; position:relative; overflow:hidden;">
-            
-            <div style="position:relative; width:100%; max-width:320px; height:200px; margin:0 auto; background:var(--panel-bg); border-radius:10px; border:1px solid var(--panel-border); overflow:hidden; display:flex; align-items:flex-end; justify-content:center;">
-              
+
+            <div
+              style="position:relative; width:100%; max-width:320px; height:200px; margin:0 auto; background:var(--panel-bg); border-radius:10px; border:1px solid var(--panel-border); overflow:hidden; display:flex; align-items:flex-end; justify-content:center;">
+
               <!-- human.jpeg realistic image -->
-              <img src="/human.jpeg" alt="Human Height Reference for Water Inundation" width="219" height="219" fetchpriority="high" loading="eager" style="height:175px; width:auto; object-fit:contain; z-index:2; position:relative; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
+              <img src="/human.jpeg" alt="Human Height Reference for Water Inundation" width="219" height="219"
+                fetchpriority="high" loading="eager"
+                style="height:175px; width:auto; object-fit:contain; z-index:2; position:relative; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
 
               <!-- Reference Height Markings Overlay -->
               <div style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:4; pointer-events:none;">
-                
+
                 <!-- Ground Line -->
-                <div style="position:absolute; bottom:0; left:0; width:100%; border-bottom:3px solid #64748b; font-size:9px; font-weight:800; color:#64748b; text-align:center; background:rgba(255,255,255,0.75);">
+                <div
+                  style="position:absolute; bottom:0; left:0; width:100%; border-bottom:3px solid #64748b; font-size:9px; font-weight:800; color:#64748b; text-align:center; background:rgba(255,255,255,0.75);">
                   GROUND LEVEL (Road Surface)
                 </div>
 
                 <!-- Ankle 10cm -->
-                <div style="position:absolute; bottom:25px; left:5px; border-bottom:1px dashed #475569; font-size:8px; color:#0f172a; font-weight:800; background:#ffffff; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; z-index:4;">
+                <div
+                  style="position:absolute; bottom:25px; left:5px; border-bottom:1px dashed #475569; font-size:8px; color:#0f172a; font-weight:800; background:#ffffff; border:1px solid #cbd5e1; border-radius:3px; padding:1px 5px; z-index:4;">
                   Ankle (10cm)
                 </div>
 
                 <!-- Knee / Car Engine 30cm -->
-                <div style="position:absolute; bottom:60px; left:5px; border-bottom:1.5px dashed #7c2d12; font-size:8px; color:#451a03; font-weight:900; background:#fef3c7; border:1px solid #fcd34d; border-radius:3px; padding:1px 5px; z-index:4;">
+                <div
+                  style="position:absolute; bottom:60px; left:5px; border-bottom:1.5px dashed #7c2d12; font-size:8px; color:#451a03; font-weight:900; background:#fef3c7; border:1px solid #fcd34d; border-radius:3px; padding:1px 5px; z-index:4;">
                   Knee / 🚗 Engine (30cm)
                 </div>
 
                 <!-- Waist 60cm -->
-                <div style="position:absolute; bottom:110px; left:5px; border-bottom:1.5px dashed #991b1b; font-size:8px; color:#450a0a; font-weight:900; background:#fee2e2; border:1px solid #fca5a5; border-radius:3px; padding:1px 5px; z-index:4;">
+                <div
+                  style="position:absolute; bottom:110px; left:5px; border-bottom:1.5px dashed #991b1b; font-size:8px; color:#450a0a; font-weight:900; background:#fee2e2; border:1px solid #fca5a5; border-radius:3px; padding:1px 5px; z-index:4;">
                   Waist (60cm)
                 </div>
 
               </div>
 
               <!-- Dynamic Animated Water Level Overlay -->
-              <div id="imgWaterOverlay" style="position:absolute; bottom:0; left:0; width:100%; height:75px; background:linear-gradient(180deg, rgba(37,99,235,0.65) 0%, rgba(29,78,216,0.85) 100%); z-index:3; border-top:3px solid #2563eb; transition:transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease; display:flex; align-items:flex-start; justify-content:center;">
-                <span id="imgDepthBadge" style="background:#1e40af; color:#ffffff; font-size:10px; font-weight:900; padding:2px 8px; border-radius:10px; margin-top:-10px; box-shadow:0 2px 6px rgba(0,0,0,0.3);">
+              <div id="imgWaterOverlay"
+                style="position:absolute; bottom:0; left:0; width:100%; height:75px; background:linear-gradient(180deg, rgba(37,99,235,0.65) 0%, rgba(29,78,216,0.85) 100%); z-index:3; border-top:3px solid #2563eb; transition:transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease; display:flex; align-items:flex-start; justify-content:center;">
+                <span id="imgDepthBadge"
+                  style="background:#1e40af; color:#ffffff; font-size:10px; font-weight:900; padding:2px 8px; border-radius:10px; margin-top:-10px; box-shadow:0 2px 6px rgba(0,0,0,0.3);">
                   40.3 cm (Ghutno tak)
                 </span>
               </div>
@@ -1919,13 +2160,17 @@
         <!-- C) Rain Intensity — Plain Language + Icon -->
         <div class="card" id="cardSimpleRain">
           <div class="card-head">
-            <h2 id="lblRainTitle" style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:800; color:var(--text-title); margin:0;">🌧️ Rain Intensity & Radar Status</h2>
+            <h2 id="lblRainTitle"
+              style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:800; color:var(--text-title); margin:0;">
+              🌧️ Rain Intensity & Radar Status</h2>
           </div>
           <div style="display:flex; align-items:center; gap:12px; margin-top:8px;">
             <div style="font-size:32px;" id="simpleRainIcon">⛈️</div>
             <div>
-              <div style="font-size:15px; font-weight:800; color:var(--text-title);" id="simpleRainLabel">Heavy Rain (48.5 dBZ)</div>
-              <div style="font-size:11px; color:var(--text-sub); font-weight:600;" id="simpleRainSub">Radar Intensity: 48.5 dBZ | Total Expected: 65 mm</div>
+              <div style="font-size:15px; font-weight:800; color:var(--text-title);" id="simpleRainLabel">Heavy Rain
+                (48.5 dBZ)</div>
+              <div style="font-size:11px; color:var(--text-sub); font-weight:600;" id="simpleRainSub">Radar Intensity:
+                48.5 dBZ | Total Expected: 65 mm</div>
             </div>
           </div>
         </div>
@@ -1933,9 +2178,12 @@
         <!-- D) "What Should I Do?" Action Advice Card -->
         <div class="card" id="cardActionAdvice" style="border-left:4px solid #ef4444;">
           <div class="card-head">
-            <h2 id="lblActionTitle" style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:800; color:var(--text-title); margin:0;">🎯 Recommended Commuter Safety Advice</h2>
+            <h2 id="lblActionTitle"
+              style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:800; color:var(--text-title); margin:0;">
+              🎯 Recommended Commuter Safety Advice</h2>
           </div>
-          <div style="margin-top:6px; font-size:12px; font-weight:700; line-height:1.5; color:var(--text-title);" id="simpleActionText">
+          <div style="margin-top:6px; font-size:12px; font-weight:700; line-height:1.5; color:var(--text-title);"
+            id="simpleActionText">
             ✅ Safe to commute — no active waterlogging threat.
           </div>
         </div>
@@ -1954,7 +2202,9 @@
         <!-- Forecast Slider (Collapsible Accordion) -->
         <div class="card collapsed" id="cardForecast">
           <div class="card-head-accordion" onclick="toggleCardAccordion('cardForecast')">
-            <h2 style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:800; color:var(--text-title); margin:0;">⏱️ Rain & Flood Forecast (0–3 Hours)</h2>
+            <h2
+              style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:800; color:var(--text-title); margin:0;">
+              ⏱️ Rain & Flood Forecast (0–3 Hours)</h2>
             <span class="accordion-arrow">▼</span>
           </div>
           <div class="card-collapsible-body" style="margin-top:6px;">
@@ -1976,71 +2226,82 @@
           </div>
         </div>
 
-      <!-- Metrics Grid (Collapsible Accordion) -->
-      <div class="card collapsed" id="cardMetrics">
-        <div class="card-head-accordion" onclick="toggleCardAccordion('cardMetrics')">
-          <h2 style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:800; color:var(--text-title); margin:0;">🌧️ Live Rain & Water Level Metrics</h2>
-          <span class="accordion-arrow">▼</span>
-        </div>
-        <div class="card-collapsible-body" style="margin-top:6px;">
-          <div class="metrics-grid">
-            <div class="metric-item">
-              <div class="metric-lbl">Radar Rain Intensity</div>
-              <div class="metric-num" id="valRadar">48.5 <span style="font-size:10px; color:var(--text-muted)">dBZ</span></div>
-            </div>
-            <div class="metric-item">
-              <div class="metric-lbl">Expected Rain (3h)</div>
-              <div class="metric-num" id="valRain">65.0 <span style="font-size:10px; color:var(--text-muted)">mm</span></div>
-            </div>
-            <div class="metric-item">
-              <div class="metric-lbl">Excess Water on Streets</div>
-              <div class="metric-num" id="valRunoff">59.8 <span style="font-size:10px; color:var(--text-muted)">mm</span></div>
-            </div>
-            <div class="metric-item">
-              <div class="metric-lbl">Regional Max Water Depth</div>
-              <div class="metric-num" id="valDepth" style="color: var(--severe-red)">40.3 <span style="font-size:10px; color:var(--text-muted)">cm</span></div>
+        <!-- Metrics Grid (Collapsible Accordion) -->
+        <div class="card collapsed" id="cardMetrics">
+          <div class="card-head-accordion" onclick="toggleCardAccordion('cardMetrics')">
+            <h2
+              style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:800; color:var(--text-title); margin:0;">
+              🌧️ Live Rain & Water Level Metrics</h2>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="card-collapsible-body" style="margin-top:6px;">
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <div class="metric-lbl">Radar Rain Intensity</div>
+                <div class="metric-num" id="valRadar">48.5 <span
+                    style="font-size:10px; color:var(--text-muted)">dBZ</span></div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-lbl">Expected Rain (3h)</div>
+                <div class="metric-num" id="valRain">65.0 <span
+                    style="font-size:10px; color:var(--text-muted)">mm</span></div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-lbl">Excess Water on Streets</div>
+                <div class="metric-num" id="valRunoff">59.8 <span
+                    style="font-size:10px; color:var(--text-muted)">mm</span></div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-lbl">Regional Max Water Depth</div>
+                <div class="metric-num" id="valDepth" style="color: var(--severe-red)">40.3 <span
+                    style="font-size:10px; color:var(--text-muted)">cm</span></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
 
 
-      <!-- Drain Status (Collapsible Accordion) -->
-      <div class="card collapsed" id="cardDrains">
-        <div class="card-head-accordion" onclick="toggleCardAccordion('cardDrains')">
-          <h2 style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:800; color:var(--text-title); margin:0;">🌊 Underground Storm Drain Status</h2>
-          <span class="accordion-arrow">▼</span>
-        </div>
-        <div class="card-collapsible-body" style="font-size:10px; display:flex; flex-direction:column; gap:4px; margin-top:6px;">
-          <div style="display:flex; justify-content:space-between;">
-            <span>PWD Main Box Drain:</span>
-            <span style="font-weight:700; color:var(--severe-red);">FULL & OVERFLOWING (144%)</span>
+        <!-- Drain Status (Collapsible Accordion) -->
+        <div class="card collapsed" id="cardDrains">
+          <div class="card-head-accordion" onclick="toggleCardAccordion('cardDrains')">
+            <h2
+              style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:800; color:var(--text-title); margin:0;">
+              🌊 Underground Storm Drain Status</h2>
+            <span class="accordion-arrow">▼</span>
           </div>
-          <div style="display:flex; justify-content:space-between;">
-            <span>Kakrola River Outlet:</span>
-            <span style="font-weight:700; color:var(--severe-red);">RIVER FLOWING BACKWARDS</span>
+          <div class="card-collapsible-body"
+            style="font-size:10px; display:flex; flex-direction:column; gap:4px; margin-top:6px;">
+            <div style="display:flex; justify-content:space-between;">
+              <span>PWD Main Box Drain:</span>
+              <span style="font-weight:700; color:var(--severe-red);">FULL & OVERFLOWING (144%)</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Kakrola River Outlet:</span>
+              <span style="font-weight:700; color:var(--severe-red);">RIVER FLOWING BACKWARDS</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Emergency Services Alert Broadcast Card (Collapsible Accordion) -->
-      <div class="card collapsed" id="cardBroadcast">
-        <div class="card-head-accordion" onclick="toggleCardAccordion('cardBroadcast')">
-          <h2 style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:800; color:var(--text-title); margin:0;">📢 Emergency Broadcast</h2>
-          <span class="accordion-arrow">▼</span>
-        </div>
-        <div class="card-collapsible-body" style="margin-top:6px;">
-          <p style="font-size:10px; color:var(--text-muted); margin-top:3px;">
-            Automated multi-agency dispatch triggers for NDRF, Traffic Police & DMRC.
-          </p>
-          <button class="broadcast-btn-sidebar" onclick="broadcastEmergencyAlert()">
-            📢 Broadcast Emergency Alert
-          </button>
+        <!-- Emergency Services Alert Broadcast Card (Collapsible Accordion) -->
+        <div class="card collapsed" id="cardBroadcast">
+          <div class="card-head-accordion" onclick="toggleCardAccordion('cardBroadcast')">
+            <h2
+              style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:800; color:var(--text-title); margin:0;">
+              📢 Emergency Broadcast</h2>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="card-collapsible-body" style="margin-top:6px;">
+            <p style="font-size:10px; color:var(--text-muted); margin-top:3px;">
+              Automated multi-agency dispatch triggers for NDRF, Traffic Police & DMRC.
+            </p>
+            <button class="broadcast-btn-sidebar" onclick="broadcastEmergencyAlert()">
+              📢 Broadcast Emergency Alert
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
     <!-- Right GIS Map Container -->
     <div class="map-container">
@@ -2051,17 +2312,18 @@
         <button class="radar-toggle-btn active" id="btnRadarToggle" onclick="toggleDopplerRadar()">
           <span class="radar-ping"></span> 📡 Doppler Radar Overlay (dBZ)
         </button>
-        <button class="expand-map-btn" id="btnExpandMap" onclick="toggleMapFullscreen()" title="Expand Map to Fullscreen">
+        <button class="expand-map-btn" id="btnExpandMap" onclick="toggleMapFullscreen()"
+          title="Expand Map to Fullscreen">
           <span id="expandMapIcon">⛶</span> <span id="expandMapText">Expand Map</span>
         </button>
-    </div>
+      </div>
 
   </main>
 
   <!-- Leaflet JS & Script -->
   <script>
     // Global Immediate Access Chatbot Handler
-    window.toggleChatbot = function(e) {
+    window.toggleChatbot = function (e) {
       if (e && e.stopPropagation) e.stopPropagation();
       console.log('toggleChatbot executed!');
       const win = document.getElementById('chatbotWindow');
@@ -2084,10 +2346,10 @@
       }
     };
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const fab = document.getElementById('chatbotFab');
       if (fab) {
-        fab.onclick = function(e) {
+        fab.onclick = function (e) {
           window.toggleChatbot(e);
         };
       }
@@ -2362,7 +2624,7 @@
       const q = query.trim().toLowerCase();
 
       // 1. Filter local instant presets
-      const localMatches = LOCAL_LOCATION_PRESETS.filter(loc => 
+      const localMatches = LOCAL_LOCATION_PRESETS.filter(loc =>
         loc.name.toLowerCase().includes(q) || loc.area.toLowerCase().includes(q)
       );
 
@@ -2453,7 +2715,7 @@
       }
     }
 
-    window.onerror = function(msg, url, line, col, error) {
+    window.onerror = function (msg, url, line, col, error) {
       showMobileToast(`⚠️ JS Error: ${msg} (Line ${line})`, 'error');
     };
 
@@ -2518,7 +2780,7 @@
             if (data && data[0]) {
               currentOriginCoords = { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
             }
-          } catch(e) {}
+          } catch (e) { }
         }
       }
 
@@ -2533,7 +2795,7 @@
             if (data && data[0]) {
               currentDestCoords = { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
             }
-          } catch(e) {}
+          } catch (e) { }
         }
       }
     }
@@ -2550,7 +2812,7 @@
 
       const dx = dLng - oLng;
       const dy = dLat - oLat;
-      const distKm = Math.sqrt(dx*dx + dy*dy) * 111.0;
+      const distKm = Math.sqrt(dx * dx + dy * dy) * 111.0;
 
       const perpOffset = Math.min(0.03, Math.max(0.008, distKm * 0.005));
 
@@ -2678,7 +2940,7 @@
 
       try {
         await ensureGeocodedCoords();
-      } catch(e) {}
+      } catch (e) { }
 
       if (!currentOriginCoords || !currentDestCoords) {
         if (btn) btn.innerText = '⚡ Find Flood-Safe Route';
@@ -2727,18 +2989,18 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       })
-      .then(res => {
-        if (!res.ok) throw new Error("API returned status " + res.status);
-        return res.json();
-      })
-      .then(data => {
-        handleRouteSuccess(data);
-      })
-      .catch(err => {
-        console.log("Using client-side fallback route solver:", err);
-        const fallbackData = calculateClientSideFallbackRoutes(currentOriginCoords, currentDestCoords, vehicle);
-        handleRouteSuccess(fallbackData);
-      });
+        .then(res => {
+          if (!res.ok) throw new Error("API returned status " + res.status);
+          return res.json();
+        })
+        .then(data => {
+          handleRouteSuccess(data);
+        })
+        .catch(err => {
+          console.log("Using client-side fallback route solver:", err);
+          const fallbackData = calculateClientSideFallbackRoutes(currentOriginCoords, currentDestCoords, vehicle);
+          handleRouteSuccess(fallbackData);
+        });
     }
 
     function renderRoutesOnMap(routes) {
@@ -2938,7 +3200,7 @@
     }
 
     let sliderFetchTimeout = null;
-    slider.addEventListener('input', function() {
+    slider.addEventListener('input', function () {
       const mins = parseInt(this.value);
       timeDisplay.innerText = `+${mins} Mins`;
       updateForecastTimestamp(mins);
@@ -3000,7 +3262,7 @@
       localStorage.setItem('urban_flood_language', currentLanguage);
 
       updateLanguageUI();
-      
+
       const sliderVal = parseInt(document.getElementById('timeSlider')?.value || 60);
       fetchNowcastData(sliderVal);
     }
@@ -3384,7 +3646,7 @@
           // Fallback calculation if backend is unreachable
           let depth = 0.0, dbz = 0.0, rainMm = 0.0, runoffMm = 0.0;
           let alertMsg = "🟢 LIVE WEATHER: Delhi NCR streets are completely clear (0.0 cm depth). No active flood threat.";
-          
+
           if (currentDataMode === 'simulated') {
             let mult = leadMins <= 0 ? 0.2 : (leadMins <= 15 ? 0.5 : (leadMins <= 30 ? 0.8 : (leadMins <= 60 ? 1.0 : (leadMins <= 120 ? 0.65 : 0.3))));
             depth = Math.round(40.3 * mult * 10) / 10;
@@ -3393,7 +3655,7 @@
             runoffMm = Math.round(59.8 * mult * 10) / 10;
             alertMsg = `⚠️ FLOOD ALERT: Heavy rain simulation predicted depth ${depth} cm across Delhi NCR low-lying hotspots.`;
           }
-          
+
           document.getElementById('valDepth').innerText = `${depth} cm`;
           document.getElementById('valRadar').innerText = `${dbz} dBZ`;
           document.getElementById('valRain').innerText = `${rainMm} mm`;
@@ -3532,7 +3794,7 @@
       modal.classList.add('active');
 
       const depthEl = document.getElementById('valDepth');
-const currentDepth = depthEl ? parseFloat(depthEl.innerText) : 40.3;
+      const currentDepth = depthEl ? parseFloat(depthEl.innerText) : 40.3;
 
       const payload = {
         "alert_status": "BROADCASTED",
@@ -3561,7 +3823,7 @@ const currentDepth = depthEl ? parseFloat(depthEl.innerText) : 40.3;
       };
 
       const payloadDisplay = document.getElementById('jsonPayloadDisplay');
-if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(payload, null, 2);
+      if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(payload, null, 2);
 
       // Attempt backend API call if server is running
       fetch('/api/v1/alert-broadcast', {
@@ -3572,9 +3834,9 @@ if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(payload, null, 2);
           water_depth_cm: currentDepth
         })
       }).then(res => res.json()).then(data => {
-        if(data && data.alert_status) {
+        if (data && data.alert_status) {
           const payloadDisplay = document.getElementById('jsonPayloadDisplay');
-if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(data, null, 2);
+          if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(data, null, 2);
         }
       }).catch(err => console.log("Offline mode: using simulated alert payload."));
     }
@@ -3608,7 +3870,7 @@ if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(data, null, 2);
 
     function triggerAgencyAction(agencyKey, targetName, actionCode) {
       showMobileToast(`📡 Triggering REST API dispatch signal for ${targetName}...`, 'info');
-      
+
       const payload = {
         "agency": agencyKey,
         "recipient": targetName,
@@ -3622,13 +3884,13 @@ if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(data, null, 2);
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       })
-      .then(res => res.json())
-      .then(data => {
-        showMobileToast(`✅ HTTP 200 OK: Emergency Dispatch Signal Received by ${targetName}`, 'success');
-      })
-      .catch(err => {
-        showMobileToast(`✅ Simulated API Dispatch Signal Sent to ${targetName}`, 'success');
-      });
+        .then(res => res.json())
+        .then(data => {
+          showMobileToast(`✅ HTTP 200 OK: Emergency Dispatch Signal Received by ${targetName}`, 'success');
+        })
+        .catch(err => {
+          showMobileToast(`✅ Simulated API Dispatch Signal Sent to ${targetName}`, 'success');
+        });
     }
 
     function copyAlertJson() {
@@ -3644,46 +3906,59 @@ if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(data, null, 2);
       <div class="modal-header">
         <div>
           <h3 style="margin:0; font-size:16px;">📢 Multi-Agency Emergency Broadcast Center</h3>
-          <div style="font-size:11px; opacity:0.9; margin-top:2px;">Automated Early Warning & Dispatch Protocol for Government Authorities</div>
+          <div style="font-size:11px; opacity:0.9; margin-top:2px;">Automated Early Warning & Dispatch Protocol for
+            Government Authorities</div>
         </div>
         <button class="modal-close-btn" onclick="closeAlertModal()">✕</button>
       </div>
       <div class="modal-body">
-        
+
         <!-- Explanation Info Box for Users & Judges -->
-        <div style="background:var(--card-bg); border:1px solid var(--card-border); border-left:4px solid var(--brand-blue); padding:10px 12px; border-radius:8px; font-size:11px; color:var(--text-sub); line-height:1.5;">
+        <div
+          style="background:var(--card-bg); border:1px solid var(--card-border); border-left:4px solid var(--brand-blue); padding:10px 12px; border-radius:8px; font-size:11px; color:var(--text-sub); line-height:1.5;">
           💡 <b>What is this section? (SIH Problem Statement Requirement)</b><br>
-          When the AI model predicts street-level flooding across Delhi low-lying hotspots, this system automatically sends instant SMS/API warnings to the <b>Delhi Traffic Police</b>, <b>NDRF Disaster Response</b>, and <b>DMRC Metro</b> to proactively block inundated roads and safeguard commuters.
+          When the AI model predicts street-level flooding across Delhi low-lying hotspots, this system automatically
+          sends instant SMS/API warnings to the <b>Delhi Traffic Police</b>, <b>NDRF Disaster Response</b>, and <b>DMRC
+            Metro</b> to proactively block inundated roads and safeguard commuters.
         </div>
 
         <!-- View Selector Tabs -->
-        <div style="display:flex; gap:6px; background:var(--card-bg); padding:4px; border-radius:8px; border:1px solid var(--card-border);">
-          <button id="alertTabSummary" onclick="switchAlertModalTab('summary')" style="flex:1; padding:8px; font-size:11px; font-weight:800; border:none; border-radius:6px; background:var(--brand-blue); color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+        <div
+          style="display:flex; gap:6px; background:var(--card-bg); padding:4px; border-radius:8px; border:1px solid var(--card-border);">
+          <button id="alertTabSummary" onclick="switchAlertModalTab('summary')"
+            style="flex:1; padding:8px; font-size:11px; font-weight:800; border:none; border-radius:6px; background:var(--brand-blue); color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
             📱 Govt & Citizen Action View
           </button>
-          <button id="alertTabJson" onclick="switchAlertModalTab('json')" style="flex:1; padding:8px; font-size:11px; font-weight:800; border:none; border-radius:6px; background:transparent; color:var(--text-sub); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+          <button id="alertTabJson" onclick="switchAlertModalTab('json')"
+            style="flex:1; padding:8px; font-size:11px; font-weight:800; border:none; border-radius:6px; background:transparent; color:var(--text-sub); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
             ⚡ SIH Judge / Live API Payload
           </button>
         </div>
 
         <!-- Alert Summary Banner -->
-        <div id="modalAlertBanner" style="display:flex; justify-content:space-between; align-items:center; background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.3); padding:12px; border-radius:8px;">
+        <div id="modalAlertBanner"
+          style="display:flex; justify-content:space-between; align-items:center; background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.3); padding:12px; border-radius:8px;">
           <div>
-            <div id="modalAlertTitle" style="font-size:13px; font-weight:800; color:var(--severe-red);">🚨 CRITICAL FLOOD EMERGENCY ALERT</div>
-            <div id="modalAlertSub" style="font-size:11px; color:var(--text-sub); margin-top:2px;">Location: Delhi Low-Lying Hotspots (Dwarka Mor / Kakrola Junction)</div>
+            <div id="modalAlertTitle" style="font-size:13px; font-weight:800; color:var(--severe-red);">🚨 CRITICAL
+              FLOOD EMERGENCY ALERT</div>
+            <div id="modalAlertSub" style="font-size:11px; color:var(--text-sub); margin-top:2px;">Location: Delhi
+              Low-Lying Hotspots (Dwarka Mor / Kakrola Junction)</div>
           </div>
-          <span style="background:#dc2626; color:white; font-size:10px; font-weight:800; padding:5px 10px; border-radius:20px; letter-spacing:0.5px;">3 AGENCIES AUTO-NOTIFIED</span>
+          <span
+            style="background:#dc2626; color:white; font-size:10px; font-weight:800; padding:5px 10px; border-radius:20px; letter-spacing:0.5px;">3
+            AGENCIES AUTO-NOTIFIED</span>
         </div>
 
         <!-- View 1: Common People & Agency Actions View -->
         <div id="alertViewSummary" style="display:flex; flex-direction:column; gap:10px;">
-          <div style="font-weight:800; font-size:12px; color:var(--text-title); display:flex; justify-content:space-between; align-items:center;">
+          <div
+            style="font-weight:800; font-size:12px; color:var(--text-title); display:flex; justify-content:space-between; align-items:center;">
             <span>🏛️ Automated Govt Agency Dispatches:</span>
             <span style="font-size:10px; color:var(--safe-green); font-weight:700;">🟢 Live SMS Gateways Ready</span>
           </div>
 
           <div class="agency-dispatch-grid">
-            
+
             <!-- Card 1: Traffic Police -->
             <div class="agency-card police">
               <div class="agency-title">
@@ -3693,9 +3968,14 @@ if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(data, null, 2);
               <div style="font-size:11px; color:var(--text-sub); margin-top:4px; line-height:1.4;">
                 <b>Automatic Action:</b> Najafgarh Road blocked at Dwarka Mor. Diversion active to Dabri Flyover.
               </div>
-              <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center; background:var(--panel-bg); padding:6px 8px; border-radius:6px; border:1px solid var(--panel-border);">
-                <span style="font-size:10px; color:var(--brand-blue); font-weight:700;">📱 Control SMS: +91-11-23010101</span>
-                <button onclick="triggerAgencyAction('police', 'Delhi Traffic Police Control Room (+91-11-23010101)', 'ROAD_CLOSURE_SMS')" style="font-size:9px; font-weight:800; background:var(--brand-blue); color:white; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">⚡ Test Dispatch</button>
+              <div
+                style="margin-top:8px; display:flex; justify-content:space-between; align-items:center; background:var(--panel-bg); padding:6px 8px; border-radius:6px; border:1px solid var(--panel-border);">
+                <span style="font-size:10px; color:var(--brand-blue); font-weight:700;">📱 Control SMS:
+                  +91-11-23010101</span>
+                <button
+                  onclick="triggerAgencyAction('police', 'Delhi Traffic Police Control Room (+91-11-23010101)', 'ROAD_CLOSURE_SMS')"
+                  style="font-size:9px; font-weight:800; background:var(--brand-blue); color:white; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">⚡
+                  Test Dispatch</button>
               </div>
             </div>
 
@@ -3706,11 +3986,17 @@ if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(data, null, 2);
                 <span class="agency-badge" style="background:#ffedd5; color:#ea580c;">PUMPS ACTIVE</span>
               </div>
               <div style="font-size:11px; color:var(--text-sub); margin-top:4px; line-height:1.4;">
-                <b>Automatic Action:</b> High-capacity dewatering pumps (Pump #4 & #5) mobilized at Kakrola Drain Outlet.
+                <b>Automatic Action:</b> High-capacity dewatering pumps (Pump #4 & #5) mobilized at Kakrola Drain
+                Outlet.
               </div>
-              <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center; background:var(--panel-bg); padding:6px 8px; border-radius:6px; border:1px solid var(--panel-border);">
-                <span style="font-size:10px; color:var(--brand-purple); font-weight:700;">⚡ NDRF Control: +91-9871000000</span>
-                <button onclick="triggerAgencyAction('ndrf', 'NDRF Dewatering Station Kakrola (+91-9871000000)', 'PUMP_START_SIGNAL')" style="font-size:9px; font-weight:800; background:var(--brand-purple); color:white; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">⚡ Trigger Pump</button>
+              <div
+                style="margin-top:8px; display:flex; justify-content:space-between; align-items:center; background:var(--panel-bg); padding:6px 8px; border-radius:6px; border:1px solid var(--panel-border);">
+                <span style="font-size:10px; color:var(--brand-purple); font-weight:700;">⚡ NDRF Control:
+                  +91-9871000000</span>
+                <button
+                  onclick="triggerAgencyAction('ndrf', 'NDRF Dewatering Station Kakrola (+91-9871000000)', 'PUMP_START_SIGNAL')"
+                  style="font-size:9px; font-weight:800; background:var(--brand-purple); color:white; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">⚡
+                  Trigger Pump</button>
               </div>
             </div>
 
@@ -3723,29 +4009,42 @@ if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(data, null, 2);
               <div style="font-size:11px; color:var(--text-sub); margin-top:4px; line-height:1.4;">
                 <b>Automatic Action:</b> Gate 2 waterlogged. Automatic passenger guidance diverted to Gate 1.
               </div>
-              <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center; background:var(--panel-bg); padding:6px 8px; border-radius:6px; border:1px solid var(--panel-border);">
-                <span style="font-size:10px; color:var(--safe-green); font-weight:700;">📢 DMRC Helpline: +91-11-23417910</span>
-                <button onclick="triggerAgencyAction('dmrc', 'DMRC Metro Control Room (+91-11-23417910)', 'METRO_SCREEN_ADVISORY')" style="font-size:9px; font-weight:800; background:var(--safe-green); color:white; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">⚡ Announce</button>
+              <div
+                style="margin-top:8px; display:flex; justify-content:space-between; align-items:center; background:var(--panel-bg); padding:6px 8px; border-radius:6px; border:1px solid var(--panel-border);">
+                <span style="font-size:10px; color:var(--safe-green); font-weight:700;">📢 DMRC Helpline:
+                  +91-11-23417910</span>
+                <button
+                  onclick="triggerAgencyAction('dmrc', 'DMRC Metro Control Room (+91-11-23417910)', 'METRO_SCREEN_ADVISORY')"
+                  style="font-size:9px; font-weight:800; background:var(--safe-green); color:white; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">⚡
+                  Announce</button>
               </div>
             </div>
 
           </div>
 
           <!-- Citizen Emergency SOS Call Box -->
-          <div style="background:linear-gradient(135deg, #1e293b, #0f172a); border-radius:10px; padding:12px; color:white; display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+          <div
+            style="background:linear-gradient(135deg, #1e293b, #0f172a); border-radius:10px; padding:12px; color:white; display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
             <div>
-              <div style="font-size:12px; font-weight:800; color:#f8fafc;">🆘 Trapped in Flood Water? Direct Citizen Helpline</div>
-              <div style="font-size:10px; color:#94a3b8;">Call National Disaster Helpline 112 or Delhi Flood Control 1077</div>
+              <div style="font-size:12px; font-weight:800; color:#f8fafc;">🆘 Trapped in Flood Water? Direct Citizen
+                Helpline</div>
+              <div style="font-size:10px; color:#94a3b8;">Call National Disaster Helpline 112 or Delhi Flood Control
+                1077</div>
             </div>
-            <a href="tel:112" style="background:#dc2626; color:white; font-size:11px; font-weight:800; padding:8px 14px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">📞 CALL 112</a>
+            <a href="tel:112"
+              style="background:#dc2626; color:white; font-size:11px; font-weight:800; padding:8px 14px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">📞
+              CALL 112</a>
           </div>
         </div>
 
         <!-- View 2: SIH Judge / Developer API JSON Payload -->
         <div id="alertViewJson" style="display:none; flex-direction:column; gap:8px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-weight:700; font-size:11px; color:var(--text-title);">📄 Live REST API Payload (`POST /api/v1/alert-broadcast`):</span>
-            <button onclick="copyAlertJson()" style="font-size:10px; padding:4px 10px; background:var(--brand-blue); color:white; border:none; border-radius:4px; cursor:pointer; font-weight:700;">📋 Copy API JSON</button>
+            <span style="font-weight:700; font-size:11px; color:var(--text-title);">📄 Live REST API Payload (`POST
+              /api/v1/alert-broadcast`):</span>
+            <button onclick="copyAlertJson()"
+              style="font-size:10px; padding:4px 10px; background:var(--brand-blue); color:white; border:none; border-radius:4px; cursor:pointer; font-weight:700;">📋
+              Copy API JSON</button>
           </div>
         </div>
       </div>
@@ -3755,54 +4054,72 @@ if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(data, null, 2);
   <!-- Detailed System Mode Info Modal (Live Weather vs Demo Simulation) -->
   <div class="modal-overlay" id="modeInfoModal" onclick="if(event.target===this) closeModeInfoModal()">
     <div class="modal-card">
-      <div class="modal-header" style="background:linear-gradient(135deg, var(--brand-purple), var(--brand-blue)); color:white;">
+      <div class="modal-header"
+        style="background:linear-gradient(135deg, var(--brand-purple), var(--brand-blue)); color:white;">
         <div>
           <h3 style="margin:0; font-size:15px;">💡 System Mode Guide: Live Weather vs Demo Simulation</h3>
-          <div style="font-size:11px; opacity:0.9; margin-top:2px;">Explanation for SIH Evaluators, Judges & Citizens</div>
+          <div style="font-size:11px; opacity:0.9; margin-top:2px;">Explanation for SIH Evaluators, Judges & Citizens
+          </div>
         </div>
         <button class="modal-close-btn" onclick="closeModeInfoModal()">✕</button>
       </div>
       <div class="modal-body" style="gap:12px;">
-        
+
         <!-- Currently Active Mode Status Banner -->
-        <div style="background:var(--card-bg); border:1px solid var(--card-border); padding:10px 14px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-size:12px; font-weight:800; color:var(--text-title);" id="modalCurrentModeText">🟢 Active Mode: Real-Time Live Weather</span>
-          <button onclick="toggleDataMode(); updateDataModeBtnUI();" style="padding:6px 12px; font-size:11px; font-weight:800; background:linear-gradient(135deg, var(--brand-purple), var(--brand-blue)); color:white; border:none; border-radius:6px; cursor:pointer;">🔄 Toggle Mode</button>
+        <div
+          style="background:var(--card-bg); border:1px solid var(--card-border); padding:10px 14px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:12px; font-weight:800; color:var(--text-title);" id="modalCurrentModeText">🟢 Active
+            Mode: Real-Time Live Weather</span>
+          <button onclick="toggleDataMode(); updateDataModeBtnUI();"
+            style="padding:6px 12px; font-size:11px; font-weight:800; background:linear-gradient(135deg, var(--brand-purple), var(--brand-blue)); color:white; border:none; border-radius:6px; cursor:pointer;">🔄
+            Toggle Mode</button>
         </div>
 
         <!-- Mode Comparison Grid -->
         <div id="modalModeBodyContent" style="display:flex; flex-direction:column; gap:10px;">
-          
+
           <!-- SIH Architecture Strategy Card for Judges -->
-          <div style="background:var(--card-bg); border:1px solid var(--brand-blue); border-left:4px solid var(--brand-blue); border-radius:8px; padding:12px;">
-            <div style="font-weight:800; font-size:12px; color:var(--brand-blue); display:flex; align-items:center; gap:6px;">
+          <div
+            style="background:var(--card-bg); border:1px solid var(--brand-blue); border-left:4px solid var(--brand-blue); border-radius:8px; padding:12px;">
+            <div
+              style="font-weight:800; font-size:12px; color:var(--brand-blue); display:flex; align-items:center; gap:6px;">
               🏆 SIH 2026 Strategy: Delhi NCR Scope vs High-Precision Pilot Catchment
             </div>
             <div style="font-size:11px; color:var(--text-sub); margin-top:6px; line-height:1.5;">
-              <b>1. City-Wide Scale (Delhi NCR):</b> Real-time 0–3h nowcasting & OSRM flood-aware navigation active across <b>all regions of Delhi NCR</b> (Central, South, North, East, West Delhi).<br>
-              <b>2. Micro-Precision Pilot (Dwarka Mor & Najafgarh Basin):</b> Used as the ground-truth verified 1D-2D SWMM Hydrodynamic Pilot Catchment (PWD Hotspot #147) following official MoES / NCMRWF iFLOWS architecture.
+              <b>1. City-Wide Scale (Delhi NCR):</b> Real-time 0–3h nowcasting & OSRM flood-aware navigation active
+              across <b>all regions of Delhi NCR</b> (Central, South, North, East, West Delhi).<br>
+              <b>2. Micro-Precision Pilot (Dwarka Mor & Najafgarh Basin):</b> Used as the ground-truth verified 1D-2D
+              SWMM Hydrodynamic Pilot Catchment (PWD Hotspot #147) following official MoES / NCMRWF iFLOWS architecture.
             </div>
           </div>
 
           <!-- Mode 1 Card -->
-          <div style="background:var(--panel-bg); border:1px solid var(--panel-border); border-left:4px solid var(--safe-green); border-radius:8px; padding:12px;">
-            <div style="font-weight:800; font-size:13px; color:var(--safe-green); display:flex; align-items:center; gap:6px;">
+          <div
+            style="background:var(--panel-bg); border:1px solid var(--panel-border); border-left:4px solid var(--safe-green); border-radius:8px; padding:12px;">
+            <div
+              style="font-weight:800; font-size:13px; color:var(--safe-green); display:flex; align-items:center; gap:6px;">
               🟢 Mode 1: Live Real-Time Weather (Default)
             </div>
             <div style="font-size:11px; color:var(--text-sub); margin-top:6px; line-height:1.5;">
-              <b>How does it work?</b> This mode fetches live 0-3 hour precipitation feeds from IMD Palam Radar station and Open-Meteo Weather API.<br>
-              <b>Result during clear weather:</b> When Delhi experiences clear weather, real-time rain is <b>0.0 mm</b> and street depth is <b>0.0 cm (Completely Safe)</b>.
+              <b>How does it work?</b> This mode fetches live 0-3 hour precipitation feeds from IMD Palam Radar station
+              and Open-Meteo Weather API.<br>
+              <b>Result during clear weather:</b> When Delhi experiences clear weather, real-time rain is <b>0.0 mm</b>
+              and street depth is <b>0.0 cm (Completely Safe)</b>.
             </div>
           </div>
 
           <!-- Mode 2 Card -->
-          <div style="background:var(--panel-bg); border:1px solid var(--panel-border); border-left:4px solid var(--brand-purple); border-radius:8px; padding:12px;">
-            <div style="font-weight:800; font-size:13px; color:var(--brand-purple); display:flex; align-items:center; gap:6px;">
+          <div
+            style="background:var(--panel-bg); border:1px solid var(--panel-border); border-left:4px solid var(--brand-purple); border-radius:8px; padding:12px;">
+            <div
+              style="font-weight:800; font-size:13px; color:var(--brand-purple); display:flex; align-items:center; gap:6px;">
               🧪 Mode 2: Demo Simulation (Heavy Storm Testing)
             </div>
             <div style="font-size:11px; color:var(--text-sub); margin-top:6px; line-height:1.5;">
-              <b>Why was this created?</b> Enables evaluators, judges, and citizens to test all advanced system features without waiting for an active monsoon storm.<br>
-              <b>What is simulated?</b> A peak <b>65mm/hr Cloudburst Storm Event (48.5 dBZ Radar Reflectivity)</b> over Delhi NCR Catchment & low-lying hotspots, resulting in:<br>
+              <b>Why was this created?</b> Enables evaluators, judges, and citizens to test all advanced system features
+              without waiting for an active monsoon storm.<br>
+              <b>What is simulated?</b> A peak <b>65mm/hr Cloudburst Storm Event (48.5 dBZ Radar Reflectivity)</b> over
+              Delhi NCR Catchment & low-lying hotspots, resulting in:<br>
               <ul style="margin-left:16px; margin-top:4px; line-height:1.4;">
                 <li>🚨 <b>40.3 cm Water Inundation Warning</b> triggered at low-lying flood hotspots in Delhi.</li>
                 <li>🚗 Car engine intake hazard limit (25cm) exceed alert issued.</li>
@@ -3820,64 +4137,72 @@ if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(data, null, 2);
 
 
   <div class="chatbot-window" id="chatbotWindow">
-    <div class="chat-header">
-      <div style="display:flex; align-items:center; gap:10px;">
-        <img src="logo.jpeg" alt="HydroCore AI Logo" onerror="this.onerror=null; this.src='/logo.jpeg';" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1.5px solid rgba(255,255,255,0.8); box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
-        <div>
-          <div class="chat-header-title">HydroCore AI Assistant</div>
-          <div class="chat-header-sub">Hydrodynamic Graph Solver & Flood Q&A</div>
-        </div>
+    <div class="chat-header guide-header">
+      <div class="chat-header-title">
+        🤖 HydroCore AI Guide
       </div>
-      <button class="chat-close-btn" onclick="toggleChatbot()">✕</button>
+      <button class="chat-close-btn" onclick="toggleChatbot()" aria-label="Close HydroCore AI Guide">
+        ✕
+      </button>
     </div>
 
     <div class="chat-body" id="chatBody">
-      <div class="chat-banner-gif chat-msg-animated" style="animation-delay: 0.10s; width: 100%; text-align: center; margin-bottom: 8px; overflow: hidden; border-radius: 12px; border: 1.5px solid var(--card-border); box-shadow: 0 4px 12px rgba(0,0,0,0.06); background: rgba(0,0,0,0.02);">
-        <img src="/hello.gif" alt="HydroCore AI Flood Simulation" style="width:100%; height:auto; object-fit:contain; display:block; border-radius:10px;">
-      </div>
+
 
       <div class="chat-options-stack">
-        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.22s;" onclick="sendChatMsg('What does this website do?')">
-          <div class="chat-option-title"><span>🌊 What does this website do?</span> <span class="chat-option-arrow">➔</span></div>
-          <div class="chat-option-sub">0–3h real-time street flood depth nowcasts & hydraulic navigation across Delhi.</div>
+        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.22s;"
+          onclick="sendChatMsg('What does this website do?')">
+          <div class="chat-option-title"><span>🌊 What does this website do?</span> <span
+              class="chat-option-arrow">➔</span></div>
+          <div class="chat-option-sub">0–3h real-time street flood depth nowcasts & hydraulic navigation across Delhi.
+          </div>
         </div>
 
-        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.34s;" onclick="sendChatMsg('How to use this website?')">
-          <div class="chat-option-title"><span>🧭 How to use this system?</span> <span class="chat-option-arrow">➔</span></div>
+        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.34s;"
+          onclick="sendChatMsg('How to use this website?')">
+          <div class="chat-option-title"><span>🧭 How to use this system?</span> <span
+              class="chat-option-arrow">➔</span>
+          </div>
           <div class="chat-option-sub">Guide to search routes, set vehicle intake limits & view emergency alerts.</div>
         </div>
 
-        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.46s;" onclick="sendChatMsg('What is the basis of results and accuracy?')">
-          <div class="chat-option-title"><span>📊 Prediction Accuracy & Data Basis</span> <span class="chat-option-arrow">➔</span></div>
+        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.46s;"
+          onclick="sendChatMsg('What is the basis of results and accuracy?')">
+          <div class="chat-option-title"><span>📊 Prediction Accuracy & Data Basis</span> <span
+              class="chat-option-arrow">➔</span></div>
           <div class="chat-option-sub">Powered by IMD Doppler Radar, 30m DEM Elevation Grid & 1D-2D SWMM Solver.</div>
         </div>
 
-        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.58s;" onclick="sendChatMsg('Is my car safe to drive?')">
-          <div class="chat-option-title"><span>🚗 Vehicle Water Depth Limits</span> <span class="chat-option-arrow">➔</span></div>
-          <div class="chat-option-sub">Engine intake safety limits: Cars (25cm), Bikes (15cm), Ambulances (45cm) & Detours.</div>
+        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.58s;"
+          onclick="sendChatMsg('Is my car safe to drive?')">
+          <div class="chat-option-title"><span>🚗 Vehicle Water Depth Limits</span> <span
+              class="chat-option-arrow">➔</span></div>
+          <div class="chat-option-sub">Engine intake safety limits: Cars (25cm), Bikes (15cm), Ambulances (45cm) &
+            Detours.</div>
         </div>
 
-        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.70s;" onclick="sendChatMsg('Tell me about Emergency Dispatches')">
-          <div class="chat-option-title"><span>📢 Multi-Agency Emergency Alerts</span> <span class="chat-option-arrow">➔</span></div>
+        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.70s;"
+          onclick="sendChatMsg('Tell me about Emergency Dispatches')">
+          <div class="chat-option-title"><span>📢 Multi-Agency Emergency Alerts</span> <span
+              class="chat-option-arrow">➔</span></div>
           <div class="chat-option-sub">Automated warning dispatches for Delhi Police, NDRF Pumps & DMRC Metro.</div>
         </div>
 
-        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.82s;" onclick="sendChatMsg('Explain Live vs Demo Mode')">
-          <div class="chat-option-title"><span>🧪 Live Weather vs Demo Simulation</span> <span class="chat-option-arrow">➔</span></div>
+        <div class="chat-option-card chat-msg-animated" style="animation-delay: 0.82s;"
+          onclick="sendChatMsg('Explain Live vs Demo Mode')">
+          <div class="chat-option-title"><span>🧪 Live Weather vs Demo Simulation</span> <span
+              class="chat-option-arrow">➔</span></div>
           <div class="chat-option-sub">Real-time clear weather monitoring vs peak 65mm storm cloudburst testing.</div>
         </div>
       </div>
     </div>
 
-    <div class="chat-footer">
-      <input type="text" id="chatInput" class="chat-input" placeholder="Ask a question (e.g. How does it work?)..." onkeydown="if(event.key==='Enter') sendChatMsg()">
-      <button class="chat-send-btn" onclick="sendChatMsg()" title="Send Message">✈️</button>
-    </div>
+
   </div>
 
   <script>
     // 💡 MODE GUIDE MODAL LOGIC
-    window.openModeInfoModal = function() {
+    window.openModeInfoModal = function () {
       console.log('openModeInfoModal triggered!');
       const modal = document.getElementById('modeInfoModal');
       if (modal) {
@@ -3894,7 +4219,7 @@ if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(data, null, 2);
       }
     };
 
-    window.closeModeInfoModal = function() {
+    window.closeModeInfoModal = function () {
       const modal = document.getElementById('modeInfoModal');
       if (modal) modal.classList.remove('active');
     };
@@ -3902,15 +4227,24 @@ if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(data, null, 2);
     // 🤖 FLOOD AI ASSISTANT CHATBOT LOGIC
     let isWelcomeRendered = true;
 
-    window.renderChatbotWelcome = function(force = false) {
+    window.renderChatbotWelcome = function (force = false) {
       const body = document.getElementById('chatBody');
       if (!body) return;
       // If not forced and a greeting banner already exists, skip rendering
-      if (!force && body.querySelector('.chat-banner-gif')) return;
+      if (!force && body.querySelector('.chat-banner-gif') && body.querySelector('.chat-options-stack')) return;
 
       body.innerHTML = `
-        <div class="chat-banner-gif chat-msg-animated" style="animation-delay: 0.10s; width: 100%; text-align: center; margin-bottom: 8px; overflow: hidden; border-radius: 12px; border: 1.5px solid var(--card-border); box-shadow: 0 4px 12px rgba(0,0,0,0.06); background: rgba(0,0,0,0.02);">
-<img src="/hello.gif" alt="HydroCore AI Flood Simulation" style="width: auto; height: auto; max-height: none; object-fit: contain; display: block; border-radius: 10px;">
+        <div class="chat-banner-gif chat-msg-animated"
+       style="animation-delay: 0.10s; width: 100%; text-align: center; margin-bottom: 8px; overflow: hidden; border-radius: 12px; border: 1.5px solid var(--card-border); box-shadow: 0 4px 12px rgba(0,0,0,0.06); background: rgba(0,0,0,0.02);">
+    <img
+      src="/hello.gif"
+      alt="HydroCore AI Flood Simulation"
+      width="480"
+      height="320"
+      decoding="async"
+      style="width:100%; height:auto; object-fit:contain; display:block; border-radius:10px;"
+    >
+
         </div>
 
         <div class="chat-options-stack">
@@ -3947,7 +4281,7 @@ if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(data, null, 2);
       `;
     };
 
-    window.sendChatMsg = function(customText = null) {
+    window.sendChatMsg = function (customText = null) {
       const input = document.getElementById('chatInput');
       const text = (customText || (input ? input.value : '') || '').trim();
       if (!text) return;
@@ -4035,4 +4369,5 @@ if (payloadDisplay) payloadDisplay.innerText = JSON.stringify(data, null, 2);
     }
   </script>
 </body>
+
 </html>

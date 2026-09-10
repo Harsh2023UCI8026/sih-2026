@@ -77,7 +77,6 @@
       "src": "/hello.gif",
       "dest": "/hello.gif"
     },
-
     {
       "src": "/dwarka_catchment_bounds.geojson",
       "dest": "/dwarka_catchment_bounds.geojson"
