@@ -5,12 +5,19 @@ from http.server import BaseHTTPRequestHandler
 
 import os
 import sys
-# Add src directory to path to allow importing the real inference API
+# Keep the API self-contained on Vercel: the serverless nowcast uses the
+# dependency-free formula path, not the 1.45 GB RandomForest artifact.
+api_path = os.path.abspath(os.path.dirname(__file__))
+if api_path not in sys.path:
+    sys.path.insert(0, api_path)
 src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src'))
 if src_path not in sys.path:
-    sys.path.append(src_path)
+    sys.path.insert(0, src_path)
 
-from main import API_CONTRACT_VERSION, calculate_nowcast as get_nowcast, get_drainage_graph
+from hydraulic_model import get_drainage_graph
+from lightweight_nowcast import calculate_lightweight_nowcast
+
+API_CONTRACT_VERSION = "1.0.1"
 
 class handler(BaseHTTPRequestHandler):
     def _send_json(self, data, status_code=200):
@@ -22,6 +29,7 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.send_header('Access-Control-Expose-Headers', 'X-SIH-API-Version')
+        self.send_header('Cache-Control', 'no-store')
         self.send_header('Content-Length', str(len(body)))
         self.end_headers()
         self.wfile.write(body)
@@ -184,7 +192,27 @@ class handler(BaseHTTPRequestHandler):
             mode = query.get('mode', ['live'])[0]
             zone = query.get('zone', ['pilot'])[0]
             force_refresh = query.get('refresh', ['0'])[0] == '1'
-            self._send_json(get_nowcast(lead_time, mode, zone, force_refresh=force_refresh))
+            try:
+                result = calculate_lightweight_nowcast(
+                    lead_time, mode, zone, force_refresh=force_refresh
+                )
+                self._send_json(result)
+            except Exception as exc:
+                print(f"[ERROR] Serverless nowcast failed: {type(exc).__name__}: {exc}")
+                self._send_json({
+                    "system_status": "FORECAST_UNAVAILABLE",
+                    "data_quality": "UNAVAILABLE",
+                    "alert_message": "The forecast service could not produce a result. Please retry shortly.",
+                    "error_type": type(exc).__name__,
+                    "lead_time_minutes": lead_time,
+                    "data_source_mode": mode,
+                    "metrics": {
+                        "rain_3h_mm": None, "rain_rate_mm_hr": None,
+                        "surface_runoff_estimate_mm": None, "dwarka_mor_depth_cm": None,
+                        "max_depth_cm": None,
+                    },
+                    "nodes": [], "spatial_node_predictions": [], "edge_predictions": [],
+                }, 503)
             return
 
         elif 'potholes-depressions' in path:
@@ -203,6 +231,15 @@ class handler(BaseHTTPRequestHandler):
 
         elif 'drainage-network' in path:
             self._send_json(get_drainage_graph())
+            return
+
+        elif 'zones' in path:
+            self._send_json({
+                "pilot": {
+                    "description": "Dwarka Mor & Najafgarh Drain Basin",
+                    "bbox": [77.0150, 28.5900, 77.0500, 28.6300],
+                }
+            })
             return
 
         else:
@@ -243,4 +280,3 @@ class handler(BaseHTTPRequestHandler):
             })
         else:
             self._send_json({"error": "POST Endpoint not found"}, 404)
-

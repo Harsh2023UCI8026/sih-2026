@@ -134,6 +134,55 @@ def _depth_from_excess_mm(
     return depth_m * 100.0  # → cm
 
 
+def get_drainage_graph() -> Dict[str, Any]:
+    """Return the configured pilot graph for lightweight serverless responses."""
+    return _GRAPH
+
+
+def estimate_edge_depths(rain_mm: float, imperviousness_ratio: float = 0.85) -> list:
+    """Apply the documented formula directly to each configured pilot edge.
+
+    This dependency-free path is intended for hosts that cannot package the
+    large RandomForest artifact. It returns assumption-based estimates, not
+    sensor observations or safety determinations.
+    """
+    rain_mm = max(0.0, float(rain_mm))
+    results = []
+    for edge_id in _EDGES:
+        capacity_mmhr, catchment_sqm, _ = _manning_capacity_mmhr(edge_id)
+        runoff_mm = _rational_runoff_mm(rain_mm, imperviousness_ratio)
+        excess_mm = max(runoff_mm - capacity_mmhr, 0.0)
+        depth_cm = _depth_from_excess_mm(
+            excess_mm,
+            _DEFAULT_PONDING_AREA_SQM,
+            catchment_sqm,
+            _DEFAULT_CONTRIBUTING_FRACTION,
+        )
+
+        if depth_cm >= 50:
+            hazard_level = "CRITICAL"
+        elif depth_cm >= 30:
+            hazard_level = "SEVERE"
+        elif depth_cm >= 15:
+            hazard_level = "MODERATE"
+        elif depth_cm >= 5:
+            hazard_level = "CAUTION"
+        else:
+            hazard_level = "LOW_ESTIMATE"
+
+        results.append({
+            "edge_id": edge_id,
+            "rain_mm": rain_mm,
+            "predicted_depth_cm": round(depth_cm, 4),
+            "hazard_level": hazard_level,
+            "effective_capacity_mmhr": round(capacity_mmhr, 4),
+            "catchment_sqm": round(catchment_sqm, 2),
+            "extrapolation_warning": False,
+            "formula_estimate": True,
+        })
+    return results
+
+
 # ---------------------------------------------------------------------------
 # 4. Main entry point
 # ---------------------------------------------------------------------------

@@ -2643,10 +2643,10 @@
         <div class="explainer-box">
           <div class="technical-overview-head">
             <span class="technical-overview-kicker">Inference pipeline</span>
-            <span class="technical-status-pill">RandomForest · Dwarka pilot</span>
+            <span class="technical-status-pill" id="technicalMethodBadge">Awaiting forecast · Dwarka pilot</span>
           </div>
           <h3 class="technical-overview-title">How the depth band is produced</h3>
-          <p class="technical-overview-copy">For each forecast lead, a RandomForest regressor predicts depth on the five mapped drainage edges. Route results use the highest covered edge band, then travel time.</p>
+          <p class="technical-overview-copy" id="technicalMethodOverview">The active forecast and depth-estimation method will appear here when the dashboard API responds.</p>
           <div class="technical-facts" aria-label="Pilot drainage graph size">
             <div class="technical-fact"><strong>6</strong><span>graph nodes</span></div>
             <div class="technical-fact"><strong>5</strong><span>graph edges</span></div>
@@ -2654,10 +2654,10 @@
           <div class="technical-pipeline" aria-label="Rainfall-to-depth calculation steps">
             <div class="technical-step"><span class="technical-step-index">01</span><div><strong>Forecast forcing</strong><p>Open-Meteo hourly precipitation is interpolated into 15-minute amounts. The model receives next-hour rain, a rolling 3-hour total, and a reflectivity proxy calculated from rain; no radar/gauge observation is connected.</p></div></div>
             <div class="technical-step"><span class="technical-step-index">02</span><div><strong>Runoff and drainage features</strong><p>Runoff proxy = rainfall × 0.85 imperviousness assumption. Each edge also contributes Manning roughness, slope, cross-section area, catchment area, and effective capacity features.</p></div></div>
-            <div class="technical-step"><span class="technical-step-index">03</span><div><strong>Hydraulic training target</strong><p>Manning capacity is adjusted for assumed blockage; runoff above capacity is converted to ponding depth using a 15% contributing fraction and 5,000 m² ponding area. These formula-derived labels train the surrogate.</p><div class="technical-equations"><code>Qeff = (1/n) × A × Rh^(2/3) × √S × blockage_factor</code><code>excess_mm = max((rain_mm × 0.85) − capacity_mmhr, 0)</code><code>depth_cm = (((excess_mm / 1000) × catchment_m² × 0.15) / 5000 m²) × 100</code></div></div></div>
-            <div class="technical-step"><span class="technical-step-index">04</span><div><strong>Inference and banding</strong><p>The RandomForest predicts each edge depth, clips negative output to zero, then groups it into 0–5, 5–15, 15–30, 30–50, or ≥50 cm bands.</p></div></div>
+            <div class="technical-step"><span class="technical-step-index">03</span><div><strong>Hydraulic calculation</strong><p id="technicalHydraulicCopy">Manning capacity is adjusted for assumed blockage; runoff above capacity is converted to ponding depth using a 15% contributing fraction and 5,000 m² ponding area.</p><div class="technical-equations"><code>Qeff = (1/n) × A × Rh^(2/3) × √S × blockage_factor</code><code>excess_mm = max((rain_mm × 0.85) − capacity_mmhr, 0)</code><code>depth_cm = (((excess_mm / 1000) × catchment_m² × 0.15) / 5000 m²) × 100</code></div></div></div>
+            <div class="technical-step"><span class="technical-step-index">04</span><div><strong>Inference and banding</strong><p id="technicalInferenceCopy">The active API method and its depth bands appear here after a forecast loads.</p></div></div>
           </div>
-          <p class="technical-validation-note">Rainfall is the forecast input; depth bands are the model output.</p>
+          <p class="technical-validation-note" id="technicalValidationNote">Forecast and depth-estimation details appear when the API responds.</p>
           <div class="demo-explainer" id="demoTechExplainer" hidden><strong>Demo pathway:</strong> select a lead time to load its fixed synthetic rainfall scenario, compare edge predictions, and optionally play the illustrative moving overlay. The overlay does not drive the model values.</div>
         </div>
 
@@ -3989,6 +3989,7 @@
       window.lastFetchedError = message || 'Forecast unavailable. No road-depth estimate is shown.';
       window.lastFetchedErrorKind = errorKind;
       window.lastFetchedQuality = 'UNAVAILABLE';
+      updateTechnicalInferenceMethod('UNAVAILABLE');
       circleMarkers.forEach(marker => map.removeLayer(marker));
       circleMarkers = [];
       edgePolylines.forEach(item => map.removeLayer(item.layer));
@@ -4021,26 +4022,74 @@
 
     const EXPECTED_API_CONTRACT_VERSION = '1.0.1';
 
+    function updateTechnicalInferenceMethod(quality) {
+      const badge = document.getElementById('technicalMethodBadge');
+      const overview = document.getElementById('technicalMethodOverview');
+      const hydraulicCopy = document.getElementById('technicalHydraulicCopy');
+      const inferenceCopy = document.getElementById('technicalInferenceCopy');
+      const validationNote = document.getElementById('technicalValidationNote');
+      if (!badge || !overview || !hydraulicCopy || !inferenceCopy || !validationNote) return;
+
+      const isFormula = quality === 'UNVALIDATED_FORMULA_ESTIMATE' || quality === 'SYNTHETIC_FORMULA_DEMO';
+      const isDemo = quality === 'SYNTHETIC_FORMULA_DEMO';
+      const isModel = quality === 'UNVALIDATED_MODEL_ESTIMATE';
+      if (isFormula) {
+        badge.textContent = isDemo ? 'Formula · demo only' : 'Formula estimate · Dwarka pilot';
+        overview.textContent = 'For each forecast lead, the API applies a runoff and drain-capacity formula to estimate depths on five mapped drainage edges. The map displays those estimates as depth bands.';
+        hydraulicCopy.textContent = 'This deployment calculates Manning capacity and converts runoff above that assumed capacity into ponding depth. The values use a 15% contributing fraction and 5,000 m² ponding area.';
+        inferenceCopy.textContent = 'The API computes each edge depth directly, clips negative excess to zero, then groups estimates into 0–5, 5–15, 15–30, 30–50, or ≥50 cm bands. This deployment does not load or run the RandomForest artifact.';
+        validationNote.textContent = isDemo
+          ? 'Rainfall is a fixed synthetic demo input. Depth bands are unvalidated formula estimates, not measurements.'
+          : 'Rainfall comes from the Open-Meteo forecast model. Depth bands use unvalidated formula estimates and assumed drainage properties, not water-level measurements.';
+      } else if (isModel) {
+        badge.textContent = 'RandomForest · Dwarka pilot';
+        overview.textContent = 'For each forecast lead, a RandomForest regressor predicts depth on the five mapped drainage edges. Route results use the highest covered edge band, then travel time.';
+        hydraulicCopy.textContent = 'Manning capacity is adjusted for assumed blockage; runoff above capacity is converted to ponding depth using a 15% contributing fraction and 5,000 m² ponding area. These formula-derived labels train the surrogate.';
+        inferenceCopy.textContent = 'The RandomForest predicts each edge depth, clips negative output to zero, then groups it into 0–5, 5–15, 15–30, 30–50, or ≥50 cm bands.';
+        validationNote.textContent = 'Rainfall is the forecast input; depth bands are the model output. Training labels are formula-derived and have not been validated against observed street depths.';
+      } else {
+        badge.textContent = 'Awaiting forecast · Dwarka pilot';
+        overview.textContent = 'The active forecast and depth-estimation method will appear here when the dashboard API responds.';
+        hydraulicCopy.textContent = 'Manning capacity and the runoff-to-depth calculation use the assumptions shown below.';
+        inferenceCopy.textContent = 'The active API method and its depth bands appear here after a forecast loads.';
+        validationNote.textContent = 'Forecast and depth-estimation details appear when the API responds.';
+      }
+    }
+
     function fetchNowcastWithRetry(url, attempt = 0) {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 12000);
       return fetch(url, { cache: 'no-store', signal: controller.signal }).then(async res => {
         let data;
+        const contentType = res.headers.get('content-type') || 'unknown content type';
         try {
-          data = await res.json();
+          const body = await res.text();
+          data = JSON.parse(body);
         } catch (parseError) {
-          const error = new Error('The dashboard API returned an unreadable response.');
+          const error = new Error('The dashboard API returned a non-JSON response.');
           error.responseParseError = true;
+          error.httpStatus = res.status;
+          error.responseContentType = contentType;
           throw error;
         }
         if (!res.ok) {
-          const error = new Error(`Dashboard API returned HTTP ${res.status}.`);
+          const apiMessage = data && (data.alert_message || data.error || data.detail);
+          const error = new Error(apiMessage || `Dashboard API returned HTTP ${res.status}.`);
           error.httpStatus = res.status;
+          error.apiMessage = apiMessage || '';
+          throw error;
+        }
+        if (!data || typeof data !== 'object') {
+          const error = new Error('The dashboard API returned an unexpected JSON value.');
+          error.responseParseError = true;
+          error.httpStatus = res.status;
+          error.responseContentType = contentType;
           throw error;
         }
         return { data, apiVersion: res.headers.get('X-SIH-API-Version') };
       }).finally(() => clearTimeout(timeoutId)).catch(err => {
-        const retryable = !Number.isFinite(Number(err.httpStatus)) || Number(err.httpStatus) >= 500;
+        const retryable = Boolean(err.responseParseError)
+          || !Number.isFinite(Number(err.httpStatus)) || Number(err.httpStatus) >= 500;
         if (attempt < 1 && retryable) {
           return new Promise(resolve => setTimeout(resolve, 700)).then(() => fetchNowcastWithRetry(url, attempt + 1));
         }
@@ -4049,10 +4098,15 @@
     }
 
     function describeDashboardRequestError(err) {
-      if (err && Number.isFinite(Number(err.httpStatus))) {
-        return `Forecast service returned HTTP ${Number(err.httpStatus)} after retry.`;
+      if (err && err.responseParseError) {
+        const status = Number.isFinite(Number(err.httpStatus)) ? ` (HTTP ${Number(err.httpStatus)})` : '';
+        const contentType = err.responseContentType ? `, ${err.responseContentType}` : '';
+        return `Forecast service returned a non-JSON response${status}${contentType} after retry.`;
       }
-      if (err && err.responseParseError) return 'Forecast service returned an unreadable response after retry.';
+      if (err && Number.isFinite(Number(err.httpStatus))) {
+        const detail = err.apiMessage ? `: ${String(err.apiMessage).replace(/[\r\n]+/g, ' ').slice(0, 140)}` : '';
+        return `Forecast service returned HTTP ${Number(err.httpStatus)} after retry${detail}.`;
+      }
       if (err && err.name === 'AbortError') return 'Forecast request timed out after retry.';
       if (err && err.name === 'TypeError') return 'Unable to reach the forecast service. Check the connection and retry.';
       const detail = String(err && err.message || 'Unknown dashboard request error').replace(/[\r\n]+/g, ' ').slice(0, 140);
@@ -4111,6 +4165,7 @@
           window.lastFetchedError = '';
           window.lastFetchedErrorKind = '';
           window.lastFetchedQuality = data.data_quality || 'UNVALIDATED_MODEL_ESTIMATE';
+          updateTechnicalInferenceMethod(window.lastFetchedQuality);
           window.lastFetchedScenarioLabel = data.data_scenario_label || '';
           window.lastFetchedMode = mode;
           window.lastFetchedZone = zone;
@@ -4257,6 +4312,7 @@
     window.lastFetchedNodes = [];
     window.lastFetchedEdges = [];
     window.lastFetchedQuality = 'UNAVAILABLE';
+    updateTechnicalInferenceMethod('UNAVAILABLE');
     window.lastViewportError = '';
     window.nextEdgePredictions = [];
 
@@ -4460,7 +4516,11 @@
         const status = getDepthStatus(depth);
         const name = escapeMapHtml(getEdgeDisplayName(edge));
         const band = escapeMapHtml(depthBandLabel(depth));
-        const modeLabel = currentDataMode === 'simulated' ? 'Synthetic scenario' : 'Forecast-driven model';
+        const modeLabel = currentDataMode === 'simulated'
+          ? 'Synthetic scenario'
+          : (['UNVALIDATED_FORMULA_ESTIMATE', 'SYNTHETIC_FORMULA_DEMO'].includes(window.lastFetchedQuality)
+            ? 'Forecast + hydraulic formula'
+            : 'Forecast-driven model');
         const freshness = stale ? ' · last successful result' : '';
         return `<article class="map-impact-item"><span class="map-impact-dot" style="background:${status.color}"></span><div><div class="map-impact-name">${name}</div><div class="map-impact-meta">${band} band · +${lead} min · ${modeLabel}${freshness}</div></div></article>`;
       }).join('') + '<div class="map-impact-empty">Bands are for the pilot model links; map lines follow approximate road geometry.</div>';
@@ -5469,9 +5529,15 @@
         ? 'Dashboard use karne ke liye Simple view mein seedha summary dekhein aur Technical view mein model inputs/method. Map par click karke point ki pilot coverage check karein, lead-time control se alag forecast times dekhein, aur Route Planner mein start/destination daal kar modeled route bands compare karein. Chat ke quick buttons current loaded data samjhate hain.'
         : 'Start in Simple view for a plain-language summary, or switch to Technical view for model inputs and methods. Click the map to check pilot coverage at a point, use the lead-time control to inspect forecast times, and compare modeled route bands in the Route Planner. The chat quick prompts explain the data currently loaded.';
 
-      if (intent === 'method') return hi
-        ? 'Har forecast lead par RandomForest surrogate pilot graph ke mapped drainage links ke liye depth output deta hai. Training labels formula-derived/synthetic hain aur drainage capacity/geometry assumed hai; independent observed street-depth se validation nahi hui. Isliye result directional band hai, measured prediction nahi.'
-        : 'At each forecast lead, a RandomForest surrogate produces depth output for mapped links in the pilot graph. Its training labels are formula-derived/synthetic and drainage geometry/capacity are assumed; it has not been validated against independent observed street depths. Treat its output as a directional band, not a measured prediction.';
+      if (intent === 'method') {
+        const formulaEstimate = ['UNVALIDATED_FORMULA_ESTIMATE', 'SYNTHETIC_FORMULA_DEMO'].includes(window.lastFetchedQuality);
+        if (formulaEstimate) return hi
+          ? 'Is deployment par depth ke liye direct runoff aur Manning-capacity formula use hota hai; RandomForest file load nahi hoti. Geometry, blockage aur ponding area assumed hain, isliye depth bands unvalidated estimates hain, measurements ya safety clearance nahi.'
+          : 'This deployment calculates depth directly from runoff and Manning drain capacity; it does not load the RandomForest artifact. Geometry, blockage, and ponding area are assumed, so these are unvalidated estimates, not measurements or safety clearances.';
+        return hi
+          ? 'Har forecast lead par RandomForest surrogate pilot graph ke mapped drainage links ke liye depth output deta hai. Training labels formula-derived/synthetic hain aur drainage capacity/geometry assumed hai; independent observed street-depth se validation nahi hui. Isliye result directional band hai, measured prediction nahi.'
+          : 'At each forecast lead, a RandomForest surrogate produces depth output for mapped links in the pilot graph. Its training labels are formula-derived/synthetic and drainage geometry/capacity are assumed; it has not been validated against independent observed street depths. Treat its output as a directional band, not a measured prediction.';
+      }
 
       if (intent === 'alert') return hi
         ? 'Alert Preview current dashboard se local briefing/JSON draft banata hai; yeh SMS ya agency ko send nahi hota. Immediate emergency mein India ka 112 dial karein. Flood ya road closure ki field confirmation official source se karein.'
