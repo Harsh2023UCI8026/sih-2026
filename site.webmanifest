@@ -8,13 +8,8 @@
   "theme_color": "#2563eb",
   "icons": [
     {
-      "src": "logo.jpeg",
-      "sizes": "192x192",
-      "type": "image/jpeg"
-    },
-    {
-      "src": "logo.jpeg",
-      "sizes": "512x512",
+      "src": "/dashboard-assets/logo.jpg",
+      "sizes": "1024x1024",
       "type": "image/jpeg"
     }
   ]

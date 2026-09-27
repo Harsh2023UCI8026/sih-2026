@@ -406,13 +406,15 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
         # 1. Dashboard Web UI & Static Assets
         if path == '/' or path == '/index.html':
             self._send_file(os.path.join(WORKSPACE_DIR, 'index.html'), 'text/html')
-        elif path == '/logo.jpeg':
-            self._send_file(os.path.join(WORKSPACE_DIR, 'logo.jpeg'), 'image/jpeg')
+        elif path in ['/logo.jpeg', '/assets/logo.jpg', '/dashboard-assets/logo.jpg']:
+            self._send_file(os.path.join(WORKSPACE_DIR, '..', 'assets', 'logo.jpg'), 'image/jpeg')
         elif path == '/logo.webp':
             self._send_file(os.path.join(WORKSPACE_DIR, 'logo.webp'), 'image/webp')
         elif path == '/human.jpeg':
-            self._send_file(os.path.join(WORKSPACE_DIR, 'human.jpeg'), 'image/jpeg')
+            self._send_file(os.path.join(WORKSPACE_DIR, 'human.webp'), 'image/webp')
         elif path == '/human.webp':
+            self._send_file(os.path.join(WORKSPACE_DIR, 'human.webp'), 'image/webp')
+        elif path == '/dashboard-assets/human.webp':
             self._send_file(os.path.join(WORKSPACE_DIR, 'human.webp'), 'image/webp')
         elif path.lower().endswith('.gif'):
             # Serve any .gif file from the workspace directory
@@ -429,7 +431,7 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
         elif path == '/sitemap.xml':
             self._send_file(os.path.join(WORKSPACE_DIR, 'sitemap.xml'), 'application/xml')
         elif path == '/site.webmanifest':
-            self._send_file(os.path.join(WORKSPACE_DIR, 'site.webmanifest'), 'application/manifest+json')
+            self._send_file(os.path.join(WORKSPACE_DIR, '..', 'site.webmanifest'), 'application/manifest+json')
         elif path == '/dwarka_catchment_bounds.geojson':
             self._send_file(os.path.join(WORKSPACE_DIR, 'data', 'dwarka_catchment_bounds.geojson'), 'application/geo+json')
         elif path.startswith('/data/'):
@@ -452,6 +454,15 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
         elif path.startswith('/vendor/leaflet/'):
             vendor_root = os.path.abspath(os.path.join(WORKSPACE_DIR, 'vendor', 'leaflet'))
             asset_path = os.path.abspath(os.path.join(vendor_root, path[len('/vendor/leaflet/'):].replace('/', os.sep)))
+            if os.path.commonpath((vendor_root, asset_path)) == vendor_root and os.path.isfile(asset_path):
+                content_type = mimetypes.guess_type(asset_path)[0] or 'application/octet-stream'
+                self._send_file(asset_path, content_type)
+            else:
+                self.send_error(404, "Asset Not Found")
+        elif path.startswith('/dashboard-assets/leaflet/'):
+            vendor_root = os.path.abspath(os.path.join(WORKSPACE_DIR, 'vendor', 'leaflet'))
+            relative_asset = path[len('/dashboard-assets/leaflet/'):].replace('/', os.sep)
+            asset_path = os.path.abspath(os.path.join(vendor_root, relative_asset))
             if os.path.commonpath((vendor_root, asset_path)) == vendor_root and os.path.isfile(asset_path):
                 content_type = mimetypes.guess_type(asset_path)[0] or 'application/octet-stream'
                 self._send_file(asset_path, content_type)

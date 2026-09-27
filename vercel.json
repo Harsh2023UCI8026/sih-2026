@@ -35,7 +35,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
+          "value": "public, max-age=3600, must-revalidate"
         }
       ]
     }
@@ -55,7 +55,7 @@
     },
     {
       "src": "/logo.jpeg",
-      "dest": "/logo.jpeg"
+      "dest": "/assets/logo.jpg"
     },
     {
       "src": "/logo.webp",
@@ -63,15 +63,35 @@
     },
     {
       "src": "/human.jpeg",
-      "dest": "/human.jpeg"
+      "dest": "/src/human.webp"
     },
     {
       "src": "/human.webp",
-      "dest": "/human.webp"
+      "dest": "/src/human.webp"
     },
     {
       "src": "/hello.gif",
       "dest": "/hello.gif"
+    },
+    {
+      "src": "/assets/logo.jpg",
+      "dest": "/assets/logo.jpg"
+    },
+    {
+      "src": "/dashboard-assets/logo.jpg",
+      "dest": "/assets/logo.jpg"
+    },
+    {
+      "src": "/dashboard-assets/human.webp",
+      "dest": "/src/human.webp"
+    },
+    {
+      "src": "/dashboard-assets/leaflet/(.*)",
+      "dest": "/src/vendor/leaflet/$1"
+    },
+    {
+      "src": "/vendor/leaflet/(.*)",
+      "dest": "/src/vendor/leaflet/$1"
     },
     {
       "src": "/dwarka_catchment_bounds.geojson",

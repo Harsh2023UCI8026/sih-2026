@@ -30,17 +30,17 @@
   <meta name="twitter:title" content="Urban Flood Dashboard Prototype | Dwarka Pilot">
   <meta name="twitter:description"
     content="Forecast-model precipitation and unvalidated pilot street-depth estimates. Not an operational warning service.">
-  <meta name="twitter:image" content="/assets/logo.jpg">
+  <meta name="twitter:image" content="/dashboard-assets/logo.jpg">
 
   <!-- Favicon & PWA Manifest -->
-  <link rel="icon" type="image/jpeg" href="assets/logo.jpg" />
-  <link rel="shortcut icon" type="image/jpeg" href="assets/logo.jpg" />
+  <link rel="icon" type="image/jpeg" href="/dashboard-assets/logo.jpg" />
+  <link rel="shortcut icon" type="image/jpeg" href="/dashboard-assets/logo.jpg" />
   <link rel="manifest" href="site.webmanifest" />
 
   <!-- Google Fonts Preconnect (Lighthouse Performance) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="image" href="/human.jpeg" fetchpriority="high">
+  <link rel="preload" as="image" href="/dashboard-assets/human.webp" fetchpriority="high">
 
   <!-- Async Non-Render Blocking Stylesheets -->
   <link rel="preload" as="style"
@@ -49,13 +49,13 @@
     href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
     media="print" onload="this.media='all'">
 
-  <link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
-  <script src="/vendor/leaflet/leaflet.js"></script>
-  <script src="/vendor/leaflet/leaflet-heat.js"></script>
+  <link rel="stylesheet" href="/dashboard-assets/leaflet/leaflet.css">
+  <script src="/dashboard-assets/leaflet/leaflet.js"></script>
+  <script src="/dashboard-assets/leaflet/leaflet-heat.js"></script>
   <noscript>
     <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/dashboard-assets/leaflet/leaflet.css">
   </noscript>
 
   <!-- JSON-LD Structured Data for GEO & Search Engine Knowledge Graphs -->
@@ -2300,9 +2300,9 @@
 
   <!-- Top Alert Banner -->
   <div class="alert-banner unavailable">
-    <span id="forecastBannerMessage">Forecast status pending. Open this dashboard through http://localhost:8083/; direct file mode cannot load its API or map data.</span>
+    <span id="forecastBannerMessage">Loading the latest forecast…</span>
     <div class="alert-banner-actions">
-      <span id="forecastUpdatedAt" aria-live="polite" style="font-size:10px;font-weight:600;white-space:nowrap;">Forecast update pending</span>
+      <span id="forecastUpdatedAt" aria-live="polite" style="font-size:10px;font-weight:600;white-space:nowrap;">Connecting…</span>
       <button class="alert-btn" id="btnRefreshForecast" onclick="window.refreshForecastNow && window.refreshForecastNow()" title="Request a fresh precipitation forecast">↻ Refresh forecast</button>
     </div>
   </div>
@@ -2313,12 +2313,12 @@
       const message = document.getElementById('forecastBannerMessage');
       const updatedAt = document.getElementById('forecastUpdatedAt');
       const refreshButton = document.getElementById('btnRefreshForecast');
-      if (message) message.textContent = 'This page was opened as a file. Run `python src/main.py`, then open http://localhost:8083/ so the API and map data can load.';
-      if (updatedAt) updatedAt.textContent = 'Local server required';
+      if (message) message.textContent = 'Open this dashboard over HTTP or HTTPS to load forecast and map data.';
+      if (updatedAt) updatedAt.textContent = 'Connection unavailable';
       if (refreshButton) {
         refreshButton.disabled = true;
-        refreshButton.textContent = 'Server required';
-        refreshButton.title = 'Start the local server and open http://localhost:8083/';
+        refreshButton.textContent = 'Unavailable';
+        refreshButton.title = 'Open the dashboard over HTTP or HTTPS to enable forecast updates.';
       }
     }
   </script>
@@ -2538,7 +2538,7 @@
           </div>
         </div>
 
-        <!-- B) Human-Figure & Vehicle Water Level Illustration (human.jpeg Image Visualizer) -->
+        <!-- B) Human-Figure & Vehicle Water Level Illustration -->
         <div class="card" id="cardWaterIllustration">
           <div class="card-head">
             <h2 id="lblWaterIllustrationTitle"
@@ -2550,8 +2550,8 @@
             <div
               style="position:relative; width:100%; max-width:320px; height:200px; margin:0 auto; background:var(--panel-bg); border-radius:10px; border:1px solid var(--panel-border); overflow:hidden; display:flex; align-items:flex-end; justify-content:center;">
 
-              <!-- human.jpeg realistic image -->
-              <img src="/human.jpeg" alt="Human Height Reference for Water Inundation" width="219" height="219"
+              <!-- Optimized human-height reference illustration -->
+              <img src="/dashboard-assets/human.webp" alt="Human Height Reference for Water Inundation" width="219" height="219"
                 fetchpriority="high" loading="eager"
                 style="height:175px; width:auto; object-fit:contain; z-index:2; position:relative; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
 
@@ -4050,13 +4050,13 @@
 
     function describeDashboardRequestError(err) {
       if (err && Number.isFinite(Number(err.httpStatus))) {
-        return `Dashboard API returned HTTP ${Number(err.httpStatus)} after retry.`;
+        return `Forecast service returned HTTP ${Number(err.httpStatus)} after retry.`;
       }
-      if (err && err.responseParseError) return 'Dashboard API returned an unreadable response after retry.';
-      if (err && err.name === 'AbortError') return 'Dashboard API request timed out after retry.';
-      if (err && err.name === 'TypeError') return 'Dashboard API could not be reached after retry (network, proxy, or local server connection issue).';
+      if (err && err.responseParseError) return 'Forecast service returned an unreadable response after retry.';
+      if (err && err.name === 'AbortError') return 'Forecast request timed out after retry.';
+      if (err && err.name === 'TypeError') return 'Unable to reach the forecast service. Check the connection and retry.';
       const detail = String(err && err.message || 'Unknown dashboard request error').replace(/[\r\n]+/g, ' ').slice(0, 140);
-      return `Dashboard request failed after retry: ${detail}`;
+      return `Forecast request failed after retry: ${detail}`;
     }
 
     function fetchNowcastData(leadMins = 60, zone = currentZone, forceRefresh = false) {
@@ -4078,9 +4078,12 @@
           if (requestId !== nowcastRequestSequence) return;
           if (apiVersion !== EXPECTED_API_CONTRACT_VERSION) {
             if (forceRefresh) setForecastRefreshBusy(false);
+            const isLocalDashboard = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
             clearUnavailableForecast(
-              'The server on port 8083 is an older process. Stop it with Ctrl+C, restart Python using: python src/main.py (from the project folder), then reload this page.',
-              'Backend restart required'
+              isLocalDashboard
+                ? 'The local dashboard server is out of date. Restart it with python src/main.py, then reload this page.'
+                : 'The forecast service needs an update. Reload this dashboard and try again.',
+              isLocalDashboard ? 'Backend restart required' : 'Service update required'
             );
             return;
           }
@@ -4172,7 +4175,7 @@
             updateMapImpactFeed(getViewportEdges(), true);
             return;
           }
-          setForecastUpdatedLabel('Dashboard response unavailable · retry or inspect the local server');
+          setForecastUpdatedLabel('Forecast unavailable · retry when ready');
           clearUnavailableForecast(`${message} No current result is available. Use Refresh Forecast to try again.`);
         });
     }
