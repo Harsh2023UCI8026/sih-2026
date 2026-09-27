@@ -1,7 +1,7 @@
 {
   "name": "Urban Flood Nowcasting System | Dwarka Mor Pilot",
   "short_name": "FloodNowcast",
-  "description": "Real-Time 0-3 Hour Street-Level Flood Inundation Prediction & Safe Routing System by MoES / NCMRWF",
+  "description": "Dwarka pilot prototype with forecast-model precipitation and unvalidated flood-depth estimates.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0b0f19",

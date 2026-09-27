@@ -1,0 +1,8 @@
+{
+  "model_kind": "RandomForest surrogate for a deterministic hydraulic formula",
+  "label_semantics": "Formula-derived estimate; not measured street-water depth",
+  "inputs": "Historical workbook time series with unverified provider/version provenance plus synthetic rain and geometry augmentation",
+  "independent_observed_depth_validation": false,
+  "metrics_semantics": "Any training metrics measure fit to formula-generated labels; they are not real-world flood accuracy",
+  "existing_model_artifact_note": "This metadata describes the project's current training pipeline. The existing serialized model file has no embedded provenance record and has not been independently re-trained or audited in this pass."
+}

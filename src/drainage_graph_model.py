@@ -3,27 +3,12 @@ import json
 
 def build_dwarka_drainage_graph(workspace_dir):
     """
-    Constructs the 1D Directed Graph Topology G = (V, E) of Dwarka Mor Stormwater Drain Network
-    integrating extracted OpenStreetMap vector drains & Open-Elevation DTM grid points.
+    Builds a schematic Dwarka pilot graph from assumed node and drain values.
+    OSM road/drain tags and elevation samples are not treated as surveyed hydraulic geometry.
     """
-    print("[INFO] Building 1D Directed Graph Topology for Dwarka Mor Drainage System...")
+    print("[INFO] Building schematic prototype drainage graph; values are assumed inputs...")
     
-    osm_file = os.path.join(workspace_dir, "dwarka_osm_drains.geojson")
-    dem_file = os.path.join(workspace_dir, "dwarka_elevation_grid.json")
-    
-    osm_features = []
-    if os.path.exists(osm_file):
-        with open(osm_file, 'r', encoding='utf-8') as f:
-            osm_data = json.load(f)
-            osm_features = osm_data.get('features', [])
-        print(f"  [+] Ingested {len(osm_features)} extracted OpenStreetMap stormwater features.")
-        
-    dem_points = []
-    if os.path.exists(dem_file):
-        with open(dem_file, 'r', encoding='utf-8') as f:
-            dem_data = json.load(f)
-            dem_points = dem_data.get('elevation_points', [])
-        print(f"  [+] Ingested {len(dem_points)} extracted DEM elevation grid points.")
+    # This template graph does not infer underground geometry from OSM roads or DEM samples.
 
     # Base Core Drainage Graph Nodes
     nodes = [
@@ -36,7 +21,8 @@ def build_dwarka_drainage_graph(workspace_dir):
             "elevation_rim_m": 218.2,
             "elevation_invert_m": 216.5,
             "max_depth_m": 1.7,
-            "inflow_catchment_sqm": 85000
+            "inflow_catchment_sqm": 650000,
+            "estimated": True
         },
         {
             "id": "NODE_NAWADA_CROSSING",
@@ -58,7 +44,8 @@ def build_dwarka_drainage_graph(workspace_dir):
             "elevation_rim_m": 211.2,
             "elevation_invert_m": 209.2,
             "max_depth_m": 2.0,
-            "inflow_catchment_sqm": 240000
+            "inflow_catchment_sqm": 240000,
+            "elevation_estimated": True
         },
         {
             "id": "NODE_SEC3_14_CROSSING",
@@ -69,7 +56,8 @@ def build_dwarka_drainage_graph(workspace_dir):
             "elevation_rim_m": 211.8,
             "elevation_invert_m": 209.8,
             "max_depth_m": 2.0,
-            "inflow_catchment_sqm": 175000
+            "inflow_catchment_sqm": 175000,
+            "elevation_estimated": True
         },
         {
             "id": "NODE_KAKROLA_UNDERPASS",
@@ -95,24 +83,6 @@ def build_dwarka_drainage_graph(workspace_dir):
         }
     ]
 
-    # Ingest OSM Drain Inlets as supplementary nodes
-    for feat in osm_features:
-        props = feat.get('properties', {})
-        geom = feat.get('geometry', {})
-        if geom.get('type') == 'Point':
-            coords = geom.get('coordinates', [0, 0])
-            nodes.append({
-                "id": props.get('id', f"NODE_OSM_{len(nodes)}"),
-                "name": props.get('name', 'OSM Storm Drain Inlet'),
-                "type": "osm_drain_inlet",
-                "latitude": coords[1],
-                "longitude": coords[0],
-                "elevation_rim_m": 213.0,
-                "elevation_invert_m": 211.5,
-                "max_depth_m": 1.5,
-                "inflow_catchment_sqm": 55000
-            })
-    
     # Directed Edges (Pipes, Box Drains, Canals)
     edges = [
         {
@@ -125,7 +95,9 @@ def build_dwarka_drainage_graph(workspace_dir):
             "height_m": 1.5,
             "mannings_n": 0.013,
             "max_capacity_cumec": 12.5,
-            "equivalent_capacity_mmhr": 55.0
+            "equivalent_capacity_mmhr": 55.0,
+            "blockage_factor": 0.5,
+            "blockage_factor_assumed": True
         },
         {
             "id": "EDGE_PWD_TRUNK_2",
@@ -137,7 +109,9 @@ def build_dwarka_drainage_graph(workspace_dir):
             "height_m": 1.8,
             "mannings_n": 0.013,
             "max_capacity_cumec": 18.0,
-            "equivalent_capacity_mmhr": 45.0
+            "equivalent_capacity_mmhr": 45.0,
+            "blockage_factor": 0.5,
+            "blockage_factor_assumed": True
         },
         {
             "id": "EDGE_MASTER_DRAIN_SEC3",
@@ -148,7 +122,9 @@ def build_dwarka_drainage_graph(workspace_dir):
             "diameter_m": 1.5,
             "mannings_n": 0.013,
             "max_capacity_cumec": 15.0,
-            "equivalent_capacity_mmhr": 42.0
+            "equivalent_capacity_mmhr": 42.0,
+            "blockage_factor": 0.5,
+            "blockage_factor_assumed": True
         },
         {
             "id": "EDGE_KAKROLA_FEEDER",
@@ -159,7 +135,9 @@ def build_dwarka_drainage_graph(workspace_dir):
             "diameter_m": 1.8,
             "mannings_n": 0.013,
             "max_capacity_cumec": 22.0,
-            "equivalent_capacity_mmhr": 40.0
+            "equivalent_capacity_mmhr": 40.0,
+            "blockage_factor": 0.5,
+            "blockage_factor_assumed": True
         },
         {
             "id": "EDGE_NAJAFGARH_DISCHARGE",
@@ -171,41 +149,31 @@ def build_dwarka_drainage_graph(workspace_dir):
             "height_m": 3.0,
             "mannings_n": 0.018,
             "max_capacity_cumec": 45.0,
-            "equivalent_capacity_mmhr": 60.0
+            "equivalent_capacity_mmhr": 60.0,
+            "blockage_factor": 0.5,
+            "blockage_factor_assumed": True
         }
     ]
 
-    # Ingest OSM Canal / Drain LineStrings as supplementary edges
-    for idx, feat in enumerate(osm_features):
-        props = feat.get('properties', {})
-        geom = feat.get('geometry', {})
-        if geom.get('type') == 'LineString':
-            edges.append({
-                "id": f"EDGE_OSM_{idx+1}",
-                "source": "NODE_DWARKA_MOR_METRO",
-                "target": "NODE_KAKROLA_UNDERPASS",
-                "type": props.get('waterway_type', 'osm_canal'),
-                "length_m": 480,
-                "width_m": 2.0,
-                "height_m": 1.6,
-                "mannings_n": 0.015,
-                "max_capacity_cumec": 16.5,
-                "equivalent_capacity_mmhr": 48.0
-            })
+    for node in nodes:
+        node["estimated"] = True
+        node["data_quality"] = "ASSUMED_INPUT"
+    for edge in edges:
+        edge["geometry_estimated"] = True
+        edge["geometry_source"] = "SCHEMATIC_ASSUMPTION"
+        edge["data_quality"] = "ASSUMED_INPUT"
 
     graph_data = {
-        "network_name": "Dwarka Mor & Najafgarh Feeder Stormwater Directed Graph (Integrated)",
+        "network_name": "Dwarka pilot schematic drainage graph",
+        "data_quality": "SCHEMATIC_PROTOTYPE_GRAPH",
+        "provenance_note": "All node elevations, drainage dimensions, capacities, connectivity, and blockage inputs are assumptions pending survey and independent validation. This is not a municipal drainage inventory.",
         "spatial_crs": "EPSG:4326",
         "nodes": nodes,
         "edges": edges,
         "hydraulic_metadata": {
             "total_nodes": len(nodes),
             "total_edges": len(edges),
-            "critical_surcharge_node": "NODE_DWARKA_MOR_METRO",
-            "outlet_node": "NODE_NAJAFGARH_OUTFALL",
-            "najafgarh_drain_fsl_m": 211.5,
-            "integrated_osm_features": len(osm_features),
-            "integrated_dem_points": len(dem_points)
+            "source_files_used_for_geometry": False
         }
     }
     
@@ -213,8 +181,8 @@ def build_dwarka_drainage_graph(workspace_dir):
     with open(out_json_path, 'w', encoding='utf-8') as jf:
         json.dump(graph_data, jf, indent=2)
         
-    print(f"[SUCCESS] Integrated Drainage Graph JSON saved to: {out_json_path}")
-    print(f"          Graph expanded to {len(nodes)} Nodes and {len(edges)} Directed Edges.")
+    print(f"[SUCCESS] Schematic prototype graph saved to: {out_json_path}")
+    print(f"          Wrote {len(nodes)} schematic nodes and {len(edges)} assumed edges.")
 
 if __name__ == "__main__":
     current_dir = os.path.dirname(os.path.abspath(__file__))

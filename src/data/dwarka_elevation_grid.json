@@ -1,5 +1,4 @@
 {
-  "source": "Open-Elevation DEM (SRTM / Copernicus 30m DTM)",
   "bounding_box": "28.5900,77.0150 to 28.6300,77.0500",
   "total_sample_points": 25,
   "elevation_points": [
@@ -128,5 +127,8 @@
       "longitude": 77.05,
       "elevation_msl_m": 214.0
     }
-  ]
+  ],
+  "source_claim_in_legacy_file": "Open-Elevation DEM (SRTM / Copernicus 30m DTM)",
+  "source": "Legacy static elevation fixture; provider and retrieval provenance are not independently verified.",
+  "data_quality": "UNVERIFIED_STATIC_REFERENCE"
 }

@@ -1,0 +1,132 @@
+{
+  "source": "Open-Elevation DEM (SRTM / Copernicus 30m DTM)",
+  "bounding_box": "28.59,77.015 to 28.63,77.05",
+  "total_sample_points": 25,
+  "elevation_points": [
+    {
+      "elevation": 212.0,
+      "longitude": 77.015,
+      "latitude": 28.59
+    },
+    {
+      "latitude": 28.59,
+      "longitude": 77.0238,
+      "elevation": 213.0
+    },
+    {
+      "elevation": 209.0,
+      "longitude": 77.0325,
+      "latitude": 28.59
+    },
+    {
+      "elevation": 210.0,
+      "longitude": 77.0412,
+      "latitude": 28.59
+    },
+    {
+      "latitude": 28.59,
+      "longitude": 77.05,
+      "elevation": 209.0
+    },
+    {
+      "latitude": 28.6,
+      "longitude": 77.015,
+      "elevation": 208.0
+    },
+    {
+      "latitude": 28.6,
+      "longitude": 77.0238,
+      "elevation": 210.0
+    },
+    {
+      "latitude": 28.6,
+      "longitude": 77.0325,
+      "elevation": 218.0
+    },
+    {
+      "elevation": 218.0,
+      "longitude": 77.0412,
+      "latitude": 28.6
+    },
+    {
+      "elevation": 215.0,
+      "longitude": 77.05,
+      "latitude": 28.6
+    },
+    {
+      "elevation": 214.0,
+      "longitude": 77.015,
+      "latitude": 28.61
+    },
+    {
+      "elevation": 212.0,
+      "longitude": 77.0238,
+      "latitude": 28.61
+    },
+    {
+      "elevation": 217.0,
+      "longitude": 77.0325,
+      "latitude": 28.61
+    },
+    {
+      "elevation": 219.0,
+      "longitude": 77.0412,
+      "latitude": 28.61
+    },
+    {
+      "elevation": 216.0,
+      "longitude": 77.05,
+      "latitude": 28.61
+    },
+    {
+      "elevation": 213.0,
+      "longitude": 77.015,
+      "latitude": 28.62
+    },
+    {
+      "latitude": 28.62,
+      "longitude": 77.0238,
+      "elevation": 213.0
+    },
+    {
+      "latitude": 28.62,
+      "longitude": 77.0325,
+      "elevation": 218.0
+    },
+    {
+      "latitude": 28.62,
+      "longitude": 77.0412,
+      "elevation": 215.0
+    },
+    {
+      "latitude": 28.62,
+      "longitude": 77.05,
+      "elevation": 219.0
+    },
+    {
+      "latitude": 28.63,
+      "longitude": 77.015,
+      "elevation": 212.0
+    },
+    {
+      "latitude": 28.63,
+      "longitude": 77.0238,
+      "elevation": 220.0
+    },
+    {
+      "latitude": 28.63,
+      "longitude": 77.0325,
+      "elevation": 212.0
+    },
+    {
+      "latitude": 28.63,
+      "longitude": 77.0412,
+      "elevation": 219.0
+    },
+    {
+      "latitude": 28.63,
+      "longitude": 77.05,
+      "elevation": 214.0
+    }
+  ]
+}

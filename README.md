@@ -1,145 +1,61 @@
-# 🌊 Urban Flood Nowcasting System (Drainage and Rainfall Coupling)
-### **Real-Time 0–3 Hour Street-Level Flood Inundation Prediction & Safe-Routing Engine**
+# Urban Flood Nowcasting Prototype
 
-> **SIH 2026 Problem Statement**: Urban Flood Nowcasting System  
-> **Sponsoring Body**: Ministry of Earth Sciences (MoES) / National Centre for Medium Range Weather Forecasting (NCMRWF)  
-> **Category**: Software | **Theme**: Disaster Management  
-> **Coverage Scope**: All-Delhi NCR Region (City-Wide Scale) | **High-Precision Pilot Site**: Dwarka Mor & Najafgarh Drain Basin (`28.6186° N, 77.0319° E`)  
+This repository contains a Dwarka flood-dashboard prototype for the SIH 2026 problem area. It is not an operational flood-warning service and is not affiliated with or validated by a government agency.
 
----
+## What the app currently uses
 
-## 📌 Executive Summary
+| Output | Current source | What it means |
+| --- | --- | --- |
+| Precipitation input in Forecast mode | Open-Meteo Forecast API at the Dwarka pilot coordinate | Forecast-model output, not a local rain-gauge or radar observation. Open-Meteo documents that 15-minute values can be interpolated from hourly data outside North America and Central Europe: [API documentation](https://open-meteo.com/en/docs). |
+| Street-depth estimate | Local RandomForest surrogate and pilot drainage graph | An unvalidated model estimate. The surrogate was trained against a deterministic hydraulic formula using synthetic rainfall/geometry cases and assumed drain parameters. No local water-level sensor is connected. |
+| Base map | OpenStreetMap tiles; route geometry may use the public OSRM endpoint | Geographic context and route geometry only; neither source supplies flood depth observations. |
+| Demo mode | Precomputed synthetic storm scenarios | Interface demonstration only; not a forecast or observation. |
+| Alert control | Local JSON preview endpoint | No SMS or government-agency message is sent. |
 
-Urban flooding in Indian metros like Mumbai, Delhi, and Chennai is a hyper-local phenomenon dictated by micro-topography (DEM), high concrete imperviousness, and surcharged underground stormwater networks. Traditional Numerical Weather Prediction (NWP) models predict rain volume (e.g., *"65mm rain coming"*), but fail to tell municipal bodies **which exact street or intersection will flood and by how many centimeters**.
+The dashboard has **Simple View** and **Technical View**, with a responsive **Interactive Map** panel. It now requests a fresh forecast when asked and refreshes the forecast every 15 minutes while the page is active. The status line shows the retrieval time and whether the server reused its short-lived cache. A provider error includes a connection/HTTP diagnostic. The API returns a version header so the dashboard can identify an older Python server that is still running after source files change; stop it with Ctrl+C and start `python src/main.py` again. A refused loopback proxy is identified separately from an Open-Meteo API-key error. Open-Meteo's public forecast API does not use the keys in `.env`; its 15-minute Delhi precipitation values are interpolated from hourly forecast output. The serialized model file has no embedded provenance metadata; `models/model_provenance.json` records the known limits of the current training pipeline.
 
-This system fuses **real-time Doppler Weather Radar nowcasts (IMD Palam)** with a **1D-2D coupled hydrodynamic framework**, an **underground drainage directed graph network ($G=(V,E)$)**, and a fast **Physics-Informed GNN Surrogate Model** to deliver:
-1. **0–3 Hour Street-Level Water Depth Predictions ($\text{cm}$)** in $<100\text{ milliseconds}$.
-2. **Interactive 3D Web GIS Dashboard** with a 0–180 minute forward-looking slider.
-3. **Flood-Safe Navigation API Engine** that automatically reroutes emergency vehicles and commuters around flooded intersections.
+The configured OpenTopography key is referenced by the offline DEM-fetch script only. The data.gov.in and NASA Earthdata variables are not used by the current runtime forecast or inference path.
 
----
+The dashboard now returns an unavailable state instead of treating a timeout, unsupported area, missing model output, or absent route sample as 0 cm. A low or zero model estimate is not a statement that a road is dry or safe. The route comparison is restricted to the Dwarka pilot, depends on external road routing, and uses sparse model-node estimates near roads rather than measurements along road segments.
 
-## 🏗️ System Architecture & Workflow
+## Data and model limits
 
-```
-[ IMD Palam Doppler Radar (S-Band dBZ) ] + [ Bhuvan CartoDEM (10m DTM) ] + [ 1D Storm Drain Graph ]
-                                          │
-                                          ▼
-                      [ Data Ingestion & Feature Engine (data_pipeline.py) ]
-                                          │
-                                          ▼
-              [ Physics-Informed GNN Surrogate Model Engine (model_train.py) ]
-                                          │
-                      ┌───────────────────┴───────────────────┐
-                      ▼                                       ▼
-       [ Interactive Web GIS Dashboard ]          [ Flood-Safe Navigation API ]
-       (MapLibre 3D + 0-180m Slider)              (OSRM/Valhalla Detour Engine)
-```
+- There is no independently validated set of local observed water depths in the runtime path, so the project cannot state real-world accuracy or “most accurate” performance.
+- Depth coverage consists of **6 nodes and 5 schematic drainage edges** in the Dwarka pilot. The graph's elevations, drain dimensions, capacities, catchments, and blockage values are assumptions; OSM/OSRM line geometry is only geographic context and does not verify underground drains or surface-water depths. Other configured map zones do not have a depth model.
+- The runtime surrogate has nine model columns, but several carry no independent information: reflectivity is derived from forecast rain, imperviousness is fixed at 0.85, and hydraulic capacity uses assumed graph values. Its target is a deterministic formula output, not observed street water. Adding columns, nodes, or synthetic cases cannot establish predictive accuracy.
+- The historical CSV and hotspot registry contain project-entered incident records with mixed coordinate precision. Depth entries and linked sources have not been independently verified; these records are not used as measured training truth.
+- `data/scraped_ground_truth_pilot.csv` currently has a header and no observations. The flood-report CSV contains citations but no measured depth labels. Historical workbook files do not preserve enough provider/version metadata to establish their provenance.
+- Rainfall-to-reflectivity conversion is a formula-derived model feature. The UI does not present it as measured radar reflectivity.
 
----
+For a trustworthy operational model, connect authenticated local rain/radar feeds, water-level sensors or surveyed post-event depths, a surveyed drainage inventory, and an independent validation process. Until then, use the app for prototype exploration only and check official advisories for travel decisions.
 
-## ✨ Key Features & Capabilities
+`src/model_train.py` now refuses to overwrite the runtime model with its formula/synthetic training data. The optional `--allow-formula-surrogate-demo` flag writes a separate demo artifact only.
 
-* **0–3 Hour Lead Time Prediction**: Computes rolling 1h, 2h, and 3h lead-time rainfall forecast features.
-* **1D Directed Graph Topology ($G=(V,E)$)**: Models manholes as directed nodes and underground pipes/box drains as directed edges with Manning roughness coefficients ($n=0.013$).
-* **Hydraulic Surcharge & Backflow Solver**: Detects when Kakrola Regulator outfall water level exceeds Full Supply Level ($211.5\text{m MSL}$), triggering hydraulic surcharge onto Dwarka Mor streets.
-* **Centimeter-Level Water Depth Estimations**: Predicts exact inundation depth in centimeters ($68\text{ cm}$ at Dwarka Mor, $110\text{ cm}$ at Kakrola Underpass).
-* **Flood-Safe Navigation Rerouting**: Dynamically penalizes flooded edges ($W_{\text{edge}} = 999$) and reroutes traffic via dry detours (Pankha Road / Dabri Flyover).
+## Run locally
 
----
+From the repository root:
 
-## 📂 Repository Structure
-
-```
-sih-2026/
-├── README.md                                  # Complete Project Documentation & User Guide
-├── ps.pdf                                     # Official SIH 2026 Problem Statement PDF (MoES / NCMRWF)
-├── vashu.csv                                  # Verified Ground-Truth Waterlogging Table (30 Hotspot Records)
-├── data_pipeline.py                           # Data Processing & Feature Engineering Engine
-├── model_train.py                             # ML / Physics Surrogate Model Training & Inference Script
-├── drainage_graph_model.py                    # 1D Directed Graph Topology Generator
-├── dwarka_drainage_graph.json                 # JSON Export of Dwarka Drainage Graph Network G=(V,E)
-├── processed_dwarka_hourly_rainfall.csv      # Master Feature Matrix (15,264 Multi-Year Hourly Records)
-├── index.html                                 # Interactive Web GIS Dashboard (Frontend UI)
-├── dwarka_2021.csv.xlsx                       # Multi-Year Hourly Rainfall Dataset (2021)
-├── dwarka_2022.csv.xlsx                       # Multi-Year Hourly Rainfall Dataset (2022)
-├── dwarka_2023.csv.xlsx                       # Multi-Year Hourly Rainfall Dataset (2023)
-├── dwarka_2024.csv.xlsx                       # Multi-Year Hourly Rainfall Dataset (2024)
-├── dwarka_2025.csv.xlsx                       # Multi-Year Hourly Rainfall Dataset (2025)
-└── dwarka_aug.csv.xlsx                        # Multi-Year Hourly Rainfall Dataset (Aug 2026)
+```powershell
+python src/main.py
 ```
 
----
+The server listens on **http://localhost:8083/**. Useful endpoints:
 
-## 📊 Dataset Specifications
+- `GET /api/v1/nowcast?mode=live&lead_time_mins=60&zone=pilot`
+- `GET /api/v1/nowcast?mode=live&lead_time_mins=60&zone=pilot&refresh=1` — force a provider request instead of reusing the recent server cache
+- API JSON responses include `X-SIH-API-Version`; if the dashboard reports an old server process, stop the previous `python src/main.py` process before restarting it.
+- `GET /api/v1/drainage-network`
+- `POST /api/v1/route/flood-safe` — returns no flood-safety result when required inputs are unavailable
+- `POST /api/v1/alert-broadcast` — prepares a preview only; it does not send messages
+- `/api/docs` — API documentation
 
-### 1. `vashu.csv` (Ground-Truth Validation Table)
-Contains 30 verified historical waterlogging observations with spatial coordinates, elevation, water depth in cm, and official source URLs:
-* **Dwarka Mor Metro Crossing (`28.6186°, 77.0319°`)**: Elevation $211.2\text{ m MSL}$, Max Depth $68\text{ cm}$.
-* **Kakrola Mod Underpass (`28.6120°, 77.0250°`)**: Elevation $209.5\text{ m MSL}$, Max Depth $110\text{ cm}$.
-* **Negative Baseline Control Samples**: High-elevation dry roads in Dwarka Sector 6 ($219.5\text{ m MSL}$, Depth $0\text{ cm}$).
+## Project entry points
 
-### 2. `processed_dwarka_hourly_rainfall.csv` (Master Feature Matrix)
-Contains 15,264 continuous hourly records from 2021 to 2026 with 18 feature attributes:
-`time`, `rain_mm`, `precip_mm`, `rain_1h_lead`, `rain_2h_lead`, `rain_3h_lead`, `rain_3h_accumulated`, `radar_reflectivity_dbz`, `soil_infiltration_mmhr`, `surface_runoff_mm`, `elevation_m`, `imperviousness_ratio`, `drain_capacity_mmhr`, `pipe_fullness_ratio`, `predicted_water_depth_cm`, `drain_surcharge_flag`, `flood_hazard_level`, `navigation_penalty_weight`.
-
----
-
-## ⚡ Quick Start & Execution Guide
-
-### 1. Run Data Ingestion & Feature Engineering
-```bash
-python data_pipeline.py
-```
-*Parses all 6 Excel files (2021–2026), computes SCS-CN Surface Runoff, Radar dBZ, and outputs `processed_dwarka_hourly_rainfall.csv`.*
-
-### 2. Generate Drainage Directed Graph
-```bash
-python drainage_graph_model.py
-```
-*Generates the 1D Directed Graph Topology JSON (`dwarka_drainage_graph.json`) for Dwarka Mor storm drains.*
-
-### 3. Train & Evaluate Nowcasting Model
-```bash
-python model_train.py
-```
-*Trains the Nowcasting Surrogate Model and runs live scenario benchmark tests.*
-
-### 4. Launch REST API Backend Server
-```bash
-python app.py
-```
-Open your web browser and navigate to:  
-👉 **`http://localhost:8081/`**  
-📄 Interactive Swagger API Documentation: 👉 **`http://localhost:8081/docs`**
-
----
-
-## 📈 Model Performance & Evaluation Metrics
-
-| Metric | Result | Target Benchmark |
-| :--- | :--- | :--- |
-| **Mean Absolute Error (MAE)** | **$0.001\text{ cm}$** | $< 2.0\text{ cm}$ |
-| **Root Mean Square Error (RMSE)** | **$0.078\text{ cm}$** | $< 5.0\text{ cm}$ |
-| **Drain Surcharge Accuracy** | **$100.0\%$** | $> 95\%$ |
-| **Model $R^2$ Score** | **$0.984$** | $> 0.90$ |
-| **Inference Execution Speed** | **$< 35\text{ ms}$** | Real-Time ($< 1\text{ sec}$) |
-
----
-
-## 🌐 Verified Sources & Data Citations
-
-1. **India Meteorological Department (IMD) Data Service Portal**:  
-   🔗 [https://dsp.imdpune.gov.in](https://dsp.imdpune.gov.in) & [https://mausam.imd.gov.in](https://mausam.imd.gov.in) *(Palam Radar Station `28.5645° N, 77.1147° E`)*
-2. **ISRO Bhuvan Geo-Portal**:  
-   🔗 [https://bhuvan.nrsc.gov.in](https://bhuvan.nrsc.gov.in) *(CartoDEM 10m & High-Resolution Urban DTM)*
-3. **Delhi Flood Control Orders (IFC Delhi)**:  
-   🔗 [https://ifc.delhi.gov.in](https://ifc.delhi.gov.in) *(Kakrola Regulator & Najafgarh Drain FSL Records)*
-4. **Copernicus DEM (Global 30m / 10m Open Access)**:  
-   🔗 [https://dataspace.copernicus.eu](https://dataspace.copernicus.eu)
-
----
-
-## 👥 Authors & Team
-* **Project**: Urban Flood Nowcasting System for Dwarka Mor
-* **Hackathon**: Smart India Hackathon (SIH 2026)
+- `src/index.html` — dashboard and Leaflet map UI
+- `src/main.py` — local HTTP/API server
+- `src/fetch_live_radar.py` — legacy-named module that fetches Open-Meteo precipitation forecast data; it does not fetch radar imagery
+- `src/model_train.py`, `src/hydraulic_model.py`, `src/model_inference.py` — formula-surrogate training and inference
+- `models/model_provenance.json` — known model training/validation limits
+- `src/inference_api.py` — live inference and synthetic demo scenarios
+- `src/data/` — graph, map geometry, historical/report-derived source files, and static assets
+- `DATA_PROVENANCE_AUDIT.md` — file/data authenticity findings and remediation notes

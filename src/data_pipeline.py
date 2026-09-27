@@ -44,20 +44,16 @@ def parse_excel_zip(path):
 import math
 
 def calculate_advanced_ps_features(rain_3h_accum, peak_1h, elev_m=211.2, drain_cap_mmhr=45.0, impervious_ratio=0.92):
-    """
-    100% Complete Feature Engine incorporating every requirement from ps.pdf:
-    1. Radar Reflectivity (dBZ) from Doppler Weather Radar Z-R relationship (Z = 200 * R^1.6)
-    2. Soil Infiltration Rate (Horton Model mm/hr)
-    3. Surface Runoff (SCS-CN Model mm)
-    4. Pipe Hydraulic Fullness Ratio (y/d) & Surcharge Pressure
-    5. Inundation Depth (cm)
-    6. Flood Hazard Index (0-4 Category)
-    7. Navigation Edge Penalty Weight (for OSRM/Valhalla Routing API)
+    """Create illustrative formula-derived features, not observed flood data.
+
+    The reflectivity-like value is derived from rainfall, never measured by radar.
+    Drain capacity, infiltration, and depth use fixed assumptions and are not a
+    calibrated hydraulic simulation or a validated road-safety classification.
     """
     if rain_3h_accum <= 0 and peak_1h <= 0:
-        return 0.0, 0.0, 0.0, 0.0, 0.0, 0, "SAFE", 1.0
+        return 0.0, 0.0, 0.0, 0.0, 0.0, 0, "LOW_ESTIMATE", 1.0
     
-    # Feature 1: Doppler Weather Radar Reflectivity (dBZ) -> Z = 200 * R^1.6 -> dBZ = 10 * log10(Z)
+    # Formula-derived rainfall reflectivity proxy (not radar dBZ).
     if peak_1h > 0:
         z_factor = 200.0 * (peak_1h ** 1.6)
         radar_dbz = round(10.0 * math.log10(max(1.0, z_factor)), 1)
@@ -86,7 +82,7 @@ def calculate_advanced_ps_features(rain_3h_accum, peak_1h, elev_m=211.2, drain_c
     
     # Feature 5: Flood Hazard Index (0-4 Rating)
     if depth_cm < 5.0:
-        hazard_level = "SAFE"
+        hazard_level = "LOW_ESTIMATE"
         hazard_code = 0
         penalty_weight = 1.0
     elif depth_cm < 15.0:
@@ -109,7 +105,7 @@ def calculate_advanced_ps_features(rain_3h_accum, peak_1h, elev_m=211.2, drain_c
     return radar_dbz, soil_infiltration_mmhr, surface_runoff_mm, pipe_fullness_ratio, depth_cm, surcharge_flag, hazard_level, penalty_weight
 
 def build_processed_dataset(workspace_dir):
-    print("Step 1: Merging Multi-Year Hourly Rainfall Datasets...")
+    print("Step 1: Merging local hourly rainfall workbooks (provenance is not independently verified)...")
     xlsx_files = sorted(glob.glob(os.path.join(workspace_dir, "dwarka_*.xlsx")))
     
     all_records = []
@@ -125,7 +121,7 @@ def build_processed_dataset(workspace_dir):
     all_records.sort(key=lambda x: x[0])
     print(f"[OK] Total Hourly Rainfall Records Processed: {len(all_records):,}")
     
-    print("Step 2: Advanced Feature Engineering (All 7 ps.pdf Modules Integrated)...")
+    print("Step 2: Creating illustrative, assumption-based hydraulic formula features...")
     processed_rows = []
     n = len(all_records)
     for i in range(n):
@@ -149,30 +145,28 @@ def build_processed_dataset(workspace_dir):
         writer = csv.writer(f_out)
         writer.writerow([
             'time', 'rain_mm', 'precip_mm', 'rain_1h_lead', 'rain_2h_lead', 'rain_3h_lead', 
-            'rain_3h_accumulated', 'radar_reflectivity_dbz', 'soil_infiltration_mmhr', 
+            'rain_3h_accumulated', 'rainfall_reflectivity_proxy_dbz', 'soil_infiltration_mmhr', 
             'surface_runoff_mm', 'elevation_m', 'imperviousness_ratio', 'drain_capacity_mmhr', 
-            'pipe_fullness_ratio', 'predicted_water_depth_cm', 'drain_surcharge_flag',
-            'flood_hazard_level', 'navigation_penalty_weight'
+            'pipe_fullness_ratio', 'formula_depth_estimate_cm', 'drain_surcharge_flag',
+            'formula_hazard_category', 'navigation_penalty_weight'
         ])
         writer.writerows(processed_rows)
         
-    print(f"[OK] Saved 100% Feature-Complete Dataset to: {out_ts_path}")
+    print(f"[OK] Saved assumption-based formula estimates to: {out_ts_path}")
     
-    # Load vashu.csv Ground-Truth Table
+    # Count source rows only; these citation-listed records are not verified ground truth.
     vashu_path = os.path.join(workspace_dir, "vashu.csv")
     if os.path.exists(vashu_path):
-        print("Step 3: Verifying vashu.csv Ground-Truth Waterlogging Table...")
+        print("Step 3: Counting citation-listed vashu.csv rows (not independent validation)...")
         with open(vashu_path, 'r', encoding='utf-8') as vf:
             v_reader = list(csv.reader(vf))
             v_data = v_reader[1:]
-            print(f"[OK] Verified vashu.csv with {len(v_data)} ground-truth records.")
+            print(f"[INFO] Found {len(v_data)} source rows; no ground-truth validation was performed.")
     
-    print("\n[SUCCESS] ALL PS.PDF FEATURES INTEGRATED WITH 100% EFFICIENCY!")
+    print("\n[COMPLETE] Formula-derived prototype dataset created; outputs are not validated observations.")
 
 if __name__ == "__main__":
     current_dir = os.path.dirname(os.path.abspath(__file__))
     build_processed_dataset(current_dir)
-
-
 
 

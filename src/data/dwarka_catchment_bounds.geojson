@@ -15,23 +15,35 @@
         "district": "South West Delhi",
         "state": "Delhi",
         "country": "India",
-        "area_sqkm": 14.8,
         "pilot_code": "DELHI-DWK-01",
-        "sponsoring_agency": "Ministry of Earth Sciences (MoES)",
-        "executing_agency": "National Centre for Medium Range Weather Forecasting (NCMRWF)",
-        "radar_station": "IMD Palam S-Band Radar (28.5667° N, 77.1000° E)",
         "critical_junction": "Dwarka Mor Metro Crossing (28.6186° N, 77.0319° E)",
-        "najafgarh_drain_fsl_m": 211.5
+        "coverage_scope": "Approximate prototype pilot bounds; not official service coverage.",
+        "data_quality": "MANUALLY_DEFINED_PROTOTYPE_BOUNDARY"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
-            [77.0150, 28.6280],
-            [77.0500, 28.6280],
-            [77.0500, 28.5900],
-            [77.0150, 28.5900],
-            [77.0150, 28.6280]
+            [
+              77.015,
+              28.628
+            ],
+            [
+              77.05,
+              28.628
+            ],
+            [
+              77.05,
+              28.59
+            ],
+            [
+              77.015,
+              28.59
+            ],
+            [
+              77.015,
+              28.628
+            ]
           ]
         ]
       }

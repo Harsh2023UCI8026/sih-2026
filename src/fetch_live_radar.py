@@ -1,57 +1,91 @@
+"""Fetch precipitation forecast input used by the Dwarka prototype.
+
+Despite the historical module name, this module does not read an IMD radar
+or a local rain gauge. Open-Meteo's Forecast API supplies model-generated
+precipitation values. In India, the requested 15-minute series may be
+interpolated from hourly model output; it is not a 15-minute observation.
+"""
+
+import datetime
 import json
-import urllib.request
+import math
 import os
+import tempfile
+import urllib.parse
+import urllib.request
 
-WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
-OUTPUT_FILE = os.path.join(WORKSPACE_DIR, "dwarka_live_radar.json")
 
-def fetch_live_radar_nowcast():
+OUTPUT_FILE = os.path.join(tempfile.gettempdir(), "dwarka_live_radar.json")
+OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
+PILOT_COORDINATES = {"latitude": 28.6186, "longitude": 77.0319}
+
+
+def fetch_live_radar_nowcast(timeout_sec=6.0):
+    """Return a validated Open-Meteo precipitation forecast or raise.
+
+    The return name is retained for compatibility with ``main.py``. The
+    returned data is forecast-model output, not an observed radar product.
+    Missing/null precipitation is an error; it must never be converted into
+    a dry-weather observation.
     """
-    Fetches real-time Doppler Weather Radar & nowcast rain intensity data
-    for Delhi / Dwarka Mor (28.6186N, 77.0319E) via RainViewer & Open-Meteo Weather Radar APIs.
-    """
-    print("[INFO] Querying RainViewer & Open-Meteo Radar API for Delhi Doppler Weather Radar reflectivity...")
-    
-    # 1. RainViewer Weather Radar Timestamp API
-    rainviewer_url = "https://api.rainviewer.com/public/weather-maps.json"
-    
+    params = {
+        **PILOT_COORDINATES,
+        "minutely_15": "precipitation,rain",
+        # 24 quarter-hour steps cover the 3-hour lead plus a 3-hour window.
+        "forecast_minutely_15": 24,
+        "forecast_days": 1,
+        "timezone": "Asia/Kolkata",
+    }
+    url = f"{OPEN_METEO_URL}?{urllib.parse.urlencode(params)}"
+    request = urllib.request.Request(
+        url,
+        headers={"User-Agent": "UrbanFloodNowcasting/1.0"},
+    )
+    with urllib.request.urlopen(request, timeout=timeout_sec) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+
+    minutely = payload.get("minutely_15") or {}
+    precipitation = minutely.get("precipitation")
+    timestamps = minutely.get("time")
+    if not isinstance(precipitation, list) or not precipitation:
+        raise ValueError("Open-Meteo did not return minutely_15 precipitation")
+    if not isinstance(timestamps, list) or len(timestamps) < len(precipitation):
+        raise ValueError("Open-Meteo precipitation timestamps are missing")
+
+    values = []
+    for value in precipitation[:24]:
+        if value is None:
+            raise ValueError("Open-Meteo returned a null precipitation value")
+        amount = float(value)
+        if not math.isfinite(amount) or amount < 0:
+            raise ValueError("Open-Meteo returned an invalid precipitation value")
+        values.append(amount)
+
+    result = {
+        "schema_version": 3,
+        "provider": "Open-Meteo Forecast API",
+        "data_kind": "forecast_model",
+        "model": payload.get("model", "best_match"),
+        "temporal_resolution_note": (
+            "Open-Meteo 15-minute precipitation values are interpolated from hourly "
+            "forecast output at this location; they are not 15-minute observations."
+        ),
+        "retrieved_at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "coordinates": PILOT_COORDINATES,
+        "nowcast_15min_interval_mm": values,
+        "timestamps_iso": timestamps[: len(values)],
+    }
+
     try:
-        req = urllib.request.Request(rainviewer_url, headers={'User-Agent': 'UrbanFloodNowcasting/1.0'})
-        with urllib.request.urlopen(req, timeout=20) as res:
-            rv_data = json.loads(res.read().decode('utf-8'))
-            
-        radar_past = rv_data.get('radar', {}).get('past', [])
-        latest_timestamp = radar_past[-1]['time'] if radar_past else None
-        
-        # 2. Open-Meteo High-Resolution Precipitation Nowcast for Dwarka (28.6186 N, 77.0319 E)
-        openmeteo_url = "https://api.open-meteo.com/v1/forecast?latitude=28.6186&longitude=77.0319&minutely_15=precipitation,rain&forecast_days=1&timezone=Asia%2FKolkata"
-        req_om = urllib.request.Request(openmeteo_url, headers={'User-Agent': 'UrbanFloodNowcasting/1.0'})
-        
-        with urllib.request.urlopen(req_om, timeout=20) as res_om:
-            om_data = json.loads(res_om.read().decode('utf-8'))
-            
-        min_15 = om_data.get('minutely_15', {})
-        precip_series = min_15.get('precipitation', [])[:12] # Next 3 hours (12 x 15min steps)
-        time_series = min_15.get('time', [])[:12]
-        
-        radar_dataset = {
-            "station": "IMD Palam S-Band Doppler Weather Radar (Delhi)",
-            "coordinates": {"lat": 28.6186, "lng": 77.0319},
-            "rainviewer_radar_host": rv_data.get('host'),
-            "latest_radar_timestamp": latest_timestamp,
-            "nowcast_15min_interval_mm": precip_series,
-            "timestamps_iso": time_series
-        }
-        
-        with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
-            json.dump(radar_dataset, f, indent=2)
-            
-        print(f"[SUCCESS] Live Doppler Radar & 0-3h Nowcast saved to {OUTPUT_FILE}")
-        return radar_dataset
-        
-    except Exception as e:
-        print(f"[ERROR] Live Radar API fetch failed: {e}")
-        return None
+        with open(OUTPUT_FILE, "w", encoding="utf-8") as cache_file:
+            json.dump(result, cache_file, indent=2)
+    except OSError:
+        # The process-local response still works if the optional cache cannot
+        # be written (for example, on a read-only host).
+        pass
+
+    return result
+
 
 if __name__ == "__main__":
-    fetch_live_radar_nowcast()
+    print(json.dumps(fetch_live_radar_nowcast(), indent=2))

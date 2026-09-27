@@ -1,18 +1,17 @@
-# Urban Flood Nowcasting System
+# Urban Flood Dashboard Prototype
 
-> Real-time 0-3 hour street-level flood depth prediction, drainage graph modeling, and flood-safe navigation for the Dwarka Mor catchment, Delhi (SIH 2026).
+> Dwarka pilot prototype for exploring Open-Meteo forecast-model precipitation, schematic drainage geometry, and unvalidated model depth estimates. This is not an operational warning or road-safety service.
 
-## Overview
-This system combines Doppler weather radar nowcasts, a Digital Elevation Model, and a directed-graph stormwater drainage network model to predict centimeter-level street flooding up to 3 hours in advance, with an API for flood-safe route navigation.
+## Project files
+- `src/index.html`: responsive dashboard with Simple View, Technical View, and OpenStreetMap context map.
+- `src/main.py`: local HTTP server and prototype API.
+- `README.md`: run instructions and current data sources.
+- `DATA_PROVENANCE_AUDIT.md`: data and model provenance findings.
 
-## Key Pages
-- [Live Dashboard](https://5d-beings.vercel.app/) - Real-time flood forecast and map
-- [API Documentation](https://5d-beings.vercel.app/api/docs) - Swagger/OpenAPI docs
-- [OpenAPI Spec](https://5d-beings.vercel.app/api/openapi.json) - Machine-readable API schema
+## API
+- `GET /api/v1/nowcast?mode=live&lead_time_mins=60&zone=pilot`: forecast input and unvalidated estimate, or an unavailable response.
+- `GET /api/v1/drainage-network`: schematic pilot graph with explicit provenance metadata.
+- `POST /api/v1/route/flood-safe`: optional route geometry with nearby unvalidated model estimates; it does not certify safety.
+- `POST /api/v1/alert-broadcast`: local preview only; no message is sent.
 
-## API Endpoints
-- GET /api/nowcast - Live street water depth nowcast
-- GET /api/drainage-network - 1D directed drainage graph network
-- POST /api/navigate - Flood-safe alternative detour route
-- POST /api/alert-broadcast - Emergency flood alert broadcast
-- GET /api/v1/potholes-depressions - Verified potholes and road depressions registry
+Forecast-mode precipitation comes from the Open-Meteo Forecast API. There is no connected local radar, rain gauge, water-level sensor, or independently validated local depth dataset. Demo mode uses fixed synthetic scenarios.

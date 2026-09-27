@@ -1,1 +1,3 @@
 tmp/reference_repo/
+.env
+models/dwarka_hydraulic_model_legacy_backup.pkl
