@@ -239,7 +239,11 @@ def get_edge_predictions(lead_time_mins: int = 60, live_rain_scenario: Dict = No
     return records
 
 
-def get_node_summary(lead_time_mins: int = 60, live_rain_scenario: Dict = None) -> List[Dict]:
+def get_node_summary(
+    lead_time_mins: int = 60,
+    live_rain_scenario: Dict = None,
+    edge_predictions: List[Dict] = None,
+) -> List[Dict]:
     """Aggregate per-edge predictions to the 6 named dashboard nodes.
     
     Each node's depth = max depth across its feed_edges.
@@ -252,9 +256,12 @@ def get_node_summary(lead_time_mins: int = 60, live_rain_scenario: Dict = None) 
         If provided, threaded directly to get_edge_predictions() so live
         mode runs inference with real Open-Meteo data instead of cached
         DEMO scenarios.
+    edge_predictions : list of dict or None
+        Reuse predictions already calculated for this nowcast when provided.
     """
-    # Explicitly thread live_rain_scenario to get_edge_predictions
-    edge_preds = get_edge_predictions(lead_time_mins, live_rain_scenario)
+    edge_preds = edge_predictions
+    if edge_preds is None:
+        edge_preds = get_edge_predictions(lead_time_mins, live_rain_scenario)
     edge_lookup = {ep["edge_id"]: ep for ep in edge_preds}
 
     nodes = []
@@ -314,9 +321,15 @@ def get_node_summary(lead_time_mins: int = 60, live_rain_scenario: Dict = None) 
     return nodes
 
 
-def get_system_status(lead_time_mins: int = 60, live_rain_scenario: Dict = None) -> Dict:
+def get_system_status(
+    lead_time_mins: int = 60,
+    live_rain_scenario: Dict = None,
+    edge_predictions: List[Dict] = None,
+) -> Dict:
     """System-wide summary for the top banner."""
-    edge_preds = get_edge_predictions(lead_time_mins, live_rain_scenario)
+    edge_preds = edge_predictions
+    if edge_preds is None:
+        edge_preds = get_edge_predictions(lead_time_mins, live_rain_scenario)
     if not edge_preds:
         return {
             "max_depth_cm": None,

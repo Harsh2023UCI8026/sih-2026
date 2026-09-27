@@ -10,6 +10,7 @@ PDF report) can honestly caveat those predictions.
 """
 
 import json, math, os
+from threading import Lock
 import numpy as np
 import pandas as pd
 import joblib
@@ -36,6 +37,27 @@ ALL_FEATURES = [
     "cross_sectional_area_sqm",
     "catchment_sqm",
 ]
+
+_MODEL_CACHE = {}
+_MODEL_CACHE_LOCK = Lock()
+
+
+def _load_runtime_model(model_path: str):
+    """Load the runtime model once per process, reloading if the file changes."""
+    model_path = os.path.abspath(model_path)
+    stat = os.stat(model_path)
+    signature = (stat.st_mtime_ns, stat.st_size)
+
+    with _MODEL_CACHE_LOCK:
+        cached = _MODEL_CACHE.get(model_path)
+        if cached and cached[0] == signature:
+            return cached[1]
+
+        model = joblib.load(model_path)
+        if hasattr(model, "n_jobs"):
+            model.n_jobs = 1
+        _MODEL_CACHE[model_path] = (signature, model)
+        return model
 
 # ── Training-range bounds (from 5 pilot edges) ──────────────────────────
 # These are saved alongside the model during training; hardcoded here as a
@@ -169,12 +191,7 @@ def run_inference(
     """
     # Load model
     model_path = os.path.join(models_dir, "dwarka_hydraulic_model.pkl")
-    model = joblib.load(model_path)
-    # Predictions are made one row at a time. Keep this request path serial:
-    # the HTTP server runs handlers on Windows worker threads, where a
-    # joblib multiprocessing pool can fail while creating named pipes.
-    if hasattr(model, "n_jobs"):
-        model.n_jobs = 1
+    model = _load_runtime_model(model_path)
 
     # Load training range for extrapolation checks
     training_range = _load_training_range(models_dir)

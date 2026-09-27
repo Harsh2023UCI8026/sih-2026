@@ -140,9 +140,9 @@ def calculate_nowcast(lead_time_mins=60, mode="live", zone="pilot", force_refres
         }
 
     if mode == "simulated":
-        status = get_system_status(lead_time_mins)
-        nodes = get_node_summary(lead_time_mins)
         edge_preds = get_edge_predictions(lead_time_mins)
+        status = get_system_status(lead_time_mins, edge_predictions=edge_preds)
+        nodes = get_node_summary(lead_time_mins, edge_predictions=edge_preds)
         rain_rate_mm_hr = status.get("rain_rate_mm_hr")
         rain_3h_mm = status.get("rain_3h_accumulated_mm")
         max_depth = status.get("max_depth_cm")
@@ -272,9 +272,17 @@ def calculate_nowcast(lead_time_mins=60, mode="live", zone="pilot", force_refres
         "radar_reflectivity_dbz": proxy_dbz,
         "imperviousness_ratio": 0.85,
     }
-    status = get_system_status(lead_time_mins, live_rain_scenario=live_scenario)
-    nodes = get_node_summary(lead_time_mins, live_rain_scenario=live_scenario)
     edge_preds = get_edge_predictions(lead_time_mins, live_rain_scenario=live_scenario)
+    status = get_system_status(
+        lead_time_mins,
+        live_rain_scenario=live_scenario,
+        edge_predictions=edge_preds,
+    )
+    nodes = get_node_summary(
+        lead_time_mins,
+        live_rain_scenario=live_scenario,
+        edge_predictions=edge_preds,
+    )
     if not edge_preds:
         return unavailable(
             "Forecast input is available, but the pilot depth model could not produce an estimate. "
