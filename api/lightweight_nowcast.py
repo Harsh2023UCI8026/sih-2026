@@ -388,7 +388,7 @@ def calculate_lightweight_nowcast(lead_time_mins=60, mode="live", zone="pilot", 
         f"Demo scenario · synthetic rainfall input {rain_rate_mm_hr:.1f} mm/h · "
         f"{'RandomForest' if random_forest_active else 'hydraulic-formula'} depth-band estimates for mapped pilot links."
         if mode == "simulated" else
-        f"Open-Meteo forecast: {rain_3h_mm:.1f} mm over the next 3 hours. "
+        f"Open-Meteo forecast: {rain_3h_mm:.1f} mm over the next 3 hours. " +
         (
             "Depth bands use a RandomForest surrogate trained on formula-derived/synthetic targets; they are not water-level measurements."
             if random_forest_active else
