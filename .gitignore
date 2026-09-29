@@ -1,3 +1,6 @@
 tmp/reference_repo/
 .env
 models/dwarka_hydraulic_model_legacy_backup.pkl
+models/dwarka_hydraulic_model.pkl
+*.pyc
+__pycache__/

@@ -1,0 +1,14 @@
+source_document,source_url,source_block,source_serial_no,drain_name_as_published,length_km,catchment_area_hectares,design_discharge_cusecs,machine_readable_georeferenced_geometry_available,survey_status
+Delhi Drainage Map,https://ifc.delhi.gov.in/sites/default/files/ifc/universal/delhi_map.pdf,Najafgarh Block - South West Delhi,1,Najafgarh Drain,57.40,1093900.00,10000,false,not_stated
+Delhi Drainage Map,https://ifc.delhi.gov.in/sites/default/files/ifc/universal/delhi_map.pdf,Najafgarh Block - South West Delhi,2,Palam Drain,8.78,5125.60,3037,false,not_stated
+Delhi Drainage Map,https://ifc.delhi.gov.in/sites/default/files/ifc/universal/delhi_map.pdf,Najafgarh Block - South West Delhi,3,Palam Link Drain,1.65,821.00,509,false,not_stated
+Delhi Drainage Map,https://ifc.delhi.gov.in/sites/default/files/ifc/universal/delhi_map.pdf,Najafgarh Block - South West Delhi,4,Najaf Garh Pond Drain,1.95,51.80,60,false,not_stated
+Delhi Drainage Map,https://ifc.delhi.gov.in/sites/default/files/ifc/universal/delhi_map.pdf,Najafgarh Block - South West Delhi,5,Nasirpur Link Drain,2.90,1038.60,1020,false,not_stated
+Delhi Drainage Map,https://ifc.delhi.gov.in/sites/default/files/ifc/universal/delhi_map.pdf,Najafgarh Block - South West Delhi,6,Bijwasan Drain,4.20,2755.80,170,false,not_stated
+Delhi Drainage Map,https://ifc.delhi.gov.in/sites/default/files/ifc/universal/delhi_map.pdf,Najafgarh Block - South West Delhi,7,Pankha Road Drain,5.30,818.00,1000,false,not_stated
+Delhi Drainage Map,https://ifc.delhi.gov.in/sites/default/files/ifc/universal/delhi_map.pdf,Najafgarh Block - South West Delhi,8,Shahbad Mohammadpur Drain,0.56,2427.00,155,false,not_stated
+Delhi Drainage Map,https://ifc.delhi.gov.in/sites/default/files/ifc/universal/delhi_map.pdf,Najafgarh Block - South West Delhi,9,Bhupania Chudania Drain (including Haryana portion),8.55,370.37,1430,false,not_stated
+Delhi Drainage Map,https://ifc.delhi.gov.in/sites/default/files/ifc/universal/delhi_map.pdf,Najafgarh Block - South West Delhi,10,Mudhela Drain,12.50,1554.00,60,false,not_stated
+Delhi Drainage Map,https://ifc.delhi.gov.in/sites/default/files/ifc/universal/delhi_map.pdf,Najafgarh Block - South West Delhi,11,Nangli Sakrawati Link Drain,2.34,20.70,24,false,not_stated
+Delhi Drainage Map,https://ifc.delhi.gov.in/sites/default/files/ifc/universal/delhi_map.pdf,Najafgarh Block - South West Delhi,12,Dichaon Kalan Link Drain,0.48,12.95,13,false,not_stated
+Delhi Drainage Map,https://ifc.delhi.gov.in/sites/default/files/ifc/universal/delhi_map.pdf,Najafgarh Block - South West Delhi,13,Kharkari Rondh Link Drain,1.53,12.95,15,false,not_stated

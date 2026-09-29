@@ -11,12 +11,15 @@ from urllib.parse import parse_qs, urlparse
 
 # Load Drainage Graph JSON if available
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
+API_DIR = os.path.abspath(os.path.join(WORKSPACE_DIR, "..", "api"))
 GRAPH_FILE = os.path.join(WORKSPACE_DIR, "dwarka_drainage_graph.json")
-API_CONTRACT_VERSION = "1.0.1"
+API_CONTRACT_VERSION = "1.1.0"
 # Request handlers import sibling modules after the server starts. Keep the
 # script directory importable even when main.py is launched through runpy.
 if WORKSPACE_DIR not in sys.path:
     sys.path.insert(0, WORKSPACE_DIR)
+if API_DIR not in sys.path:
+    sys.path.insert(0, API_DIR)
 
 def get_drainage_graph():
     if os.path.exists(GRAPH_FILE):
@@ -89,12 +92,26 @@ def describe_forecast_request_error(exc):
 
 
 def calculate_nowcast(lead_time_mins=60, mode="live", zone="pilot", force_refresh=False):
-    """Return a clearly sourced demo or an unvalidated pilot model estimate.
+    """Use local RF for localhost, or the optional remote HF service if set.
 
-    Live mode uses Open-Meteo forecast-model precipitation as its only live
-    weather input. It does not provide measured radar reflectivity or street
-    water levels. Modelled depth values are explicitly marked unvalidated.
+    Vercel's API entry point calls the lightweight adapter directly; it can
+    delegate its RF step to Hugging Face through SIH_RF_INFERENCE_URL.
+    SIH_LOCAL_INFERENCE_BACKEND=formula forces the lightweight local path.
     """
+    local_backend = os.environ.get("SIH_LOCAL_INFERENCE_BACKEND", "auto").strip().lower()
+    use_local_forest = local_backend == "random_forest" or (
+        local_backend == "auto"
+        and not os.environ.get("SIH_RF_INFERENCE_URL", "").strip()
+        and os.path.isfile(os.path.join(WORKSPACE_DIR, "..", "models", "dwarka_hydraulic_model.pkl"))
+    )
+    if local_backend not in {"auto", "random_forest", "formula"} or (
+        local_backend == "formula" or not use_local_forest
+    ):
+        from lightweight_nowcast import calculate_lightweight_nowcast
+        return calculate_lightweight_nowcast(
+            lead_time_mins, mode, zone, force_refresh=force_refresh
+        )
+
     import tempfile
     from inference_api import (
         get_node_summary, get_edge_predictions,
@@ -152,13 +169,15 @@ def calculate_nowcast(lead_time_mins=60, mode="live", zone="pilot", force_refres
             "data_source_mode": "simulated",
             "data_kind": "synthetic_demo",
             "is_live_data": False,
-            "data_quality": "SYNTHETIC_DEMO",
-            "data_source_name": f"Synthetic demo scenario: {status.get('scenario_label', 'Storm Simulation')}",
+            "data_quality": "SYNTHETIC_DEMO_RF_ESTIMATE",
+            "data_source_name": f"Synthetic demo rainfall + local RandomForest surrogate: {status.get('scenario_label', 'Storm Simulation')}",
             "data_scenario_label": status.get("scenario_label", "Storm Simulation"),
             "alert_message": (
-                f"DEMO ONLY: synthetic rainfall rate ({rain_rate_mm_hr} mm/hr), "
-                f"3-hour scenario total ({rain_3h_mm} mm). Depth output is shown as a band."
+                f"Demo scenario · synthetic rainfall input {rain_rate_mm_hr} mm/h · "
+                "RandomForest depth-band estimates for mapped pilot links."
             ),
+            "depth_model_backend": "random_forest_local",
+            "model_caveat": "The local RandomForest is a surrogate trained on formula-derived/synthetic targets and assumed graph geometry; its outputs are unvalidated estimates, not observations or safety clearances.",
             "lead_time_minutes": lead_time_mins,
             "lead_time_options": demo_options,
             "rain_intensity_exceeds_training": status.get("rain_intensity_exceeds_training", False),
@@ -316,9 +335,11 @@ def calculate_nowcast(lead_time_mins=60, mode="live", zone="pilot", force_refres
         "data_kind": "forecast_model",
         "is_live_data": True,
         "data_quality": "UNVALIDATED_MODEL_ESTIMATE",
-        "data_source_name": "Open-Meteo forecast model + Dwarka pilot depth model",
+        "data_source_name": "Open-Meteo forecast model + local RandomForest surrogate",
         "data_scenario_label": "Forecast input; pilot-model depth bands",
         "alert_message": alert_msg,
+        "depth_model_backend": "random_forest_local",
+        "model_caveat": "The local RandomForest is a surrogate trained on formula-derived/synthetic targets and assumed graph geometry; its outputs are unvalidated estimates, not observations or safety clearances.",
         "lead_time_minutes": lead_time_mins,
         # Live forecasts do not include fixed synthetic demo scenarios.
         "lead_time_options": [],
@@ -480,6 +501,10 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
             cfg = load_config()
             self._send_json(cfg.get('presets', {}))
 
+        elif path == '/api/v1/data-readiness':
+            from data_readiness import build_data_readiness_report
+            self._send_json(build_data_readiness_report())
+
         elif path == '/api/v1/nowcast':
             lead_time = int(query.get('lead_time_mins', [60])[0])
             mode = query.get('mode', ['live'])[0]
@@ -608,7 +633,7 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
                 "info": {
                     "title": "Urban Flood Dashboard Prototype API",
                     "version": API_CONTRACT_VERSION,
-                    "description": "Prototype REST API. Open-Meteo supplies forecast-model precipitation; street-depth outputs are unvalidated estimates. Route comparisons can be unavailable and are not safety clearances."
+                    "description": "Prototype REST API. Open-Meteo supplies forecast-model precipitation; street-depth outputs are unvalidated estimates. Route directions use OpenStreetMap road routing with live-directions fallback; no route is a flood-safety clearance."
                 },
                 "paths": {
                     "/api/v1/nowcast": {
@@ -622,6 +647,12 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
                             "responses": {"200": {"description": "Successful Response"}}
                         }
                     },
+                    "/api/v1/data-readiness": {
+                        "get": {
+                            "summary": "Report readiness of PS 26085 rainfall, terrain, drainage, solver, and validation inputs",
+                            "responses": {"200": {"description": "Read-only readiness report"}}
+                        }
+                    },
                     "/api/v1/drainage-network": {
                         "get": {
                             "summary": "Get 1D Directed Drainage Graph Network G=(V,E)",
@@ -630,13 +661,13 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
                     },
                     "/api/v1/navigate": {
                         "post": {
-                            "summary": "Compare OSRM routes with unvalidated pilot model estimates; no safety clearance",
+                            "summary": "Compare OpenStreetMap road alternatives with nearby unvalidated pilot estimates; no safety clearance",
                             "responses": {"200": {"description": "Successful Response"}}
                         }
                     },
                     "/api/v1/route/flood-safe": {
                         "post": {
-                            "summary": "Compare OSRM route geometry with nearby unvalidated model estimates; no safety clearance",
+                            "summary": "Compare OpenStreetMap route geometry with nearby unvalidated model estimates; no safety clearance",
                             "responses": {"200": {"description": "Successful Response"}}
                         }
                     },
@@ -651,169 +682,29 @@ class SIHNowcastingAPIHandler(BaseHTTPRequestHandler):
             self._send_json(openapi_spec)
 
         else:
-            self._send_json({"error": "Endpoint not found", "available_endpoints": ["/api/v1/nowcast", "/api/v1/drainage-network", "/api/v1/navigate", "/api/v1/route/flood-safe", "/api/v1/alert-broadcast", "/docs"]}, 404)
+            self._send_json({"error": "Endpoint not found", "available_endpoints": ["/api/v1/nowcast", "/api/v1/data-readiness", "/api/v1/drainage-network", "/api/v1/navigate", "/api/v1/route/flood-safe", "/api/v1/alert-broadcast", "/docs"]}, 404)
 
     def do_POST(self):
         parsed = urlparse(self.path)
         if parsed.path == '/api/v1/route/flood-safe':
             content_length = int(self.headers.get('Content-Length', 0))
             post_data = self.rfile.read(content_length).decode('utf-8') if content_length > 0 else "{}"
-            
             try:
                 body = json.loads(post_data)
-            except Exception:
+            except (json.JSONDecodeError, TypeError):
                 body = {}
 
-            orig = body.get("origin", {"lat": 28.6210, "lng": 77.0420})
-            dest = body.get("destination", {"lat": 28.5910, "lng": 77.0610})
-            if isinstance(orig, list): orig = {"lat": orig[0], "lng": orig[1]}
-            if isinstance(dest, list): dest = {"lat": dest[0], "lng": dest[1]}
-
-            vehicle_type = body.get("vehicle_type", "car").lower()
-            lead_time_mins = int(body.get("lead_time_mins", 60))
-
-            # Comparison uses unvalidated pilot estimates only. The selected
-            # vehicle is context and no vehicle clearance threshold is applied.
-            nowcast = calculate_nowcast(lead_time_mins, mode="live", zone="pilot")
-            pilot_coverage = is_in_dwarka_catchment(orig.get("lat"), orig.get("lng")) and is_in_dwarka_catchment(dest.get("lat"), dest.get("lng"))
-            if not pilot_coverage or nowcast.get("data_quality") != "UNVALIDATED_MODEL_ESTIMATE":
-                reason = (
-                    "Flood-status comparison is available only for routes fully inside the Dwarka pilot and when forecast data is available."
-                    if not pilot_coverage else
-                    "Forecast or pilot depth model is unavailable. No route is labeled safe."
-                )
-                self._send_json({
-                    "routing_engine": "Flood-aware route comparison unavailable",
-                    "routing_status": "FLOOD_STATUS_UNAVAILABLE",
-                    "flood_safety_status": "UNVERIFIED",
-                    "origin": orig, "destination": dest,
-                    "vehicle_type": vehicle_type, "lead_time_minutes": lead_time_mins,
-                    "notice": reason, "routes": [],
-                })
-                return
-            flood_nodes = nowcast.get("spatial_node_predictions", [])
-
-            # Compute 3 alternative routes (using OSRM or robust fallback solver)
-            import urllib.request
-            osrm_routes = []
-            try:
-                osrm_url = f"http://router.project-osrm.org/route/v1/driving/{orig['lng']},{orig['lat']};{dest['lng']},{dest['lat']}?overview=full&geometries=geojson&alternatives=true&steps=true"
-                req = urllib.request.Request(osrm_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
-                with urllib.request.urlopen(req, timeout=10) as resp:
-                    if resp.status == 200:
-                        osrm_data = json.loads(resp.read().decode('utf-8'))
-                        osrm_routes = osrm_data.get("routes", [])
-            except Exception as e:
-                print("OSRM query offline/failed, using dynamic multi-route generator:", e)
-
-            routes_response = []
-            if not osrm_routes:
-                self._send_json({
-                    "routing_engine": "OSRM unavailable",
-                    "routing_status": "ROAD_ROUTE_UNAVAILABLE",
-                    "flood_safety_status": "UNVERIFIED",
-                    "origin": orig, "destination": dest,
-                    "vehicle_type": vehicle_type, "lead_time_minutes": lead_time_mins,
-                    "notice": "No road-route provider response was available. Straight-line routes are not shown as drivable roads.",
-                    "routes": [],
-                })
-                return
-
-            if osrm_routes:
-                for idx, r in enumerate(osrm_routes):
-                    coords_raw = r["geometry"]["coordinates"] # [lng, lat]
-                    coords = [[c[1], c[0]] for c in coords_raw] # [lat, lng]
-                    distance_km = round(r.get("distance", 0) / 1000.0, 1)
-                    eta_mins = max(1, round(r.get("duration", 0) / 60.0))
-
-                    # Check max flood depth along route coordinates
-                    max_depth = None
-                    flooded_segs = []
-
-                    for pt in coords:
-                        for fn in flood_nodes:
-                            # Euclidean distance approximation in meters
-                            d_m = math.sqrt((pt[0] - fn["lat"])**2 + (pt[1] - fn["lng"])**2) * 111000
-                            if d_m < 400: # Sparse node estimate within 400m; not a road measurement
-                                d_cm = fn.get("water_depth_cm")
-                                if d_cm is None:
-                                    continue
-                                max_depth = max(float(d_cm), max_depth if max_depth is not None else float(d_cm))
-                                if d_cm > 15.0:
-                                    flooded_segs.append({
-                                        "road_name": fn["name"],
-                                        "depth_cm": d_cm,
-                                        "coords": [fn["lat"], fn["lng"]]
-                                    })
-
-                    unique_flooded = []
-                    seen = set()
-                    for fs in flooded_segs:
-                        if fs["road_name"] not in seen:
-                            seen.add(fs["road_name"])
-                            unique_flooded.append(fs)
-
-                    status = "MODEL_ESTIMATE"
-
-                    wps = []
-                    if len(coords) > 6:
-                        step_idx = len(coords) // 3
-                        for k in range(1, 3):
-                            wpt = coords[k * step_idx]
-                            wps.append(f"{wpt[0]:.5f},{wpt[1]:.5f}")
-
-                    wp_param = "|".join(wps)
-                    gmaps_url = f"https://www.google.com/maps/dir/?api=1&origin={orig['lat']:.5f},{orig['lng']:.5f}&destination={dest['lat']:.5f},{dest['lng']:.5f}"
-                    if wp_param:
-                        gmaps_url += f"&waypoints={wp_param}"
-                    gmaps_url += "&travelmode=driving"
-
-                    routes_response.append({
-                        "route_id": f"r{idx+1}",
-                        "name": f"Route Option {idx+1}" + (" (Direct)" if idx==0 else " (Alternative)"),
-                        "status": status,
-                        "eta_minutes": eta_mins,
-                        "distance_km": distance_km,
-                        "max_water_depth_cm": round(max_depth, 1) if max_depth is not None else None,
-                        "vehicle_type": vehicle_type,
-                        "flooded_segments": unique_flooded,
-                        "coordinates": coords,
-                        "google_maps_url": gmaps_url
-                    })
-
-            # OSRM supplies road geometry. Flood depths are sparse, unvalidated
-            # estimates near pilot graph nodes; they are not road measurements.
-            routes_response.sort(key=lambda x: (x["max_water_depth_cm"] if x["max_water_depth_cm"] is not None else float("inf"), x["eta_minutes"]))
-
-            orig_in_catchment = is_in_dwarka_catchment(orig['lat'], orig['lng'])
-            dest_in_catchment = is_in_dwarka_catchment(dest['lat'], dest['lng'])
-            is_outside_pilot = not (orig_in_catchment and dest_in_catchment)
-
-            geofence_message = None
-
-            recommended_id = routes_response[0]["route_id"] if routes_response else "r1"
-
-            self._send_json({
-                "routing_engine": "OSRM road geometry + unvalidated pilot model estimates",
-                "routing_status": "ROUTES_WITH_UNVALIDATED_DEPTH_ESTIMATES",
-                "flood_safety_status": "UNVERIFIED_MODEL_ESTIMATE",
-                "model_caveat": "Depths are sparse model estimates around pilot graph nodes, not observed water depths along the road.",
-                "origin": orig,
-                "destination": dest,
-                "vehicle_type": vehicle_type,
-                "lead_time_minutes": lead_time_mins,
-                "origin_in_catchment": orig_in_catchment,
-                "destination_in_catchment": dest_in_catchment,
-                "is_outside_pilot": is_outside_pilot,
-                "geofence_message": geofence_message,
-                "recommended_route_id": recommended_id,
-                "routes": routes_response
-            })
+            from route_comparison import build_route_response
+            self._send_json(build_route_response(
+                body,
+                referer=self.headers.get('Origin') or self.headers.get('Referer'),
+                flood_context=body.get('flood_context') if isinstance(body, dict) else None,
+            ))
 
         elif parsed.path == '/api/v1/navigate':
             self._send_json({
                 "routing_status": "USE_FLOOD_SAFE_ROUTE_ENDPOINT",
-                "notice": "This legacy endpoint is not configured to validate flood conditions. Use /api/v1/route/flood-safe; it returns no route when pilot forecast/model inputs are unavailable.",
+                "notice": "Use /api/v1/route/flood-safe for road alternatives. Nearby depth context is an unvalidated estimate, not a safety clearance.",
                 "routes": [],
             }, 410)
 
@@ -855,6 +746,7 @@ def run_server(port=8083):
     print(f"SIH 2026 REST API Backend Server Running on http://localhost:{port}/")
     print(f"Swagger API Documentation available at: http://localhost:{port}/docs")
     print(f"GET  /api/v1/nowcast?lead_time_mins=60")
+    print("GET  /api/v1/data-readiness")
     print(f"GET  /api/v1/drainage-network")
     print(f"POST /api/v1/route/flood-safe")
     print("=" * 60)

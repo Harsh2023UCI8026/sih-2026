@@ -33,8 +33,10 @@
   <meta name="twitter:image" content="/dashboard-assets/logo.jpg">
 
   <!-- Favicon & PWA Manifest -->
-  <link rel="icon" type="image/jpeg" href="/dashboard-assets/logo.jpg" />
-  <link rel="shortcut icon" type="image/jpeg" href="/dashboard-assets/logo.jpg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="site.webmanifest" />
 
   <!-- Google Fonts Preconnect (Lighthouse Performance) -->
@@ -2048,7 +2050,7 @@
   <style id="command-center-layout-overrides">
     .alert-banner.model { background:linear-gradient(90deg,#0f766e,#0e7490) !important; }
     .alert-banner.unavailable { background:linear-gradient(90deg,#475569,#334155) !important; }
-    .alert-banner.demo { background:linear-gradient(90deg,#6d28d9,#4338ca) !important; }
+    .alert-banner.demo { background:#f3f0ff !important; color:#4338ca !important; border-bottom:1px solid #ddd6fe; box-shadow:none; }
     .alert-banner { gap:12px; }
     .alert-banner.stale { background:linear-gradient(90deg,#92400e,#b45309) !important; }
     #forecastBannerMessage { flex:1; min-width:0; line-height:1.35; }
@@ -2107,7 +2109,21 @@
     .dashboard-layout { width:100%; height:100%; min-height:0; display:grid; grid-template-columns:minmax(285px,22vw) minmax(0,1fr) minmax(285px,22vw); grid-template-areas:"left map right"; gap:10px; padding:10px; overflow:hidden; }
     .dashboard-layout > .sidebar { grid-area:left; position:relative !important; inset:auto !important; width:auto !important; min-width:0 !important; max-width:none !important; height:100% !important; max-height:100% !important; overflow:auto !important; padding:12px !important; gap:10px !important; justify-content:safe center; z-index:2 !important; background:var(--panel-bg) !important; border:1px solid var(--panel-border) !important; border-radius:14px !important; box-shadow:var(--shadow-sm) !important; }
     .dashboard-layout > .map-container { grid-area:map; position:relative !important; inset:auto !important; width:auto !important; min-width:0 !important; height:100% !important; z-index:1 !important; border:1px solid var(--panel-border); border-radius:14px; overflow:hidden; background:#e2e8f0; }
-    .dashboard-right { grid-area:right; display:flex; flex-direction:column; gap:10px; min-width:0; min-height:0; height:100%; overflow:auto; padding:12px; border:1px solid var(--panel-border); border-radius:14px; background:var(--panel-bg); box-shadow:var(--shadow-sm); z-index:2; }
+    .dashboard-right { grid-area:right; display:flex; flex-direction:column; gap:10px; min-width:0; min-height:0; height:100%; overflow:auto; overflow-wrap:anywhere; overscroll-behavior:contain; scrollbar-gutter:stable; scroll-padding-block-end:132px; padding:12px 12px 132px; border:1px solid var(--panel-border); border-radius:14px; background:var(--panel-bg); box-shadow:var(--shadow-sm); z-index:2; }
+    .dashboard-right > *, #technicalViewContainer > * { min-width:0; max-width:100%; }
+    #technicalViewContainer .technical-overview-copy, #technicalViewContainer .model-confidence-copy,
+    #technicalViewContainer .technical-step p, #technicalViewContainer .technical-validation-note,
+    #technicalViewContainer .card-collapsible-body { overflow-wrap:anywhere; word-break:normal; }
+    .route-step-list { display:grid; gap:3px; margin:6px 0 0; padding-left:16px; color:var(--text-sub); font-size:9px; line-height:1.4; }
+    .route-attribution { margin:6px 0 0; color:var(--text-muted); font-size:9px; line-height:1.4; }
+    .route-status-note { margin:6px 0 0; padding:7px 8px; border:1px solid var(--panel-border); border-radius:8px; background:var(--panel-bg); color:var(--text-sub); font-size:9px; line-height:1.45; }
+    .readiness-overall { margin:8px 0; padding:10px; border:1px solid #f4c66a; border-left:4px solid #d99000; border-radius:9px; background:#fffbeb; color:#704b0b; font-size:10px; line-height:1.45; }
+    .readiness-grid { display:grid; gap:6px; }
+    .readiness-item { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:start; gap:8px; padding:8px; border:1px solid var(--panel-border); border-radius:8px; background:var(--panel-bg); }
+    .readiness-item strong { display:block; margin-bottom:2px; color:var(--text-title); font-size:10px; }
+    .readiness-item span { display:block; color:var(--text-sub); font-size:9px; line-height:1.4; overflow-wrap:anywhere; }
+    .readiness-pill { max-width:112px; padding:3px 6px; border-radius:999px; background:#fff7ed; color:#9a5a00; font-size:8px; font-weight:900; line-height:1.3; text-align:center; }
+    .readiness-source-link { color:var(--brand-blue); font-size:10px; font-weight:800; text-decoration:none; }
     #simpleRightPanel { display:flex; flex-direction:column; gap:10px; }
     #simpleViewContainer, #technicalViewContainer { gap:10px; }
     #technicalViewContainer > .explainer-box {
@@ -2123,11 +2139,11 @@
     .technical-status-pill { padding:4px 7px; border-radius:999px; color:var(--brand-blue); background:color-mix(in srgb,var(--brand-blue) 12%,var(--card-bg)); }
     .technical-overview-title { margin:0; color:var(--text-title); font-family:'Outfit',sans-serif; font-size:14px; line-height:1.25; font-weight:800; }
     .technical-overview-copy { margin:0; color:var(--text-sub); font-size:12px; line-height:1.5; }
-    .model-confidence-note { display:flex; flex-direction:column; gap:5px; padding:11px 12px; border:1px solid #f4c66a; border-left:4px solid #d99000; border-radius:11px; color:var(--text-title); background:linear-gradient(135deg,#fff8e7,#fffdf7); }
-    .model-confidence-heading { display:flex; align-items:center; gap:7px; color:#754b00; font-size:12px; line-height:1.3; }
+    .model-confidence-note { display:flex; flex-direction:column; gap:5px; padding:11px 12px; border:1px solid #bfdbfe; border-left:4px solid #3b82f6; border-radius:11px; color:var(--text-title); background:linear-gradient(135deg,#eff6ff,#fff); }
+    .model-confidence-heading { display:flex; align-items:center; gap:7px; color:#1e40af; font-size:12px; line-height:1.3; }
     .model-confidence-heading strong { font-family:'Outfit',sans-serif; font-weight:900; }
-    .model-confidence-area { margin-left:auto; color:#78591e; font-size:10px; font-weight:700; text-align:right; }
-    .model-confidence-copy { margin:0; color:#5b4a2b; font-size:11px; line-height:1.45; }
+    .model-confidence-area { margin-left:auto; color:#475569; font-size:10px; font-weight:700; text-align:right; }
+    .model-confidence-copy { margin:0; color:#334155; font-size:11px; line-height:1.45; }
     .confidence-reference { color:var(--brand-blue); font-size:10px; font-weight:800; text-decoration:none; }
     .confidence-reference:hover { text-decoration:underline; }
     .technical-facts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
@@ -2135,6 +2151,26 @@
     .technical-fact strong { color:var(--brand-blue); font-family:'Outfit',sans-serif; font-size:18px; line-height:1; }
     .technical-fact span { color:var(--text-sub); font-size:10px; font-weight:700; }
     .technical-validation-note { margin:0; padding-top:8px; border-top:1px solid var(--panel-border); color:var(--text-sub); font-size:11px; line-height:1.45; }
+    .dmp-context-body { display:grid; gap:11px; }
+    .dmp-context-note { margin:0; padding:9px 10px; border:1px solid #f4c66a; border-left:4px solid #d99000; border-radius:9px; color:var(--text-sub); background:color-mix(in srgb,#fef3c7 45%,var(--panel-bg)); font-size:10px; line-height:1.5; }
+    .dmp-context-heading { margin:0 0 6px; color:var(--text-title); font-size:11px; font-weight:900; }
+    .dmp-landuse-chart { display:grid; gap:7px; }
+    .dmp-landuse-row { display:grid; grid-template-columns:88px minmax(45px,1fr) 48px; align-items:center; gap:7px; color:var(--text-sub); font-size:9px; }
+    .dmp-landuse-label { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .dmp-landuse-track { height:9px; overflow:hidden; border-radius:999px; background:var(--card-bg); }
+    .dmp-landuse-fill { height:100%; border-radius:inherit; }
+    .dmp-landuse-value { color:var(--text-title); font-size:9px; font-weight:900; text-align:right; }
+    .dmp-chart-scale { display:flex; justify-content:space-between; margin:1px 54px 0 95px; color:var(--text-muted); font-size:8px; }
+    .dmp-flow { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; }
+    .dmp-flow-step { position:relative; display:grid; align-content:center; min-height:52px; padding:7px; border:1px solid var(--panel-border); border-radius:8px; background:var(--panel-bg); color:var(--text-title); font-size:9px; font-weight:800; line-height:1.35; text-align:center; }
+    .dmp-flow-step:not(:last-child)::after { content:'→'; position:absolute; z-index:1; top:50%; right:-8px; transform:translate(50%,-50%); color:var(--brand-blue); font-size:13px; font-weight:900; }
+    .dmp-flow-controls { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
+    .dmp-flow-control { padding:7px 8px; border:1px dashed var(--card-border); border-radius:8px; background:var(--card-bg); color:var(--text-sub); font-size:9px; line-height:1.4; }
+    .dmp-simulation-facts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
+    .dmp-simulation-fact { padding:8px; border:1px solid var(--panel-border); border-radius:8px; background:var(--panel-bg); color:var(--text-sub); font-size:9px; line-height:1.35; }
+    .dmp-simulation-fact strong { display:block; margin-bottom:3px; color:var(--brand-blue); font-family:'Outfit',sans-serif; font-size:17px; line-height:1; }
+    .dmp-context-source { color:var(--brand-blue); font-size:10px; font-weight:800; text-decoration:none; }
+    .dmp-context-source:hover { text-decoration:underline; }
     .map-impact-feed {
       position:absolute; z-index:700; right:12px; bottom:42px; width:min(270px,calc(100% - 24px));
       max-height:min(44vh,320px); overflow:hidden; border:1px solid #cbd5e1; border-radius:12px;
@@ -2237,7 +2273,7 @@
       .mobile-tab-bar { position:sticky; top:0; padding:4px 6px; gap:6px; }
       .tab-btn { min-height:44px; padding:8px 5px; font-size:11px; }
       .dashboard-layout > .sidebar { padding:10px !important; gap:10px !important; }
-      .dashboard-right { padding:10px !important; }
+      .dashboard-right { padding:10px 10px 150px !important; scroll-padding-block-end:150px; }
       .dashboard-layout > .sidebar > *, .dashboard-right > * { min-width:0; max-width:100%; }
       .map-floating-controls { top:8px; left:8px; right:8px; gap:6px; }
       .map-floating-controls > button { min-height:44px; max-width:calc(50vw - 14px); padding:8px; font-size:10px; line-height:1.2; white-space:normal; }
@@ -2264,6 +2300,10 @@
     }
     @media (max-width:380px) {
       .brand-title h1 { font-size:12px; }
+      .technical-facts, .dmp-simulation-facts, .dmp-flow-controls { grid-template-columns:1fr !important; }
+      .dmp-flow { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .dmp-flow-step:nth-child(2)::after { content:none; }
+      .route-item .route-title { align-items:flex-start; flex-wrap:wrap; }
       .header-right { justify-content:space-between; }
       #dataModeBtn { min-width:0; max-width:calc(100% - 74px); }
       #dataModeText { display:inline-block; max-width:132px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; vertical-align:bottom; }
@@ -2437,7 +2477,7 @@
               Point Location</label>
             <div style="display:flex; gap:4px; align-items:center;">
               <input type="text" id="inputOrigin" aria-label="Starting Point Location"
-                placeholder="Enter starting point (e.g. Uttam Nagar West)" value=""
+                placeholder="Enter starting point (e.g. Uttam Nagar West)" value="Netaji Subhas University of Technology (NSUT)"
                 style="flex:1; padding:7px 9px; font-size:11px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); border-radius:6px;"
                 oninput="onLocationInput('origin', this.value)">
               <button onclick="useCurrentLocation()" aria-label="Use Current GPS Location"
@@ -2454,7 +2494,7 @@
               style="position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0;">Destination
               Location</label>
             <input type="text" id="inputDestination" aria-label="Destination Location"
-              placeholder="Enter destination (e.g. Dwarka Sector 6)" value=""
+              placeholder="Enter destination (e.g. Dwarka Sector 6)" value="Dwarka Mor Metro Station"
               style="width:100%; padding:7px 9px; font-size:11px; border:1px solid var(--card-border); background:var(--panel-bg); color:var(--text-title); border-radius:6px;"
               oninput="onLocationInput('dest', this.value)">
             <div id="autocompleteDest" class="autocomplete-dropdown" style="display:none;"></div>
@@ -2475,6 +2515,7 @@
             </select>
             <span id="routePlannerHelp" style="font-size:9px;color:var(--text-muted);">Choose how you travel. This does not check vehicle water clearance.</span>
           </div>
+          <div style="font-size:9px;color:var(--text-muted);">Sample pilot trip prefilled · edit either location to plan a different trip.</div>
 
           <button class="btn-find-route" id="btnCompareRoutes" onclick="triggerRouteCalculation()">
             ⚡ Compare routes
@@ -2522,10 +2563,10 @@
 
         <div class="model-confidence-note" id="modelConfidenceNote" role="note" aria-label="Model confidence and coverage">
           <div class="model-confidence-heading">
-            <strong id="modelConfidenceTitle">⚠️ Limited map coverage</strong>
+            <strong id="modelConfidenceTitle">📍 Dwarka pilot model</strong>
             <span class="model-confidence-area" id="txtCommuterHeader">Dwarka Mor pilot</span>
           </div>
-          <p class="model-confidence-copy" id="modelConfidenceCopy">Only 6 drain locations are mapped in this pilot. Water levels are shown as broad ranges near those points, not exact readings for every street.</p>
+          <p class="model-confidence-copy" id="modelConfidenceCopy">Rainfall-driven depth bands are shown for the mapped drainage links in this pilot area.</p>
         </div>
 
         <!-- A) Hero Status Card (Big & Prominent) -->
@@ -2659,6 +2700,68 @@
           </div>
           <p class="technical-validation-note" id="technicalValidationNote">Forecast and depth-estimation details appear when the API responds.</p>
           <div class="demo-explainer" id="demoTechExplainer" hidden><strong>Demo pathway:</strong> select a lead time to load its fixed synthetic rainfall scenario, compare edge predictions, and optionally play the illustrative moving overlay. The overlay does not drive the model values.</div>
+        </div>
+
+        <div class="card collapsed" id="cardOperationalReadiness">
+          <div class="card-head-accordion" onclick="toggleCardAccordion('cardOperationalReadiness')">
+            <div class="technical-section-copy">
+              <h2 style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:800; color:var(--text-title); margin:0;">🧭 SIH 26085 data readiness</h2>
+              <span class="technical-section-description">What this build has versus the street-level target</span>
+            </div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="card-collapsible-body" style="margin-top:6px;">
+            <p class="readiness-overall" id="readinessOverall">Reading the current rainfall, terrain, drainage, solver, validation, and deployment inputs…</p>
+            <div class="readiness-grid" id="readinessGrid" aria-live="polite"></div>
+            <p class="technical-validation-note"><strong>Data acquisition:</strong> Official IMD / Delhi I&amp;FC request materials and source notes are included in the project. Agency-supplied rainfall and street-depth observations are not yet integrated into this dashboard.</p>
+            <a class="readiness-source-link" href="https://ifc.delhi.gov.in/doit-content/our-services" target="_blank" rel="noopener noreferrer">Open Delhi I&amp;FC source index</a>
+          </div>
+        </div>
+
+        <div class="card collapsed" id="cardDmpContext">
+          <div class="card-head-accordion" onclick="toggleCardAccordion('cardDmpContext')">
+            <div class="technical-section-copy">
+              <h2 style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:800; color:var(--text-title); margin:0;">🗺️ Najafgarh drainage context · 2018</h2>
+              <span class="technical-section-description">IIT Delhi / IFCD report · basin-wide reference</span>
+            </div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="card-collapsible-body dmp-context-body" style="margin-top:6px;">
+            <p class="dmp-context-note" id="dmpContextScope">Loading the source and scale notes…</p>
+
+            <div class="dmp-simulation-facts" id="dmpBasinFacts" aria-label="Najafgarh basin-scale terrain context"></div>
+
+            <section aria-labelledby="dmpLandUseHeading">
+              <h3 class="dmp-context-heading" id="dmpLandUseHeading">Reported basin-wide land use</h3>
+              <div class="dmp-landuse-chart" id="dmpLandUseChart" role="img" aria-label="Najafgarh basin land-use shares from Table 3.3-2"></div>
+              <div class="dmp-chart-scale" aria-hidden="true"><span>0%</span><span>25%</span><span>50%</span></div>
+              <p class="technical-validation-note" id="dmpLandUseNote"></p>
+            </section>
+
+            <section aria-labelledby="dmpFlowHeading">
+              <h3 class="dmp-context-heading" id="dmpFlowHeading">Drainage logic described in the report</h3>
+              <div class="dmp-flow" role="img" aria-label="Rainfall and upstream flow produce subcatchment runoff that can collect at low points before moving through drains to the receiving reach">
+                <div class="dmp-flow-step">Rainfall + upstream inflow</div>
+                <div class="dmp-flow-step">Subcatchment runoff</div>
+                <div class="dmp-flow-step">Low point / inlet</div>
+                <div class="dmp-flow-step">Drain → receiving reach</div>
+              </div>
+              <div class="dmp-flow-controls">
+                <div class="dmp-flow-control"><strong>Storage:</strong> water bodies, parks, and permeable surfaces can hold or infiltrate some runoff when locally connected and available.</div>
+                <div class="dmp-flow-control"><strong>Pumps:</strong> availability and receiving-drain capacity matter; moving water out of one low point can increase load downstream.</div>
+              </div>
+              <p class="technical-validation-note" id="dmpMapLimitNote">Figures 3.3-6 and 3.3-7 are regional maps, not coordinate/depth tables. Their pump and reported-waterlogging symbols are not exact GPS sites or measured depth labels.</p>
+            </section>
+
+            <section aria-labelledby="dmpSimulationHeading">
+              <h3 class="dmp-context-heading" id="dmpSimulationHeading">Published basin-model examples</h3>
+              <div class="dmp-simulation-facts" id="dmpSimulationFacts"></div>
+              <p class="technical-validation-note" id="dmpSimulationNote"></p>
+            </section>
+
+            <p class="technical-validation-note">These findings guide future local checks for depression storage, surveyed drain slopes, pump state, and downstream effects. They are not currently applied to the Dwarka forecast.</p>
+            <a class="dmp-context-source" id="dmpContextSource" href="https://ifc.delhi.gov.in/sites/default/files/inline-files/main_report_dmp_version51.pdf" target="_blank" rel="noopener noreferrer">Open the official Drainage Master Plan report</a>
+          </div>
         </div>
 
         <!-- Metrics Grid (Collapsible Accordion) -->
@@ -2797,6 +2900,8 @@
     document.addEventListener('DOMContentLoaded', function () {
       const fab = document.getElementById('chatbotFab');
       if (fab) fab.addEventListener('click', window.toggleChatbot);
+      loadNajafgarhDmpContext();
+      loadOperationalReadiness();
     });
 
     // Mobile Tab Switcher Single Source of Truth Logic
@@ -3104,7 +3209,10 @@
     let activeRouteMarkers = [];
     let lastFetchedRoutes = [];
     let selectedRouteId = null;
+    let lastRouteNotice = '';
+    let lastRouteAttribution = '';
     let autocompleteDebounceTimer = null;
+    let initialRouteSuggestionStatus = 'pending';
 
     // Comprehensive Delhi-Wide Regional Hotspots & Metro Hubs Database
     const LOCAL_LOCATION_PRESETS = [
@@ -3328,7 +3436,9 @@
       const destText = document.getElementById('inputDestination')?.value?.trim();
 
       if (!origText || !destText) {
-        if (btn) btn.innerText = '⚡ Compare Route Options';
+        if (btn) btn.innerText = currentViewMode === 'technical'
+          ? '⚡ Compare road options + model context'
+          : '⚡ Get route options';
         if (isUserAction) {
           if (!origText && !destText) {
             showMobileToast("⚠️ Please enter starting point & destination to calculate route.", "warning");
@@ -3348,7 +3458,9 @@
       } catch (e) { }
 
       if (!currentOriginCoords || !currentDestCoords) {
-        if (btn) btn.innerText = '⚡ Compare Route Options';
+        if (btn) btn.innerText = currentViewMode === 'technical'
+          ? '⚡ Compare road options + model context'
+          : '⚡ Get route options';
         if (isUserAction) {
           showMobileToast("⚠️ Could not locate address coordinates. Please pick from dropdown suggestions.", "warning");
         }
@@ -3362,11 +3474,24 @@
         origin: currentOriginCoords,
         destination: currentDestCoords,
         vehicle_type: vehicle,
-        lead_time_mins: leadTimeMins
+        lead_time_mins: leadTimeMins,
+        flood_context: {
+          data_quality: window.lastFetchedError ? 'UNAVAILABLE' : (window.lastFetchedQuality || 'UNAVAILABLE'),
+          lead_time_minutes: Number(window.lastFetchedLeadTime ?? leadTimeMins),
+          nodes: (Array.isArray(window.lastFetchedNodes) ? window.lastFetchedNodes : []).slice(0, 50).map(node => ({
+            id: node.id || node.node_id || '',
+            name: node.name || '',
+            lat: node.lat,
+            lng: node.lng,
+            water_depth_cm: node.water_depth_cm ?? node.depth_cm ?? null
+          }))
+        }
       };
 
       const handleRouteSuccess = (data) => {
-        if (btn) btn.innerText = '⚡ Compare Route Options';
+        if (btn) btn.innerText = currentViewMode === 'technical'
+          ? '⚡ Compare road options + model context'
+          : '⚡ Get route options';
 
         if (data && data.geofence_message) {
           showMobileToast(data.geofence_message, "info");
@@ -3375,8 +3500,10 @@
         if (data && data.routes && data.routes.length > 0) {
           lastFetchedRoutes = data.routes;
           selectedRouteId = data.recommended_route_id || data.routes[0].route_id;
+          lastRouteNotice = data.notice || '';
+          lastRouteAttribution = data.route_data_attribution || '';
           renderRoutesOnMap(data.routes);
-          renderRouteCards(data.routes, selectedRouteId);
+          renderRouteCards(data.routes, selectedRouteId, lastRouteNotice, lastRouteAttribution);
 
           // Smooth scroll route cards into view so mobile user sees instant results
           setTimeout(() => {
@@ -3384,11 +3511,16 @@
             if (listEl) listEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           }, 100);
         } else {
-          lastFetchedRoutes = [];
-          renderRoutesOnMap([]);
-          const notice = data?.notice || 'No verified flood-aware route result is available for this area.';
-          renderRouteCards([], null, notice);
-          if (isUserAction) showMobileToast(notice, 'warning');
+          const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(`${currentOriginCoords.lat},${currentOriginCoords.lng}`)}&destination=${encodeURIComponent(`${currentDestCoords.lat},${currentDestCoords.lng}`)}&travelmode=${vehicle === 'pedestrian' ? 'walking' : (vehicle === 'bike' ? 'bicycling' : 'driving')}`;
+          lastFetchedRoutes = [{
+            route_id: 'live-directions', name: 'Open live road directions', status: 'LIVE_DIRECTIONS_LINK',
+            eta_minutes: null, distance_km: null, vehicle_type: vehicle, coordinates: [], steps: [],
+            max_water_depth_cm: null, nearby_depth_estimates: [], google_maps_url: mapsUrl
+          }];
+          lastRouteNotice = 'Road geometry was unavailable. The map marks the trip endpoints; open Maps for the road route.';
+          lastRouteAttribution = 'Live directions via Google Maps. Check current closures and official advisories.';
+          renderRoutesOnMap(lastFetchedRoutes);
+          renderRouteCards(lastFetchedRoutes, 'live-directions', lastRouteNotice, lastRouteAttribution);
         }
       };
 
@@ -3397,19 +3529,26 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       })
-        .then(res => {
-          if (!res.ok) throw new Error("API returned status " + res.status);
-          return res.json();
+        .then(async res => {
+          const data = await res.json().catch(() => null);
+          if (!res.ok && (!data || !Array.isArray(data.routes))) throw new Error(`Route response ${res.status}`);
+          return data || {};
         })
         .then(data => {
           handleRouteSuccess(data);
         })
         .catch(err => {
-          console.warn('Route comparison unavailable:', err);
-          lastFetchedRoutes = [];
-          renderRoutesOnMap([]);
-          renderRouteCards([], null, 'Route provider or pilot forecast/model unavailable. No route is labeled safe.');
-          if (isUserAction) showMobileToast('Route comparison unavailable. No route is labeled safe.', 'warning');
+          console.warn('Route request failed; showing live-directions fallback:', err);
+          const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(`${currentOriginCoords.lat},${currentOriginCoords.lng}`)}&destination=${encodeURIComponent(`${currentDestCoords.lat},${currentDestCoords.lng}`)}&travelmode=${vehicle === 'pedestrian' ? 'walking' : (vehicle === 'bike' ? 'bicycling' : 'driving')}`;
+          lastFetchedRoutes = [{
+            route_id: 'live-directions', name: 'Open live road directions', status: 'LIVE_DIRECTIONS_LINK',
+            eta_minutes: null, distance_km: null, vehicle_type: vehicle, coordinates: [], steps: [],
+            max_water_depth_cm: null, nearby_depth_estimates: [], google_maps_url: mapsUrl
+          }];
+          lastRouteNotice = 'Road geometry was unavailable. The map marks the trip endpoints; open Maps for the road route.';
+          lastRouteAttribution = 'Live directions via Google Maps. Check current closures and official advisories.';
+          renderRoutesOnMap(lastFetchedRoutes);
+          renderRouteCards(lastFetchedRoutes, 'live-directions', lastRouteNotice, lastRouteAttribution);
         });
     }
 
@@ -3424,23 +3563,32 @@
 
       routes.forEach(r => {
         const isSelected = (r.route_id === selectedRouteId);
-        let color = '#d97706'; // Unvalidated model estimate
-        let dashArray = '5, 5';
+        const hasRoadGeometry = r.status === 'LOCAL_OSM_ROAD_GEOMETRY' || r.status === 'ROAD_ROUTE_FROM_OPENSTREETMAP';
+        let color = hasRoadGeometry ? '#2563eb' : '#d97706';
+        let dashArray = hasRoadGeometry ? null : '5, 5';
 
         if (r.status === 'BLOCKED') { color = '#dc2626'; dashArray = '8, 8'; }
 
         const opacity = isSelected ? 0.95 : 0.4;
         const weight = isSelected ? 7 : 4;
 
-        const coords = r.coordinates || r.waypoints || [];
+        let coords = r.coordinates || r.waypoints || [];
+        const isEndpointConnector = r.status === 'LIVE_DIRECTIONS_LINK' && coords.length < 2;
+        if (isEndpointConnector && currentOriginCoords && currentDestCoords) {
+          coords = [
+            [Number(currentOriginCoords.lat), Number(currentOriginCoords.lng)],
+            [Number(currentDestCoords.lat), Number(currentDestCoords.lng)]
+          ];
+        }
 
         if (coords && coords.length > 0) {
           const polyline = L.polyline(coords, {
-            color: color,
-            weight: weight,
-            opacity: opacity,
-            dashArray: dashArray
+            color: isEndpointConnector ? '#64748b' : color,
+            weight: isEndpointConnector ? 3 : weight,
+            opacity: isEndpointConnector ? 0.85 : opacity,
+            dashArray: isEndpointConnector ? '3, 8' : dashArray
           }).addTo(map);
+          if (isEndpointConnector) polyline.bindTooltip('Endpoint connector only · road geometry was unavailable');
 
           polyline.on('click', () => selectRoute(r.route_id));
           activeRoutePolylines.push(polyline);
@@ -3463,51 +3611,248 @@
         }
       });
 
+      if (routes.length && currentOriginCoords && currentDestCoords) {
+        const startMarker = L.circleMarker([Number(currentOriginCoords.lat), Number(currentOriginCoords.lng)], {
+          radius: 6, color: '#ffffff', weight: 2, fillColor: '#16a34a', fillOpacity: 1
+        }).addTo(map).bindTooltip('Trip start');
+        const destinationMarker = L.circleMarker([Number(currentDestCoords.lat), Number(currentDestCoords.lng)], {
+          radius: 6, color: '#ffffff', weight: 2, fillColor: '#dc2626', fillOpacity: 1
+        }).addTo(map).bindTooltip('Trip destination');
+        activeRouteMarkers.push(startMarker, destinationMarker);
+        boundsGroup.push([Number(currentOriginCoords.lat), Number(currentOriginCoords.lng)]);
+        boundsGroup.push([Number(currentDestCoords.lat), Number(currentDestCoords.lng)]);
+      }
+
       if (boundsGroup.length > 0) {
         map.fitBounds(L.polyline(boundsGroup).getBounds(), { padding: [40, 40] });
       }
     }
 
-    function renderRouteCards(routes, activeId, notice = '') {
+    function renderRouteCards(routes, activeId, notice = '', attribution = '') {
       const container = document.getElementById('routeResultsList');
       if (!routes || routes.length === 0) {
-        const plainNotice = currentViewMode === 'simple' ? 'No route comparison is available right now. Please try again.' : (notice || 'No route result is available; no route is marked safe.');
+        const plainNotice = notice || 'Open live directions for this trip. Street-flood exposure has no verified local observation.';
         container.innerHTML = `<div style="font-size:10px;color:var(--text-muted);line-height:1.5;">${escapeMapHtml(plainNotice)}</div>`;
         return;
       }
-      container.innerHTML = routes.map(r => {
+      const cards = routes.map(r => {
         const isSelected = r.route_id === activeId;
         const eta = r.eta_minutes || r.estimated_time_mins || '—';
         const gmapsUrl = r.gmaps_url || r.google_maps_url;
         const hasDepthBand = r.max_water_depth_cm !== null && r.max_water_depth_cm !== undefined && Number.isFinite(Number(r.max_water_depth_cm));
-        const depth = hasDepthBand ? depthBandLabel(r.max_water_depth_cm) : 'Insufficient data';
+        const depth = hasDepthBand ? depthBandLabel(r.max_water_depth_cm) : 'Unverified';
         const simpleWords = currentViewMode === 'simple';
-        const statusText = hasDepthBand
-          ? (simpleWords ? `Likely water: ${depth}` : `Maximum depth band: ${depth}`)
-          : (simpleWords ? 'No local estimate' : 'No graph-edge coverage');
+        const isDirectionsFallback = r.status === 'LIVE_DIRECTIONS_LINK';
+        const isLocalOsmRoute = r.status === 'LOCAL_OSM_ROAD_GEOMETRY';
+        const statusText = isLocalOsmRoute
+          ? 'Local OSM path · ETA estimate'
+          : isDirectionsFallback
+          ? 'Road directions'
+          : hasDepthBand
+          ? `Nearby point estimate: ${depth}`
+          : 'Road option';
         const confidenceLink = simpleWords ? 'ⓘ About this result' : 'ⓘ Model assumptions';
-        const routeCoverage = hasDepthBand ? '' : (simpleWords ? 'No mapped drain data for this route. ' : 'No covered pilot graph edge intersects this route. ');
+        const nearestNode = Array.isArray(r.nearby_depth_estimates) && r.nearby_depth_estimates.length ? r.nearby_depth_estimates[0] : null;
+        const routeCoverage = isLocalOsmRoute
+          ? 'Path follows bundled OpenStreetMap road lines; traffic and road closures are not included.'
+          : isDirectionsFallback
+          ? 'Road geometry was not returned; the map shows only the trip endpoints.'
+          : hasDepthBand
+          ? `${escapeMapHtml(nearestNode?.node_name || 'Schematic pilot point')} is ${escapeMapHtml(nearestNode?.distance_to_route_m ?? '—')} m from route; this is not a road reading.`
+          : 'No nearby model link is available for this road option.';
+        const stepList = Array.isArray(r.steps) && r.steps.length
+          ? `<ol class="route-step-list">${r.steps.slice(0, 5).map(step => `<li>${escapeMapHtml(step.instruction || step.road_name || 'Continue')}</li>`).join('')}</ol>`
+          : '';
+        const distanceLabel = r.distance_km !== null && r.distance_km !== undefined && Number.isFinite(Number(r.distance_km))
+          ? `${Number(r.distance_km).toFixed(2)} km` : 'distance by live map';
         return `
           <div class="route-item ${isSelected ? 'selected' : ''}" onclick="selectRoute('${r.route_id}')">
             <div class="route-title"><span style="font-weight:800;font-size:11px;">${escapeMapHtml(r.name)}</span>
               <span class="badge-risky">${statusText}</span></div>
             <div style="font-size:10px;color:var(--text-sub);margin-top:3px;display:flex;justify-content:space-between;">
-              <span>⏱️ ${eta} mins · ${escapeMapHtml(r.distance_km)} km</span>
+              <span>⏱️ ${escapeMapHtml(eta)} mins · ${escapeMapHtml(distanceLabel)}</span>
               <span>${simpleWords ? 'Travel type' : 'Vehicle class'}: ${escapeMapHtml(r.vehicle_type || 'not specified')}</span>
             </div>
-            <div style="font-size:9px;color:var(--text-muted);font-weight:700;margin-top:4px;">${routeCoverage}<a class="confidence-reference" href="#modelConfidenceNote">${confidenceLink} ↑</a></div>
+            <div class="route-status-note">${routeCoverage}${hasDepthBand ? ` Nearby model band ${depth} is unvalidated and is not measured along the road.` : ''} <a class="confidence-reference" href="#modelConfidenceNote">${confidenceLink} ↑</a></div>
+            ${stepList}
             <div style="display:flex;gap:6px;margin-top:6px;">
-              <button style="flex:1;padding:6px;font-size:10px;font-weight:800;background:var(--brand-blue);color:white;border:none;border-radius:4px;cursor:pointer;" onclick="event.stopPropagation();viewRouteOnMap('${r.route_id}')">${simpleWords ? '🗺️ Show on map' : '🗺️ View route geometry'}</button>
+              <button style="flex:1;padding:6px;font-size:10px;font-weight:800;background:var(--brand-blue);color:white;border:none;border-radius:4px;cursor:pointer;" onclick="event.stopPropagation();viewRouteOnMap('${r.route_id}')">${simpleWords ? '🗺️ Show on map' : (isDirectionsFallback ? '🗺️ Show trip area' : '🗺️ View route geometry')}</button>
               ${gmapsUrl ? `<button class="btn-gmaps-navigate" style="flex:1;margin-top:0;" onclick="event.stopPropagation();navigateToGoogleMaps('${gmapsUrl}')">🧭 Open Maps</button>` : ''}
             </div>
           </div>`;
       }).join('');
+      const noticeMarkup = notice ? `<p class="route-status-note">${escapeMapHtml(notice)}</p>` : '';
+      const attributionLink = /OpenStreetMap|OSRM|FOSSGIS/i.test(attribution)
+        ? ` <a class="readiness-source-link" href="https://www.openstreetmap.org/fixthemap" target="_blank" rel="noopener noreferrer">Fix a map issue</a>`
+        : '';
+      const attributionMarkup = attribution ? `<p class="route-attribution">${escapeMapHtml(attribution)}${attributionLink}</p>` : '';
+      container.innerHTML = `${noticeMarkup}${cards}${attributionMarkup}`;
+    }
+
+    function requestInitialRouteSuggestion(hasModelContext) {
+      if (hasModelContext) {
+        if (initialRouteSuggestionStatus === 'modelled') return;
+        initialRouteSuggestionStatus = 'modelled';
+      } else {
+        if (initialRouteSuggestionStatus !== 'pending') return;
+        initialRouteSuggestionStatus = 'road-only';
+      }
+      triggerRouteCalculation(false);
     }
 
     function toggleCardAccordion(cardId) {
       const card = document.getElementById(cardId);
       if (card) {
         card.classList.toggle('collapsed');
+      }
+    }
+
+    async function loadOperationalReadiness() {
+      const overall = document.getElementById('readinessOverall');
+      const grid = document.getElementById('readinessGrid');
+      if (!overall || !grid) return;
+
+      const fallback = {
+        overall_status: 'PROTOTYPE_ONLY', ready_component_count: 0, required_component_count: 6,
+        components: {
+          rainfall_nowcast: { status: 'PARTIAL', current_source: 'Open-Meteo point forecast', current_source_is_radar: false, spatial_rainfall_grid: false },
+          terrain: { status: 'PARTIAL', supplementary_reference_raster: { available: true, product: 'Copernicus GLO-30 reference DSM' } },
+          drainage_network: { status: 'PARTIAL', node_count: 6, edge_count: 5, assumed_node_count: 6, assumed_edge_count: 5 },
+          coupled_surface_hydraulics: { status: 'MISSING' },
+          ground_truth_and_validation: { status: 'MISSING', independent_verified_depth_count: 0, observation_count: 0 },
+          ml_and_deployment: { status: 'NOT_VALIDATED_OR_DEPLOYMENT_MISMATCH', local_pickle_present: true, local_pickle_size_bytes: 1527296833, vercel_excludes_pickle: true, deployed_inference_path: 'formula_only' }
+        }
+      };
+      let report = fallback;
+      try {
+        const response = await fetch('/api/v1/data-readiness', { cache: 'no-store' });
+        if (response.ok) {
+          const current = await response.json();
+          if (current && current.components) report = current;
+        }
+      } catch (error) {
+        // Show the repository-audit snapshot below so the panel remains useful
+        // even when a readiness endpoint is not part of a deployment bundle.
+      }
+
+      const components = report.components || {};
+      const ready = Number(report.ready_component_count) || 0;
+      const required = Number(report.required_component_count) || 6;
+      overall.textContent = `${ready}/${required} required inputs meet the full operational target. Current status: ${report.overall_status || 'PROTOTYPE_ONLY'}. Depth bands are estimates, not verified street-water measurements.`;
+      const byteSize = Number(components.ml_and_deployment?.local_pickle_size_bytes);
+      const modelSize = Number.isFinite(byteSize) ? `${(byteSize / (1024 ** 3)).toFixed(2)} GiB` : 'local artifact';
+      const descriptions = [
+        {
+          key: 'rainfall_nowcast', title: 'Rainfall forcing',
+          detail: c => `${c.current_source || 'Open-Meteo point forecast'}; radar grid ${c.spatial_rainfall_grid ? 'connected' : 'not connected'}, gauge correction ${c.gauge_bias_correction ? 'connected' : 'not connected'}.`
+        },
+        {
+          key: 'terrain', title: 'Terrain',
+          detail: c => `${c.supplementary_reference_raster?.product || c.source || 'Copernicus GLO-30'} is contextual reference; a verified, conditioned street-scale DTM is missing.`
+        },
+        {
+          key: 'drainage_network', title: 'Drainage graph',
+          detail: c => `${Number(c.node_count) || 0} nodes / ${Number(c.edge_count) || 0} edges; ${Number(c.assumed_node_count) || 0} nodes and ${Number(c.assumed_edge_count) || 0} edges carry assumed inputs.`
+        },
+        {
+          key: 'coupled_surface_hydraulics', title: 'Coupled surface + drain solver',
+          detail: c => c.status === 'READY' ? 'A coupled solver is present; see its validation record.' : 'No validated 2D surface-flow + 1D drain exchange solver; deployed depth uses a formula.'
+        },
+        {
+          key: 'ground_truth_and_validation', title: 'Observed street-depth validation',
+          detail: c => `${Number(c.independent_verified_depth_count) || 0} independently verified measured depths; incident reports without depth stay occurrence-only.`
+        },
+        {
+          key: 'ml_and_deployment', title: 'RandomForest and deployment',
+          detail: c => `${c.local_pickle_present ? `${modelSize} local RandomForest` : 'Local RandomForest absent'}; Vercel excludes it and runs the formula path. Independent depth validation: ${c.independent_observed_depth_validation ? 'recorded' : 'not done'}.`
+        }
+      ];
+      grid.innerHTML = descriptions.map(item => {
+        const component = components[item.key] || {};
+        const meets = component.meets_problem_statement === true;
+        const status = String(component.status || 'MISSING').replaceAll('_', ' ').toLowerCase();
+        const pill = meets ? 'Meets full target' : (component.status === 'PARTIAL' ? 'Partial reference/input' : (item.key === 'ml_and_deployment' ? 'Local vs deployed differs' : 'Target not met'));
+        const detail = item.detail(component);
+        return `<div class="readiness-item"><div><strong>${escapeMapHtml(item.title)}</strong><span>${escapeMapHtml(detail)}</span></div><span class="readiness-pill" title="${escapeMapHtml(status)}">${escapeMapHtml(pill)}</span></div>`;
+      }).join('');
+    }
+
+    async function loadNajafgarhDmpContext() {
+      const scope = document.getElementById('dmpContextScope');
+      const chart = document.getElementById('dmpLandUseChart');
+      const landUseNote = document.getElementById('dmpLandUseNote');
+      const simulationFacts = document.getElementById('dmpSimulationFacts');
+      const simulationNote = document.getElementById('dmpSimulationNote');
+      const basinFacts = document.getElementById('dmpBasinFacts');
+      const sourceLink = document.getElementById('dmpContextSource');
+      try {
+        const response = await fetch('/data/najafgarh_dmp_2018_context.json', { cache: 'force-cache' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const context = await response.json();
+        const source = context.source || {};
+        const landUse = context.land_use || {};
+        const classes = Array.isArray(landUse.classes) ? landUse.classes : [];
+        const maxPercent = Number(landUse.chart_max_percentage) || 50;
+        if (scope) {
+          scope.textContent = `${source.publisher || 'Official drainage-plan reference'} · ${source.year || 'year unavailable'} · Section ${source.section || 'not specified'}. Basin-wide context; it does not define the Dwarka pilot catchment or provide street-level observations.`;
+        }
+        const terrain = context.terrain || {};
+        const elevationRange = Array.isArray(terrain.reported_elevation_range_m_above_mean_sea_level)
+          ? terrain.reported_elevation_range_m_above_mean_sea_level.map(Number)
+          : [];
+        if (basinFacts) {
+          const terrainFacts = [];
+          if (elevationRange.length === 2 && elevationRange.every(Number.isFinite)) {
+            terrainFacts.push({ value: `${elevationRange[0]}–${elevationRange[1]} m`, label: 'reported basin DEM elevation range above mean sea level' });
+          }
+          if (terrain.reported_broad_flow_direction) {
+            terrainFacts.push({ value: 'Yamuna', label: `report describes broad natural flow ${terrain.reported_broad_flow_direction}` });
+          }
+          basinFacts.innerHTML = terrainFacts.map(item => `<div class="dmp-simulation-fact"><strong>${escapeMapHtml(item.value)}</strong>${escapeMapHtml(item.label)}</div>`).join('');
+        }
+        if (chart) {
+          chart.innerHTML = classes.map(item => {
+            const percentage = Number(item.percentage);
+            if (!Number.isFinite(percentage) || percentage < 0) return '';
+            const width = Math.max(0, Math.min(100, percentage / maxPercent * 100));
+            const color = /^#[0-9a-f]{6}$/i.test(String(item.color || '')) ? item.color : '#2563eb';
+            const area = Number(item.area_km2);
+            const areaLabel = Number.isFinite(area) ? `${area.toFixed(3)} km²` : 'area not listed';
+            return `<div class="dmp-landuse-row" title="${escapeMapHtml(areaLabel)}"><span class="dmp-landuse-label">${escapeMapHtml(item.label || 'Unlabelled')}</span><span class="dmp-landuse-track"><span class="dmp-landuse-fill" style="display:block;width:${width}%;background:${color};"></span></span><strong class="dmp-landuse-value">${percentage.toFixed(2)}%</strong></div>`;
+          }).join('');
+        }
+        if (landUseNote) {
+          landUseNote.textContent = `${landUse.source_table || 'Source table'} · Urban share is a broad land-use class, not measured impervious cover. These values are not used as Dwarka runoff coefficients.`;
+        }
+        const simulation = context.simulation_evidence || {};
+        if (simulationFacts) {
+          const facts = [
+            { value: simulation.scenario_1_reported_flooded_nodes_approx, label: 'approx. flooded nodes in Scenario 1' },
+            { value: simulation.scenario_2_reported_flooded_junctions, label: 'flooded junctions in Scenario 2' },
+            { value: simulation.najafgarh_adverse_slope_segments_reported, label: `reported adverse-slope segments of ${Number(simulation.najafgarh_conduits_considered_reported).toLocaleString()} conduits` },
+            { value: simulation.scenario_3_water_bodies_used_as_storage, label: `water bodies modelled with assumed ${simulation.scenario_3_assumed_average_water_body_depth_m} m average depth` }
+          ];
+          const parkDepth = Number(simulation.scenario_4_assumed_park_storage_depth_m);
+          if (Number.isFinite(parkDepth)) facts.push({ displayValue: `${parkDepth.toFixed(1)} m`, label: 'assumed park storage depth in Scenario 4' });
+          simulationFacts.innerHTML = facts.map(item => {
+            const value = item.displayValue || (Number.isFinite(Number(item.value)) ? Number(item.value).toLocaleString() : null);
+            return value ? `<div class="dmp-simulation-fact"><strong>${escapeMapHtml(value)}</strong>${escapeMapHtml(item.label)}</div>` : '';
+          }).join('');
+        }
+        if (simulationNote) {
+          const interval = Number(simulation.scenario_rainfall_interval_minutes);
+          const returnPeriod = Number(simulation.scenario_return_period_years);
+          simulationNote.textContent = `${simulation.input_quality_note || ''} ${simulation.network_effect_note || ''} ${Number.isFinite(interval) && Number.isFinite(returnPeriod) ? `The comparison used a ${returnPeriod}-year design-rainfall scenario at ${interval}-minute intervals, not a live event.` : ''}`.trim();
+        }
+        if (sourceLink && typeof source.url === 'string') sourceLink.href = source.url;
+      } catch (error) {
+        if (scope) scope.textContent = 'The regional report summary could not be loaded. Dwarka forecast and model outputs are unchanged.';
+        if (chart) chart.innerHTML = '';
+        if (landUseNote) landUseNote.textContent = 'Reference chart unavailable.';
+        if (simulationFacts) simulationFacts.innerHTML = '';
+        if (simulationNote) simulationNote.textContent = 'Reference scenario details unavailable.';
+        if (basinFacts) basinFacts.innerHTML = '';
+        console.warn('Najafgarh drainage-plan context did not load:', error);
       }
     }
 
@@ -3542,7 +3887,7 @@
       if (destInput && !destInput.value) destInput.value = "Dwarka Sector 6 Ridge";
 
       renderRoutesOnMap(lastFetchedRoutes);
-      renderRouteCards(lastFetchedRoutes, selectedRouteId);
+      renderRouteCards(lastFetchedRoutes, selectedRouteId, lastRouteNotice, lastRouteAttribution);
     }
 
     function navigateToGoogleMaps(url) {
@@ -3613,12 +3958,12 @@
         const element = document.getElementById(id);
         if (element) element.textContent = value;
       };
-      setText('lblRouteFinderTitle', isSimple ? '🧭 Plan a route' : '🛣️ Route analysis · depth bands');
+      setText('lblRouteFinderTitle', isSimple ? '🧭 Find road options' : '🛣️ Route options · OSM roads + model context');
       setText('routePlannerHelp', isSimple
-        ? 'Choose how you travel. This does not check vehicle water clearance.'
-        : 'Vehicle class is context only; it does not change the depth calculation or verify clearance.');
+        ? 'View road options with nearby pilot-model context.'
+        : 'Travel mode selects the road profile; nearby depth context is unvalidated and does not verify vehicle clearance.');
       setText('lblVehicleSelector', isSimple ? 'Choose your vehicle:' : 'Vehicle class:');
-      setText('btnCompareRoutes', isSimple ? '⚡ Compare routes' : '⚡ Compare modeled route bands');
+      setText('btnCompareRoutes', isSimple ? '⚡ Get route options' : '⚡ Compare road options + model context');
       setText('lblWaterIllustrationTitle', isSimple ? '🚶 What these water levels look like' : '🚶 Depth-to-impact reference scale');
       setText('simpleCarWarning', isSimple
         ? 'The picture shows what each water-level range can look like.'
@@ -3628,14 +3973,14 @@
       setText('forecastControlsTitle', isSimple ? '⏱️ Choose a forecast time' : '⏱️ Forecast lead-time control');
       setText('lblRainTitle', isSimple ? '🌧️ Rain forecast' : '🌧️ Forecast precipitation input');
       setText('lblActionTitle', isSimple ? '🎯 What should I do?' : '🎯 Safety advisory output');
-      setText('modelConfidenceTitle', isSimple ? '⚠️ Limited map coverage' : '🔶 Model confidence: LOW');
+      setText('modelConfidenceTitle', isSimple ? '📍 Dwarka pilot model' : '🔶 Model confidence: LOW');
       setText('modelConfidenceCopy', isSimple
-        ? 'Only 6 drain locations are mapped in this pilot. Water levels are shown as broad ranges near those points, not exact readings for every street.'
+        ? 'Rainfall-driven depth bands are shown for the mapped drainage links in this pilot area.'
         : 'Sparse graph: 6 nodes and 5 edges. Drain geometry/capacity are assumed; training targets are formula-derived and synthetic, with no independent observed-depth validation.');
       const note = document.getElementById('modelConfidenceNote');
       if (note) note.setAttribute('aria-label', isSimple ? 'Pilot map coverage' : 'Model confidence, training labels, and validation status');
       if (Array.isArray(lastFetchedRoutes) && lastFetchedRoutes.length && typeof renderRouteCards === 'function') {
-        renderRouteCards(lastFetchedRoutes, selectedRouteId);
+        renderRouteCards(lastFetchedRoutes, selectedRouteId, lastRouteNotice, lastRouteAttribution);
       }
     }
 
@@ -3761,17 +4106,17 @@
       if (forecastUnavailable) {
         if (heroCard) { heroCard.style.background = 'var(--card-bg)'; heroCard.style.borderColor = 'var(--card-border)'; }
         if (heroIcon) heroIcon.innerText = '⚪';
-        if (heroTitle) { heroTitle.innerText = simpleWords ? 'Rain forecast not available' : 'Forecast input unavailable'; heroTitle.style.color = 'var(--text-title)'; }
-        if (heroSub) { heroSub.innerText = simpleWords ? 'Try Refresh Forecast to load the latest rain forecast.' : (window.lastFetchedError || 'No rainfall input is available for this time window.'); heroSub.style.color = 'var(--text-sub)'; }
+        if (heroTitle) { heroTitle.innerText = simpleWords ? 'Live forecast unavailable' : 'Forecast input unavailable'; heroTitle.style.color = 'var(--text-title)'; }
+        if (heroSub) { heroSub.innerText = simpleWords ? 'Switch to the demo scenario to keep exploring the map and route planner.' : (window.lastFetchedError || 'No rainfall input is available for this time window.'); heroSub.style.color = 'var(--text-sub)'; }
         if (heroTrend) heroTrend.innerText = '';
         if (imgOverlay) { imgOverlay.style.height = '0px'; imgOverlay.style.opacity = '0'; }
         if (depthBadge) depthBadge.innerText = 'No data';
         if (carWarning) { carWarning.style.display = 'none'; carWarning.innerText = ''; }
         if (rainIcon) rainIcon.innerText = '🌦️';
-        if (rainLabel) rainLabel.innerText = 'Forecast unavailable';
-        if (rainSub) rainSub.innerText = simpleWords ? 'No rain amount was returned for this time.' : 'The forecast feed returned no valid precipitation value for this lead time.';
+        if (rainLabel) rainLabel.innerText = 'Rainfall input unavailable';
+        if (rainSub) rainSub.innerText = simpleWords ? 'Use the demo scenario while the live feed reconnects.' : 'The forecast feed returned no valid precipitation value for this lead time.';
         if (actionCard) actionCard.style.borderLeftColor = 'var(--panel-border)';
-        if (actionText) actionText.innerText = simpleWords ? 'Check local official alerts while the forecast loads.' : 'Forecast forcing is unavailable; no model depth inference is shown.';
+        if (actionText) actionText.innerText = simpleWords ? 'Choose Demo Scenario to explore the mapped model output.' : 'Forecast forcing is unavailable; no live-input model result is shown.';
         if (pwdEl) pwdEl.innerText = 'No forecast data';
         if (kakrolaEl) kakrolaEl.innerText = 'No forecast data';
         return;
@@ -3794,7 +4139,7 @@
           ? `Scenario: ${window.lastFetchedScenarioLabel || 'selected synthetic storm'} · example data, not a live forecast.`
           : (rainAvailable ? (simpleWords ? 'Open-Meteo weather forecast for this area.' : 'Hourly forecast split into 15-minute amounts; not radar or gauge data.') : 'No rainfall value is configured for this area.');
         if (actionCard) actionCard.style.borderLeftColor = '#f59e0b';
-        if (actionText) actionText.innerText = simpleWords ? 'No local estimate is available. Check official local alerts.' : 'No graph edge covers this area; no depth band is returned.';
+        if (actionText) actionText.innerText = simpleWords ? 'This area is outside the mapped pilot links; use the route planner to view road options.' : 'No graph edge covers this area; no depth band is returned.';
         if (pwdEl) pwdEl.innerText = 'Outside pilot coverage';
         if (kakrolaEl) kakrolaEl.innerText = 'Outside pilot coverage';
         return;
@@ -3805,10 +4150,14 @@
       const band = depthBandLabel(depth);
       const noRainForecast = !demo && rain <= 0.1;
       const isDryForecast = resultState === 'dry-forecast';
-      let icon = demo ? '🧪' : (isDryForecast && depth < 5 ? '✅' : '🌧️');
-      let title = demo ? (simpleWords ? 'Example storm scenario' : 'Synthetic demo scenario') : (isDryForecast && depth < 5 ? 'Dry forecast' : (noRainForecast ? `Little/no rain forecast · ${simpleWords ? 'water range' : 'model band'} ${band}` : `${simpleWords ? 'Estimated water range' : 'Predicted depth band'}: ${band}`));
+      let icon = demo ? '🧪' : (isDryForecast && depth < 5 ? '🌦️' : '🌧️');
+      let title = demo
+        ? (simpleWords ? 'Illustrative rain scenario' : 'Synthetic demo scenario')
+        : (isDryForecast
+          ? `Estimated water-depth band: ${band}`
+          : (noRainForecast ? `Estimated water-depth band: ${band}` : `${simpleWords ? 'Estimated water-depth band' : 'Predicted depth band'}: ${band}`));
       const estimatedBandTitle = simpleWords
-        ? `${demo ? 'Example scenario · ' : ''}Estimated water range: ${band}`
+        ? `${demo ? 'Scenario · ' : ''}Modelled water-depth band: ${band}`
         : `${demo ? 'Demo model' : 'Predicted depth'} band: ${band}`;
       let bg = 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)';
       let border = '#3b82f6';
@@ -3820,7 +4169,9 @@
       if (heroIcon) heroIcon.innerText = icon;
       if (heroTitle) { heroTitle.innerText = title; heroTitle.style.color = color; }
       if (heroSub) {
-        heroSub.innerText = `${simpleWords ? 'Likely water range' : (demo ? 'Demo depth band' : 'Model depth band')}: ${band}`;
+        heroSub.innerText = demo
+          ? `Illustrative model band: ${band} · scenario input, not live weather`
+          : `Rainfall-driven model estimate · +${Number(leadMins) || 0} min · not a street measurement`;
         heroSub.style.color = color;
       }
       if (heroTrend) heroTrend.innerText = simpleWords ? `Forecast for ${Number(leadMins) || 0} minutes from now` : `Lead time: +${Number(leadMins) || 0} min`;
@@ -3828,19 +4179,21 @@
       if (imgOverlay) { imgOverlay.style.height = `${Math.round(bandRepresentativeCm * 1.7)}px`; imgOverlay.style.opacity = '0.82'; }
       if (depthBadge) depthBadge.innerText = simpleWords ? band : `${band} band`;
       if (carWarning) {
-        carWarning.style.display = depth >= 10 ? 'block' : 'none';
+        carWarning.style.display = 'block';
         carWarning.innerText = depth >= 10
-          ? (simpleWords ? 'This much water can affect people and vehicles.' : 'Depth category reaches the vehicle-impact reference range.')
-          : (simpleWords ? 'The picture shows what this water range can look like.' : 'Illustration is scaled to the displayed depth band.');
+          ? (simpleWords ? 'If water is visible, do not enter it. Explore another road option.' : 'This estimate reaches a vehicle-impact reference band; it is not measured street depth.')
+          : (simpleWords ? 'Reference illustration scaled to the displayed model band.' : 'Illustration is a reference; no street-level sensor confirms this estimated band.');
       }
       if (rainIcon) rainIcon.innerText = rain > 0 ? '🌧️' : '🌦️';
-      if (rainLabel) rainLabel.innerText = demo ? 'Synthetic demo rainfall' : `${simpleWords ? 'Rain forecast' : 'Open-Meteo'}: ${rain.toFixed(1)} mm / 3 h`;
-      if (rainSub) rainSub.innerText = demo ? `Scenario: ${window.lastFetchedScenarioLabel || 'selected synthetic storm'} · example data, not a live forecast.` : (simpleWords ? 'Open-Meteo weather forecast for this area.' : 'Hourly forecast split into 15-minute amounts; not radar or gauge data.');
+      if (rainLabel) rainLabel.innerText = demo ? `Scenario rainfall: ${rain.toFixed(1)} mm / 3 h` : `${simpleWords ? 'Rain forecast' : 'Open-Meteo'}: ${rain.toFixed(1)} mm / 3 h`;
+      if (rainSub) rainSub.innerText = demo ? `Illustrative input: ${window.lastFetchedScenarioLabel || 'selected rain scenario'} · not live weather.` : (simpleWords ? 'Open-Meteo rainfall forecast used as the model input.' : 'Hourly forecast-model output interpolated into 15-minute amounts; not radar/gauge observations.');
       if (actionCard) actionCard.style.borderLeftColor = border;
       if (actionText) {
         actionText.innerText = depth >= 10
-          ? 'Avoid entering standing floodwater. Follow official local advisories.'
-          : `${noRainForecast ? 'Little or no rain is forecast in this 3-hour window.' : (simpleWords ? 'Follow official local advisories.' : 'Confirm current conditions with official local advisories.')}`;
+          ? 'Avoid entering standing water. Explore another road option if water is visible; this band is a model estimate.'
+          : (demo
+            ? 'Use this scenario to explore the drainage links and compare road options. The depth band is illustrative.'
+            : `${noRainForecast ? 'The forecast shows little rain, but it cannot confirm a dry street. Use the map and check visible road conditions.' : 'Use the mapped depth band as planning context; check visible road conditions before travelling.'}`);
       }
       if (pwdEl) pwdEl.innerText = 'Pilot model point';
       if (kakrolaEl) kakrolaEl.innerText = 'Pilot model point';
@@ -4006,6 +4359,7 @@
       if (banner) { banner.classList.remove('safe', 'model', 'demo', 'stale'); banner.classList.add('unavailable'); }
       updateViewportDashboard();
       syncZoomLayers();
+      requestInitialRouteSuggestion(false);
     }
 
     function setForecastUpdatedLabel(message) {
@@ -4020,7 +4374,7 @@
       button.textContent = isBusy ? '↻ Refreshing…' : '↻ Refresh forecast';
     }
 
-    const EXPECTED_API_CONTRACT_VERSION = '1.0.1';
+    const EXPECTED_API_CONTRACT_VERSION = '1.1.0';
 
     function updateTechnicalInferenceMethod(quality) {
       const badge = document.getElementById('technicalMethodBadge');
@@ -4043,7 +4397,7 @@
           : 'Rainfall comes from the Open-Meteo forecast model. Depth bands use unvalidated formula estimates and assumed drainage properties, not water-level measurements.';
       } else if (isModel) {
         badge.textContent = 'RandomForest · Dwarka pilot';
-        overview.textContent = 'For each forecast lead, a RandomForest regressor predicts depth on the five mapped drainage edges. Route results use the highest covered edge band, then travel time.';
+          overview.textContent = 'For each forecast lead, a RandomForest regressor predicts depth on the five mapped drainage edges. Road directions are supplied separately and do not certify flood safety.';
         hydraulicCopy.textContent = 'Manning capacity is adjusted for assumed blockage; runoff above capacity is converted to ponding depth using a 15% contributing fraction and 5,000 m² ponding area. These formula-derived labels train the surrogate.';
         inferenceCopy.textContent = 'The RandomForest predicts each edge depth, clips negative output to zero, then groups it into 0–5, 5–15, 15–30, 30–50, or ≥50 cm bands.';
         validationNote.textContent = 'Rainfall is the forecast input; depth bands are the model output. Training labels are formula-derived and have not been validated against observed street depths.';
@@ -4192,7 +4546,20 @@
           setMetric('valRunoff', data.metrics.surface_runoff_estimate_mm, 'mm est.');
           const banner = document.querySelector('.alert-banner');
           const span = document.getElementById('forecastBannerMessage');
-          if (span) span.textContent = data.alert_message || 'Open-Meteo forecast input is available.';
+          if (span) {
+            const depthBackend = String(data.depth_model_backend || 'hydraulic_formula');
+            const depthMethod = depthBackend.includes('random_forest') ? 'Random Forest estimate' : 'hydraulic-model estimate';
+            if (mode === 'simulated') {
+              const rainRate = Number(data.metrics?.rain_rate_mm_hr);
+              const rainLabel = Number.isFinite(rainRate) ? `${rainRate.toFixed(1)} mm/h` : 'selected rate';
+              span.textContent = `Demo scenario · synthetic rainfall ${rainLabel} · ${depthMethod}`;
+            } else {
+              const total = Number(data.metrics?.rain_3h_mm);
+              span.textContent = Number.isFinite(total)
+                ? `Open-Meteo forecast · ${total.toFixed(1)} mm / 3 h · ${depthMethod}`
+                : (data.alert_message || 'Open-Meteo forecast input is available.');
+            }
+          }
           if (banner) {
             banner.classList.remove('safe', 'unavailable', 'model', 'demo', 'stale');
             banner.classList.add(mode === 'simulated' ? 'demo' : 'model');
@@ -4208,6 +4575,7 @@
             if (span) span.textContent = 'Forecast data loaded; a map/dashboard layer needs refresh.';
             setForecastUpdatedLabel('Forecast loaded · display layer issue');
           }
+          requestInitialRouteSuggestion(true);
           fetchNextLeadEdges(leadMins, zone, mode, requestId);
         })
         .catch(err => {
@@ -4231,7 +4599,7 @@
             return;
           }
           setForecastUpdatedLabel('Forecast unavailable · retry when ready');
-          clearUnavailableForecast(`${message} No current result is available. Use Refresh Forecast to try again.`);
+          clearUnavailableForecast(`${message} Weather Forecast mode is still active. Retry when the provider is reachable; use Demo Simulation only when you want a synthetic scenario.`);
         });
     }
 
@@ -4448,7 +4816,7 @@
         const depthText = forecastAvailable ? depthBandLabel(depth) : (simpleWords ? 'No local estimate' : 'No predicted band');
         const vehicleText = forecastAvailable ? 'Check official local advisories before travel.' : 'No depth band is available.';
         const trend = escapeMapHtml(edgeTrendText(edge, window.lastFetchedLeadTime || 0));
-        const popupDepthLabel = simpleWords ? 'Likely water range' : 'Predicted depth band';
+        const popupDepthLabel = simpleWords ? 'Estimated band · not measured' : 'Unvalidated model depth band';
         const popupStatus = simpleWords ? status.label.replace(/_BAND|_ESTIMATE/g, '').replace(/_/g, ' ').toLowerCase() : status.label;
         const detailLine = simpleWords
           ? '<span style="color:#64748b;font-size:10px;">Open the confidence note in the dashboard for coverage details.</span>'
@@ -4499,12 +4867,10 @@
         && edge.predicted_depth_cm !== undefined && Number.isFinite(Number(edge.predicted_depth_cm))
       ).sort((a, b) => Number(b.predicted_depth_cm) - Number(a.predicted_depth_cm));
       if (!predictions.length) {
-        count.textContent = 'No nearby links';
+        count.textContent = window.lastFetchedError ? 'Loading' : 'Pilot coverage';
         const emptyMessage = window.lastFetchedError
-          ? 'No current forecast result is available. Refresh the dashboard to retry.'
-          : (window.lastFetchedQuality && window.lastFetchedQuality !== 'UNAVAILABLE'
-            ? 'No predicted drainage link intersects this map view. Pan or zoom toward the Dwarka pilot links to see their model bands.'
-            : 'Waiting for the forecast service. No depth band is shown until data loads.');
+          ? 'Loading the selected rain scenario…'
+          : 'Move the map to the Dwarka pilot network to view its modelled link bands.';
         list.innerHTML = `<div class="map-impact-empty">${escapeMapHtml(emptyMessage)}</div>`;
         return;
       }
@@ -4707,7 +5073,8 @@
         marker.bindPopup(`
           <div style="font-family:'Plus Jakarta Sans',sans-serif;padding:4px;max-width:210px;color:#1e293b;">
             <strong style="font-size:13px;">${name}</strong><br>
-            <b>${currentViewMode === 'simple' ? 'Likely water range' : 'Predicted depth band'}:</b> <span style="color:${status.color};font-weight:800;">${depthBandLabel(depth)}</span><br>
+            <b>${currentViewMode === 'simple' ? 'Estimated band · not measured' : 'Unvalidated model depth band'}:</b> <span style="color:${status.color};font-weight:800;">${depthBandLabel(depth)}</span><br>
+            <span style="color:#64748b;font-size:10px;">This is a point/link estimate, not a street-water observation.</span><br>
             ${currentViewMode === 'technical' ? `<b>Status:</b> ${status.label}<br>` : ''}
             ${Number.isFinite(elevation) ? `<b>Elevation:</b> ${elevation.toFixed(1)} m MSL` : ''}
           </div>
@@ -5522,12 +5889,12 @@
         : 'The moving blue/orange/pink haze is the synthetic Demo rain animation, not measured rainfall. Drainage-link colors follow the depth-band legend; the bands are model outputs, not sensor readings. Open Flood legend to see the ranges.';
 
       if (intent === 'route') return hi
-        ? 'Left side Route Planner mein start aur destination enter karke “Compare modeled route bands” chunein. Route result available pilot links par based hota hai; live road-closure, traffic, ya verified safe-route feed connected nahi. Current conditions official advisories se confirm karein.'
-        : 'Enter a start and destination in the Route Planner, then choose “Compare modeled route bands.” Route results use available pilot links; there is no connected live road-closure, traffic, or verified safe-route feed. Confirm current conditions with official advisories.';
+        ? 'Route Planner mein start/destination daal kar road options mangwayein. Geometry OpenStreetMap routing se aati hai; nearby depth sirf sparse, unvalidated pilot points ka estimate hai, road reading nahi. Live traffic/closures include nahi hain—official advisory follow karein.'
+        : 'Enter a start and destination to get OpenStreetMap road options. Nearby depth context is a sparse, unvalidated pilot-point estimate, not a road measurement; live traffic and closures are not included. Check official advisories.';
 
       if (intent === 'usage') return hi
-        ? 'Dashboard use karne ke liye Simple view mein seedha summary dekhein aur Technical view mein model inputs/method. Map par click karke point ki pilot coverage check karein, lead-time control se alag forecast times dekhein, aur Route Planner mein start/destination daal kar modeled route bands compare karein. Chat ke quick buttons current loaded data samjhate hain.'
-        : 'Start in Simple view for a plain-language summary, or switch to Technical view for model inputs and methods. Click the map to check pilot coverage at a point, use the lead-time control to inspect forecast times, and compare modeled route bands in the Route Planner. The chat quick prompts explain the data currently loaded.';
+        ? 'Simple view mein forecast summary aur Technical view mein source, assumptions, aur data-readiness dekhein. Map par pilot links inspect karein, lead-time control se 0–3 hour window dekhein, aur Route Planner se OSM road options mangwayein. Depth bands unvalidated hain.'
+        : 'Use Simple view for a plain summary or Technical view for sources, assumptions, and data readiness. Inspect pilot links on the map, choose a 0–3 hour lead, and get OSM road options from the Route Planner. Depth bands remain unvalidated estimates.';
 
       if (intent === 'method') {
         const formulaEstimate = ['UNVALIDATED_FORMULA_ESTIMATE', 'SYNTHETIC_FORMULA_DEMO'].includes(window.lastFetchedQuality);

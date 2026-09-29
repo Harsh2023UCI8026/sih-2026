@@ -1,15 +1,18 @@
-"""Small Vercel-compatible forecast adapter using the documented formula.
+"""Vercel/local adapter for Open-Meteo rainfall and Dwarka depth estimates.
 
-The trained RandomForest artifact is larger than a standard serverless bundle.
-This adapter only uses the Python standard library and the pilot graph, so the
-deployed dashboard can still return real Open-Meteo rainfall with clearly
-labelled, assumption-based formula depth estimates.
+The large RandomForest pickle stays outside this function bundle. If
+SIH_RF_INFERENCE_URL is configured, depth inference is delegated to the
+Hugging Face service; otherwise the documented local formula is used.
 """
 
 import math
+import json
 import os
 import sys
+import tempfile
 import time
+import urllib.error
+import urllib.request
 
 
 SRC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src"))
@@ -26,6 +29,7 @@ CONTRIBUTING_FRACTION = 0.15
 IMPERVIOUSNESS_RATIO = 0.85
 LIVE_CACHE_SECONDS = 300
 STALE_CACHE_SECONDS = 900
+DISK_CACHE_PATH = os.path.join(tempfile.gettempdir(), "dwarka_live_radar.json")
 
 _forecast_cache = None
 _forecast_cache_time = 0.0
@@ -94,11 +98,38 @@ def _valid_forecast(payload):
         return False
 
 
+def _read_recent_disk_cache():
+    """Load the fetcher's short-lived /tmp cache after a warm-instance restart."""
+    try:
+        age = time.time() - os.path.getmtime(DISK_CACHE_PATH)
+        if age < 0 or age > STALE_CACHE_SECONDS:
+            return None, None
+        with open(DISK_CACHE_PATH, "r", encoding="utf-8") as cache_file:
+            payload = json.load(cache_file)
+        if (
+            isinstance(payload, dict)
+            and payload.get("schema_version") == 3
+            and payload.get("provider") == "Open-Meteo Forecast API"
+            and payload.get("data_kind") == "forecast_model"
+            and _valid_forecast(payload)
+        ):
+            return payload, age
+    except (OSError, ValueError, TypeError, json.JSONDecodeError):
+        pass
+    return None, None
+
+
 def _get_live_forecast(force_refresh=False):
     global _forecast_cache, _forecast_cache_time
     age = time.time() - _forecast_cache_time
     if _forecast_cache and age < LIVE_CACHE_SECONDS and not force_refresh:
         return _forecast_cache, True
+
+    disk_cache, disk_cache_age = _read_recent_disk_cache()
+    if disk_cache and disk_cache_age < LIVE_CACHE_SECONDS and not force_refresh:
+        _forecast_cache = disk_cache
+        _forecast_cache_time = time.time() - disk_cache_age
+        return disk_cache, True
 
     try:
         forecast = fetch_live_radar_nowcast(timeout_sec=6.0)
@@ -111,16 +142,78 @@ def _get_live_forecast(force_refresh=False):
         age = time.time() - _forecast_cache_time
         if _forecast_cache and age <= STALE_CACHE_SECONDS:
             return _forecast_cache, True
+        if disk_cache and disk_cache_age <= STALE_CACHE_SECONDS:
+            _forecast_cache = disk_cache
+            _forecast_cache_time = time.time() - disk_cache_age
+            return disk_cache, True
         raise
 
 
-def _build_edges(rain_mm):
+def _request_random_forest(rain_mm, rain_3h_mm, proxy_dbz):
+    """Call the optional Hugging Face model service; return None on failure."""
+    endpoint = os.environ.get("SIH_RF_INFERENCE_URL", "").strip()
+    if not endpoint:
+        return None, "not_configured"
+
+    timeout = 7.0
+    try:
+        timeout = max(1.0, min(20.0, float(os.environ.get("SIH_RF_INFERENCE_TIMEOUT_SECONDS", "7"))))
+    except (TypeError, ValueError):
+        pass
+
+    body = json.dumps({
+        "rain_mm": max(0.0, float(rain_mm)),
+        "rain_3h_accumulated": max(0.0, float(rain_3h_mm)),
+        "radar_reflectivity_dbz": max(0.0, float(proxy_dbz)),
+        "imperviousness_ratio": IMPERVIOUSNESS_RATIO,
+    }).encode("utf-8")
+    headers = {"Content-Type": "application/json", "Accept": "application/json"}
+    token = os.environ.get("SIH_RF_INFERENCE_TOKEN", "")
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+
+    request = urllib.request.Request(endpoint, data=body, headers=headers, method="POST")
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            payload = json.loads(response.read(1_000_001).decode("utf-8"))
+        predictions = payload.get("predictions") if isinstance(payload, dict) else None
+        if not isinstance(payload, dict) or payload.get("status") != "ok" or not isinstance(predictions, list):
+            raise ValueError("unexpected response shape")
+
+        parsed = {}
+        for prediction in predictions:
+            if not isinstance(prediction, dict):
+                raise ValueError("invalid prediction row")
+            edge_id = prediction.get("edge_id")
+            depth = float(prediction.get("predicted_depth_cm"))
+            if edge_id not in _graph_edges or not math.isfinite(depth) or depth < 0:
+                raise ValueError("invalid edge prediction")
+            parsed[edge_id] = prediction
+        if set(parsed) != set(_graph_edges):
+            raise ValueError("model response did not cover the configured pilot graph")
+        return parsed, None
+    except (urllib.error.URLError, TimeoutError, OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
+        print(f"[WARN] Hugging Face RandomForest inference unavailable ({type(exc).__name__}).")
+        return None, "service_unavailable"
+
+
+def _build_edges(rain_mm, random_forest_predictions=None):
     estimates = estimate_edge_depths(rain_mm, IMPERVIOUSNESS_RATIO)
     output = []
     for estimate in estimates:
         edge = _graph_edges.get(estimate["edge_id"], {})
         source = _graph_nodes.get(edge.get("source"), {})
         target = _graph_nodes.get(edge.get("target"), {})
+        model_prediction = (random_forest_predictions or {}).get(estimate["edge_id"])
+        if model_prediction:
+            estimate.update({
+                "predicted_depth_cm": model_prediction["predicted_depth_cm"],
+                "hazard_level": model_prediction.get("hazard_level", _depth_band(model_prediction["predicted_depth_cm"])),
+                "extrapolation_warning": bool(model_prediction.get("extrapolation_warning", False)),
+                "extrapolation_features": model_prediction.get("extrapolation_features", []),
+                "formula_estimate": False,
+                "prediction_backend": "random_forest_huggingface",
+            })
         estimate.update({
             "forecast_available": True,
             "rain_intensity_exceeds_training": rain_mm > TRAINING_MAX_RAIN_MM,
@@ -152,7 +245,7 @@ def _build_nodes(edge_predictions):
                     "edge_id": edge_id,
                     "depth_cm": prediction["predicted_depth_cm"],
                     "hazard_level": prediction["hazard_level"],
-                    "extrapolation_warning": False,
+                    "extrapolation_warning": bool(prediction.get("extrapolation_warning", False)),
                     "geometry_estimated": prediction["geometry_estimated"],
                     "rain_intensity_exceeds_training": prediction["rain_intensity_exceeds_training"],
                 })
@@ -167,7 +260,7 @@ def _build_nodes(edge_predictions):
             "water_depth_cm": round(max_depth, 1) if max_depth is not None else None,
             "hazard_level": _depth_band(max_depth) if max_depth is not None else "NO_MODEL_COVERAGE",
             "is_surcharged": max_depth > 15 if max_depth is not None else None,
-            "extrapolation_warning": False,
+            "extrapolation_warning": any(item["extrapolation_warning"] for item in feed_details),
             "rain_intensity_exceeds_training": any(item["rain_intensity_exceeds_training"] for item in feed_details),
             "geometry_estimated": any(item["geometry_estimated"] for item in feed_details),
             "feed_edges": feed_details,
@@ -205,7 +298,7 @@ def _unavailable_response(lead_time_mins, mode, message, status="UNAVAILABLE"):
 
 
 def calculate_lightweight_nowcast(lead_time_mins=60, mode="live", zone="pilot", force_refresh=False):
-    """Create a current forecast response without loading the large ML pickle."""
+    """Create a forecast response without bundling/loading the local ML pickle."""
     lead_time_mins = max(0, min(180, int(lead_time_mins)))
     if zone != "pilot":
         return _unavailable_response(
@@ -261,7 +354,30 @@ def calculate_lightweight_nowcast(lead_time_mins=60, mode="live", zone="pilot", 
         system_status = "FORMULA_ESTIMATE"
         lead_time_options = []
 
-    edge_predictions = _build_edges(rain_rate_mm_hr)
+    # Run the configured RandomForest for live forecast input and for the
+    # explicitly selected synthetic demo scenario. Demo rainfall stays marked
+    # as synthetic; the model backend must not change its provenance.
+    rf_predictions, rf_fallback_reason = _request_random_forest(
+        rain_rate_mm_hr, rain_3h_mm, proxy_dbz
+    )
+    edge_predictions = _build_edges(rain_rate_mm_hr, rf_predictions)
+    random_forest_active = rf_predictions is not None
+    if mode == "live":
+        data_quality = "UNVALIDATED_MODEL_ESTIMATE" if random_forest_active else "UNVALIDATED_FORMULA_ESTIMATE"
+        system_status = "MODEL_ESTIMATE" if random_forest_active else "FORMULA_ESTIMATE"
+        data_source_name = (
+            "Open-Meteo forecast + Hugging Face RandomForest surrogate"
+            if random_forest_active else "Open-Meteo forecast + direct assumed-drain formula"
+        )
+    else:
+        data_quality = (
+            "SYNTHETIC_DEMO_RF_ESTIMATE"
+            if random_forest_active else "SYNTHETIC_DEMO_FORMULA_ESTIMATE"
+        )
+        data_source_name = (
+            "Synthetic demo rainfall + Hugging Face RandomForest surrogate"
+            if random_forest_active else "Synthetic demo rainfall + direct assumed-drain formula"
+        )
     nodes = _build_nodes(edge_predictions)
     max_depth = max((edge["predicted_depth_cm"] for edge in edge_predictions), default=None)
     dwarka_mor_depth = next(
@@ -269,11 +385,15 @@ def calculate_lightweight_nowcast(lead_time_mins=60, mode="live", zone="pilot", 
         None,
     )
     source_message = (
-        f"DEMO ONLY: synthetic rainfall rate {rain_rate_mm_hr:.1f} mm/hr. "
-        "Depths are formula estimates using assumed drain properties; not a forecast or observed water level."
+        f"Demo scenario · synthetic rainfall input {rain_rate_mm_hr:.1f} mm/h · "
+        f"{'RandomForest' if random_forest_active else 'hydraulic-formula'} depth-band estimates for mapped pilot links."
         if mode == "simulated" else
         f"Open-Meteo forecast: {rain_3h_mm:.1f} mm over the next 3 hours. "
-        "Depth bands use an unvalidated hydraulic formula and assumed drain properties; they are not water-level measurements."
+        (
+            "Depth bands use a RandomForest surrogate trained on formula-derived/synthetic targets; they are not water-level measurements."
+            if random_forest_active else
+            "Depth bands use an unvalidated hydraulic formula and assumed drain properties; they are not water-level measurements."
+        )
     )
 
     response = {
@@ -309,6 +429,7 @@ def calculate_lightweight_nowcast(lead_time_mins=60, mode="live", zone="pilot", 
         "spatial_node_predictions": nodes,
         "nodes": nodes,
         "edge_predictions": edge_predictions,
+        "depth_model_backend": "random_forest_huggingface" if random_forest_active else "hydraulic_formula",
         "formula_assumptions": {
             "imperviousness_ratio": IMPERVIOUSNESS_RATIO,
             "blockage_factor": "Per-edge graph value; assumed where not surveyed",
@@ -316,11 +437,13 @@ def calculate_lightweight_nowcast(lead_time_mins=60, mode="live", zone="pilot", 
             "ponding_area_sqm": PONDING_AREA_SQM,
         },
         "model_caveat": (
-            "Vercel uses the documented deterministic hydraulic formula directly because the trained RandomForest "
-            "artifact is too large for a standard serverless bundle. Drain geometry/capacity are assumptions; "
-            "these values are unvalidated estimates, not measurements or safety clearances."
+            "The RandomForest artifact is served by the configured inference service. Its training labels are formula-derived/synthetic and it has no independent observed-depth validation; outputs are estimates, not measurements or safety clearances."
+            if random_forest_active else
+            "The direct hydraulic formula is active. Configure SIH_RF_INFERENCE_URL to use the RandomForest service. Drain geometry/capacity are assumptions; outputs are unvalidated estimates, not measurements or safety clearances."
         ),
     }
+    if mode == "live" and not random_forest_active:
+        response["depth_model_fallback_reason"] = rf_fallback_reason
     if mode == "live":
         response.update({
             "forecast_retrieved_at_utc": retrieved_at,

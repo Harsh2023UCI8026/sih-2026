@@ -1,0 +1,66 @@
+127.0.0.1 - - [29/Sep/2026 21:04:25] "GET /api/v1/nowcast?mode=live&lead_time_mins=60&refresh=1 HTTP/1.1" 200 -
+Traceback (most recent call last):
+  File "C:\Users\Bughu\OneDrive\Pictures\Desktop\sih-2026\src\main.py", line 514, in do_GET
+    self._send_json(calculate_nowcast(lead_time, mode, zone, force_refresh=force_refresh))
+  File "C:\Users\Bughu\OneDrive\Pictures\Desktop\sih-2026\src\main.py", line 399, in _send_json
+    self.wfile.write(body)
+  File "C:\Users\Bughu\AppData\Local\Programs\Python\Python310\lib\socketserver.py", line 826, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] An established connection was aborted by the software in your host machine
+127.0.0.1 - - [29/Sep/2026 21:04:25] "GET /api/v1/nowcast?mode=live&lead_time_mins=60&refresh=1 HTTP/1.1" 500 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 34424)
+Traceback (most recent call last):
+  File "C:\Users\Bughu\OneDrive\Pictures\Desktop\sih-2026\src\main.py", line 514, in do_GET
+    self._send_json(calculate_nowcast(lead_time, mode, zone, force_refresh=force_refresh))
+  File "C:\Users\Bughu\OneDrive\Pictures\Desktop\sih-2026\src\main.py", line 399, in _send_json
+    self.wfile.write(body)
+  File "C:\Users\Bughu\AppData\Local\Programs\Python\Python310\lib\socketserver.py", line 826, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] An established connection was aborted by the software in your host machine
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Bughu\AppData\Local\Programs\Python\Python310\lib\socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Bughu\AppData\Local\Programs\Python\Python310\lib\socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Bughu\AppData\Local\Programs\Python\Python310\lib\socketserver.py", line 747, in __init__
+    self.handle()
+  File "C:\Users\Bughu\AppData\Local\Programs\Python\Python310\lib\http\server.py", line 433, in handle
+    self.handle_one_request()
+  File "C:\Users\Bughu\AppData\Local\Programs\Python\Python310\lib\http\server.py", line 421, in handle_one_request
+    method()
+  File "C:\Users\Bughu\OneDrive\Pictures\Desktop\sih-2026\src\main.py", line 518, in do_GET
+    self._send_json({"error": "Nowcast calculation failed", "detail": str(exc)}, 500)
+  File "C:\Users\Bughu\OneDrive\Pictures\Desktop\sih-2026\src\main.py", line 398, in _send_json
+    self.end_headers()
+  File "C:\Users\Bughu\AppData\Local\Programs\Python\Python310\lib\http\server.py", line 535, in end_headers
+    self.flush_headers()
+  File "C:\Users\Bughu\AppData\Local\Programs\Python\Python310\lib\http\server.py", line 539, in flush_headers
+    self.wfile.write(b"".join(self._headers_buffer))
+  File "C:\Users\Bughu\AppData\Local\Programs\Python\Python310\lib\socketserver.py", line 826, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] An established connection was aborted by the software in your host machine
+----------------------------------------
+127.0.0.1 - - [29/Sep/2026 21:04:52] "GET /api/v1/nowcast?mode=live&lead_time_mins=60&refresh=1 HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:05:20] "GET /api/v1/nowcast?mode=live&lead_time_mins=60 HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:05:21] "POST /api/v1/route/flood-safe HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:06:44] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:15:22] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:15:23] "GET /site.webmanifest HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:15:23] "GET /dashboard-assets/leaflet/leaflet.css HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:15:23] "GET /dashboard-assets/leaflet/leaflet-heat.js HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:15:23] "GET /dashboard-assets/leaflet/leaflet.js HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:15:23] "GET /api/v1/potholes-depressions HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:15:23] "GET /api/v1/drainage-network HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:15:23] "GET /data/dwarka_edge_road_geometry.json HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:15:23] "GET /data/dwarka_catchment_bounds.geojson HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:15:23] "GET /api/v1/nowcast?mode=live&lead_time_mins=60&zone=pilot HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:15:23] "GET /api/v1/data-readiness HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:15:23] "GET /api/v1/zones HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:15:24] "GET /favicon.ico HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:15:24] "GET /favicon-192.png HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:15:24] "GET /api/v1/nowcast?mode=live&lead_time_mins=75&zone=pilot HTTP/1.1" 200 -
+127.0.0.1 - - [29/Sep/2026 21:15:24] "POST /api/v1/route/flood-safe HTTP/1.1" 200 -

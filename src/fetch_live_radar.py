@@ -41,7 +41,27 @@ def fetch_live_radar_nowcast(timeout_sec=6.0):
         url,
         headers={"User-Agent": "UrbanFloodNowcasting/1.0"},
     )
-    with urllib.request.urlopen(request, timeout=timeout_sec) as response:
+    # Desktop environments sometimes export an HTTP(S)_PROXY pointing at a
+    # local helper which is no longer running.  In that case urllib raises
+    # WinError 10061 before it ever reaches Open-Meteo, even though direct
+    # HTTPS works. Bypass only loopback proxies; continue honoring configured
+    # corporate/non-local proxies.
+    loopback_proxy = False
+    for proxy_value in urllib.request.getproxies().values():
+        try:
+            proxy_url = proxy_value if "://" in proxy_value else f"http://{proxy_value}"
+            if urllib.parse.urlparse(proxy_url).hostname in {"127.0.0.1", "localhost", "::1"}:
+                loopback_proxy = True
+                break
+        except (TypeError, ValueError):
+            continue
+
+    opener = (
+        urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        if loopback_proxy
+        else urllib.request.build_opener()
+    )
+    with opener.open(request, timeout=timeout_sec) as response:
         payload = json.loads(response.read().decode("utf-8"))
 
     minutely = payload.get("minutely_15") or {}

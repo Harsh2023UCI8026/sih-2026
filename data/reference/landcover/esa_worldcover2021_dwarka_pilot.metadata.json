@@ -1,0 +1,58 @@
+{
+  "title": "ESA WorldCover 10 m 2021 v200 Dwarka pilot land-cover crop",
+  "publisher": "ESA WorldCover consortium",
+  "source_product": "ESA WorldCover 10 m 2021 v200 Map",
+  "source_url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N27E075_Map.tif",
+  "source_registry": "https://registry.opendata.aws/esa-worldcover/",
+  "product_user_manual": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/docs/WorldCover_PUM_V2.0.pdf",
+  "extraction": "Cloud-Optimized GeoTIFF window read using HTTP byte ranges; clipped to the Copernicus GLO-30 pilot extent; no resampling.",
+  "crs": "EPSG:4326",
+  "resolution_degrees": [
+    8.333333333333333e-05,
+    8.333333333333333e-05
+  ],
+  "clip_bounds_wgs84": [
+    77.0015,
+    28.592166666666664,
+    77.06233333333333,
+    28.639083333333332
+  ],
+  "shape_rows_cols": [
+    563,
+    730
+  ],
+  "nodata_value": 0,
+  "pixel_counts_by_class": {
+    "10": 51197,
+    "20": 2166,
+    "30": 12535,
+    "40": 17351,
+    "50": 317860,
+    "60": 5496,
+    "80": 4321,
+    "90": 64
+  },
+  "valid_pixel_count": 410990,
+  "class_50_built_up_fraction_of_valid_cutout_pixels": 0.7734008126718411,
+  "class_legend": {
+    "10": "Tree cover",
+    "20": "Shrubland",
+    "30": "Grassland",
+    "40": "Cropland",
+    "50": "Built-up",
+    "60": "Bare / sparse vegetation",
+    "70": "Snow and ice",
+    "80": "Permanent water bodies",
+    "90": "Herbaceous wetland",
+    "95": "Mangroves",
+    "100": "Moss and lichen"
+  },
+  "known_accuracy": "The product reports 76.7% overall accuracy globally for 2021 v200; class- and region-specific accuracy varies.",
+  "caution": "Class 50 is a land-cover category, not a measured impervious-surface fraction. Do not convert it directly to a runoff coefficient. This is a 2021 classification, not a current 2026 survey.",
+  "license": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+  "required_map_attribution": "\u00a9 ESA WorldCover project 2021 / Contains modified Copernicus Sentinel data (2021) processed by ESA WorldCover consortium",
+  "citation": "Zanaga, D. et al. (2022). ESA WorldCover 10 m 2021 v200. https://doi.org/10.5281/zenodo.7254221",
+  "retrieved_at_utc": "2026-09-27T08:46:06.657357+00:00",
+  "sha256": "c3bce25754703c1e3f32b5b4fa56eb5105fa86a9af431b040fc869ddfc325df7",
+  "use_status": "SUPPLEMENTARY_REFERENCE_ONLY_NOT_USED_FOR_TRAINING_OR_FORECASTS"
+}

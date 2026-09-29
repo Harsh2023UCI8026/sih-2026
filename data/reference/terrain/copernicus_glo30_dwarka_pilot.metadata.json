@@ -1,0 +1,45 @@
+{
+  "title": "Copernicus DEM GLO-30 Public reference cutout for Dwarka pilot",
+  "source_product": "Copernicus WorldDEM-30 / GLO-30 Public, 2021 release",
+  "source_type": "Digital Surface Model (DSM), includes buildings, infrastructure, and vegetation",
+  "source_asset_url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N28_00_E077_00_DEM/Copernicus_DSM_COG_10_N28_00_E077_00_DEM.tif",
+  "source_registry": "https://registry.opendata.aws/copernicus-dem/",
+  "product_handbook": "https://dataspace.copernicus.eu/sites/default/files/media/files/2024-06/geo1988-copernicusdem-spe-002_producthandbook_i5.0.pdf",
+  "accessed_at_utc": "2026-09-27T08:31:13.697357+00:00",
+  "source_tile": "N28_00_E077_00",
+  "source_tile_bytes": 41680243,
+  "extraction": "Cloud-Optimized GeoTIFF window read; clipped to the current schematic drainage-node extent plus 2 km buffer.",
+  "clip_bounds_wgs84": [
+    77.00152777777778,
+    28.59208333333333,
+    77.06236111111112,
+    28.639027777777777
+  ],
+  "requested_bounds_wgs84": [
+    77.00153380424524,
+    28.59203377650018,
+    77.06246619575477,
+    28.638966223499818
+  ],
+  "width_pixels": 219,
+  "height_pixels": 169,
+  "horizontal_crs": "GEOGCS[\"WGS 84\",DATUM[\"World Geodetic System 1984\",SPHEROID[\"WGS 84\",6378137,298.257223563]],PRIMEM[\"Greenwich\",0],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AXIS[\"Latitude\",NORTH],AXIS[\"Longitude\",EAST]]",
+  "grid_spacing_degrees": [
+    0.0002777777777777778,
+    0.0002777777777777778
+  ],
+  "nominal_grid_spacing": "1 arc second (~31 m north-south; ~27 m east-west at this latitude)",
+  "vertical_datum": "EGM2008 (EPSG:3855)",
+  "vertical_unit": "metres",
+  "global_accuracy_specification": "<4 m absolute vertical accuracy at 90% linear error; product-level global statistic; local deviations can occur.",
+  "clip_elevation_range_m": [
+    203.80294799804688,
+    235.9430389404297
+  ],
+  "clip_valid_pixel_count": 37011,
+  "sha256": "cbb14c5402ff1e0bbc234995db623a2ff3869c34171dd48411e9e7efc691fdfc",
+  "license": "Free public GLO-30 access under Copernicus terms; include required source attribution when distributing.",
+  "required_attribution": "Produced using Copernicus WorldDEM-30 \u00a9 DLR e.V. 2010-2014 and \u00a9 Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved.",
+  "operational_use": "REFERENCE ONLY. A 30 m DSM is not a street-scale bare-earth DTM; it is not hydrologically conditioned for this catchment and must not be used to claim street-depth accuracy.",
+  "validation_status": "Not locally surveyed or validated against a control DEM."
+}

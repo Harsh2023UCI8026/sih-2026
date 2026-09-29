@@ -1,0 +1,9 @@
+source_document,source_url,source_printed_folio_range,drain_system,site_as_published,asset_type,embankment_level_m,regulator_sill_level_m,regulator_capacity_cusecs,warning_level_m,danger_level_m,hfl_1977_m,hfl_1977_discharge_cusecs,hfl_1977_date,vertical_datum,coordinates
+Delhi Flood Control Order 2025,https://ifc.delhi.gov.in/sites/default/files/ifc/circulars-orders/fco_2025.pdf,37-38,Najafgarh Drain,Dhansa Bund,bund,214.400,,,211.440,212.440,213.575,298565,1977-08-23,not stated,
+Delhi Flood Control Order 2025,https://ifc.delhi.gov.in/sites/default/files/ifc/circulars-orders/fco_2025.pdf,37-38,Najafgarh Drain,Regulator at Dhansa - Old,regulator,214.400,209.700,3000,211.530,,,,not stated,
+Delhi Flood Control Order 2025,https://ifc.delhi.gov.in/sites/default/files/ifc/circulars-orders/fco_2025.pdf,37-38,Najafgarh Drain,Regulator at Dhansa - New,regulator,,209.200,5000,211.530,,,,not stated,
+Delhi Flood Control Order 2025,https://ifc.delhi.gov.in/sites/default/files/ifc/circulars-orders/fco_2025.pdf,37-38,Najafgarh Drain,Chhawla,bund,213.000,,,,,,,not stated,
+Delhi Flood Control Order 2025,https://ifc.delhi.gov.in/sites/default/files/ifc/circulars-orders/fco_2025.pdf,37-38,Najafgarh Drain,Regulator at Kakraula - Old,regulator,,207.500,3000,,,,,not stated,
+Delhi Flood Control Order 2025,https://ifc.delhi.gov.in/sites/default/files/ifc/circulars-orders/fco_2025.pdf,37-38,Najafgarh Drain,Regulator at Kakraula - New,regulator,,207.500,5000,,,,,not stated,
+Delhi Flood Control Order 2025,https://ifc.delhi.gov.in/sites/default/files/ifc/circulars-orders/fco_2025.pdf,37-38,Najafgarh Drain,Basaidarapur Bridge,bridge,211.970,,,,,,,not stated,
+Delhi Flood Control Order 2025,https://ifc.delhi.gov.in/sites/default/files/ifc/circulars-orders/fco_2025.pdf,37-38,Najafgarh Drain,Timarpur Bridge,bridge,211.370,,,,,,,not stated,

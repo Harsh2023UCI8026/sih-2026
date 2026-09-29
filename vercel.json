@@ -2,7 +2,10 @@
   "version": 2,
   "functions": {
     "api/**/*.py": {
-      "includeFiles": "src/dwarka_drainage_graph.json",
+      "includeFiles": [
+        "src/dwarka_drainage_graph.json",
+        "data/reference/roads/dwarka_roads.geojson"
+      ],
       "excludeFiles": "models/**/*.pkl"
     }
   },
@@ -58,6 +61,26 @@
     {
       "src": "/site.webmanifest",
       "dest": "/site.webmanifest"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/src/favicon.ico"
+    },
+    {
+      "src": "/favicon-32.png",
+      "dest": "/src/favicon-32.png"
+    },
+    {
+      "src": "/favicon-192.png",
+      "dest": "/src/favicon-192.png"
+    },
+    {
+      "src": "/favicon-512.png",
+      "dest": "/src/favicon-512.png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "dest": "/src/apple-touch-icon.png"
     },
     {
       "src": "/logo.jpeg",

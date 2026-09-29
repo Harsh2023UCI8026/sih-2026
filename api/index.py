@@ -5,8 +5,8 @@ from http.server import BaseHTTPRequestHandler
 
 import os
 import sys
-# Keep the API self-contained on Vercel: the serverless nowcast uses the
-# dependency-free formula path, not the 1.45 GB RandomForest artifact.
+# Keep the API bundle independent of the large RandomForest pickle. The
+# lightweight adapter optionally delegates model inference to a Hugging Face Space.
 api_path = os.path.abspath(os.path.dirname(__file__))
 if api_path not in sys.path:
     sys.path.insert(0, api_path)
@@ -17,7 +17,7 @@ if src_path not in sys.path:
 from hydraulic_model import get_drainage_graph
 from lightweight_nowcast import calculate_lightweight_nowcast
 
-API_CONTRACT_VERSION = "1.0.1"
+API_CONTRACT_VERSION = "1.1.0"
 
 class handler(BaseHTTPRequestHandler):
     def _send_json(self, data, status_code=200):
@@ -164,6 +164,12 @@ class handler(BaseHTTPRequestHandler):
                             "responses": {"200": {"description": "Successful Response"}}
                         }
                     },
+                    "/api/data-readiness": {
+                        "get": {
+                            "summary": "Report readiness of PS 26085 rainfall, terrain, drainage, solver, and validation inputs",
+                            "responses": {"200": {"description": "Read-only readiness report"}}
+                        }
+                    },
                     "/api/drainage-network": {
                         "get": {
                             "summary": "Get 1D Directed Drainage Graph Network G=(V,E)",
@@ -172,7 +178,7 @@ class handler(BaseHTTPRequestHandler):
                     },
                     "/api/navigate": {
                         "post": {
-                            "summary": "Flood-status route comparison (unvalidated pilot estimates; may be unavailable)",
+                            "summary": "OpenStreetMap road alternatives with optional unvalidated nearby pilot-depth context; no safety clearance",
                             "responses": {"200": {"description": "Successful Response"}}
                         }
                     },
@@ -185,6 +191,11 @@ class handler(BaseHTTPRequestHandler):
                 }
             }
             self._send_json(openapi_spec)
+            return
+
+        elif path.rstrip('/').endswith('data-readiness'):
+            from data_readiness import build_data_readiness_report
+            self._send_json(build_data_readiness_report())
             return
 
         elif 'nowcast' in path:
@@ -257,12 +268,12 @@ class handler(BaseHTTPRequestHandler):
             body = {}
 
         if 'route/flood-safe' in path or 'navigate' in path:
-            self._send_json({
-                "routing_status": "UNAVAILABLE",
-                "flood_safety_status": "UNVERIFIED",
-                "routes": [],
-                "notice": "The serverless adapter has no connected road-route provider. It does not fabricate straight-line roads or label a route safe.",
-            }, 503)
+            from route_comparison import build_route_response
+            self._send_json(build_route_response(
+                body,
+                referer=self.headers.get('Origin') or self.headers.get('Referer'),
+                flood_context=body.get('flood_context'),
+            ))
         elif 'alert-broadcast' in path:
             depth = body.get("water_depth_cm")
             try:

@@ -1,0 +1,99 @@
+{
+  "source": {
+    "title": "Drainage Master Plan for NCT of Delhi",
+    "publisher": "IIT Delhi for the Irrigation and Flood Control Department, Government of NCT of Delhi",
+    "year": 2018,
+    "section": "3.3 Najafgarh Basin",
+    "printed_pages": "89-113",
+    "pdf_pages": "108-132",
+    "url": "https://ifc.delhi.gov.in/sites/default/files/inline-files/main_report_dmp_version51.pdf",
+    "license_or_reuse_note": "Use the report as a cited public reference; retain attribution and the report's scale and model limitations."
+  },
+  "scope": {
+    "status": "REGIONAL_REFERENCE_ONLY",
+    "area": "Najafgarh basin, Delhi region",
+    "pilot_alignment": "Basin-wide information; no surveyed Dwarka Mor subcatchment boundary is supplied by these figures.",
+    "notice": "This report context is not a live observation, current pilot boundary, measured depth dataset, or calibrated input to the Dwarka forecast model."
+  },
+  "terrain": {
+    "reported_elevation_range_m_above_mean_sea_level": [201, 426],
+    "reported_broad_flow_direction": "towards the Yamuna",
+    "source_figure": "Figure 3.3-3",
+    "use_limit": "Basin-scale 2018 DEM context only; it does not provide surveyed street elevations or the pilot graph's vertical datum."
+  },
+  "land_use": {
+    "source_table": "Table 3.3-2",
+    "sum_of_reported_land_use_class_areas_km2": 918.373,
+    "reported_percentage_sum": 99.989,
+    "chart_max_percentage": 50,
+    "classes": [
+      {"label": "Rural / crop", "area_km2": 404.798, "percentage": 44.077, "color": "#16a34a"},
+      {"label": "Urban", "area_km2": 192.419, "percentage": 20.952, "color": "#2563eb"},
+      {"label": "Grass", "area_km2": 45.739, "percentage": 4.98, "color": "#84cc16"},
+      {"label": "Fallow", "area_km2": 209.867, "percentage": 22.85, "color": "#d97706"},
+      {"label": "Deciduous", "area_km2": 65.55, "percentage": 7.13, "color": "#15803d"}
+    ],
+    "use_limit": "The broad Urban land-use share is not a measured impervious percentage and must not be substituted for a local runoff coefficient."
+  },
+  "drainage_context": {
+    "source_figure": "Figure 3.3-5",
+    "network_description": "The report describes a connected storm-drain network maintained by multiple agencies.",
+    "named_trunk_drains": ["Najafgarh Drain", "Mungeshpur Drain", "Palam Drain"],
+    "basin_features": ["Najafgarh Jheel natural depression", "Yamuna receiving river", "water bodies and local low areas"],
+    "pump_location_figure": "Figure 3.3-6",
+    "reported_waterlogging_figure": "Figure 3.3-7",
+    "map_limit": "These are basin-scale report figures, not coordinate tables. Figure 3.3-7 describes reported waterlogging locations, not measured depth observations; map points should not be treated as exact GPS coordinates."
+  },
+  "reported_flood_mechanisms": [
+    {
+      "id": "depression_congestion",
+      "label": "Low-point storage",
+      "description": "Runoff collects in local depressions during rain and can remain congested."
+    },
+    {
+      "id": "upstream_inflow",
+      "label": "Upstream inflow",
+      "description": "Some trunk drains carry stormwater originating outside Delhi, adding flow to the regional network."
+    },
+    {
+      "id": "pump_and_downstream_capacity",
+      "label": "Pump and downstream interaction",
+      "description": "Pump failure can worsen local congestion; pumping surplus water into a nearby drain can load downstream reaches."
+    },
+    {
+      "id": "storage_and_lid",
+      "label": "Storage and local infiltration",
+      "description": "The report explores routing runoff to water bodies, parks, permeable pavement, and rain gardens as modeled mitigation scenarios."
+    }
+  ],
+  "simulation_evidence": {
+    "scenario_rainfall_interval_minutes": 15,
+    "scenario_return_period_years": 2,
+    "rainfall_reference": "Palam station design rainfall; scenario input, not a live forecast",
+    "scenario_1_reported_flooded_nodes_approx": 3854,
+    "scenario_2_reported_flooded_junctions": 2794,
+    "najafgarh_adverse_slope_segments_reported": 3539,
+    "najafgarh_conduits_considered_reported": 14035,
+    "scenario_3_water_bodies_used_as_storage": 140,
+    "scenario_3_assumed_average_water_body_depth_m": 2,
+    "scenario_4_assumed_park_storage_depth_m": 0.3,
+    "scenario_5_junctions_over_15_minutes_modelled_as_storage": 1618,
+    "input_quality_note": "The report says department survey data supplied for the initial scenario had not been properly vetted. Scenario values are model outputs, not observed flood measurements; storage depths are assumptions. The report labels one result as nodes and another as junctions, so the counts are shown separately rather than as a direct before/after score.",
+    "network_effect_note": "The report says correcting drain slopes can move flooding upstream or downstream, so mitigation should be assessed across connected reaches."
+  },
+  "dwarka_application": {
+    "current_forecast_uses_this_context": false,
+    "safe_uses": [
+      "Explain why local depressions, upstream loading, pump availability, and receiving-drain capacity matter.",
+      "Guide future graph fields for surveyed outfalls, pump controls, storage assets, and connected subcatchments.",
+      "Show basin-wide land-use context with explicit scale and source labels."
+    ],
+    "requires_local_verification_before_model_use": [
+      "Dwarka subcatchment boundary and flow direction",
+      "drain connectivity, slope, dimensions, and capacity",
+      "pump locations, capacities, operating state, and receiving reach",
+      "water-body or park storage capacity and inlet/outlet connectivity",
+      "local land-cover fractions and runoff parameters"
+    ]
+  }
+}

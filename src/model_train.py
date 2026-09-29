@@ -138,7 +138,7 @@ def compute_depth_for_row(rain_mm, imperv, cap_mmhr, catch_sqm,
 
 
 # ── Main training function ───────────────────────────────────────────────
-def train_dwarka_flood_model(workspace_dir, allow_formula_surrogate_demo=False):
+def train_dwarka_flood_model(workspace_dir, allow_formula_surrogate_demo=False, compact_demo=False):
     if not allow_formula_surrogate_demo:
         raise RuntimeError(
             "Refusing to train or overwrite the runtime model: this script learns from "
@@ -295,7 +295,21 @@ def train_dwarka_flood_model(workspace_dir, allow_formula_surrogate_demo=False):
 
     # ── 7. Fit model with sample weighting (real rows up‑weighted) ─────────────────────────────────────────────────────
     print("7. Training RandomForestRegressor with workbook rows weighted x4...")
-    model = RandomForestRegressor(n_estimators=150, random_state=42, n_jobs=-1)
+    if compact_demo:
+        # Bounded demo artifact for local latency/size experiments only. This
+        # does not make formula-derived labels suitable for flood validation.
+        model = RandomForestRegressor(
+            n_estimators=32,
+            max_depth=14,
+            max_leaf_nodes=1024,
+            min_samples_leaf=10,
+            random_state=42,
+            n_jobs=-1,
+        )
+        artifact_name = "dwarka_hydraulic_formula_surrogate_compact_demo.pkl"
+    else:
+        model = RandomForestRegressor(n_estimators=150, random_state=42, n_jobs=-1)
+        artifact_name = "dwarka_hydraulic_formula_surrogate_demo.pkl"
     
     # Build weight array: real rows get higher weight
     real_weight = 4
@@ -368,7 +382,8 @@ def train_dwarka_flood_model(workspace_dir, allow_formula_surrogate_demo=False):
     models_dir = os.path.join(workspace_dir, "..", "models")
     os.makedirs(models_dir, exist_ok=True)
 
-    joblib.dump(model, os.path.join(models_dir, "dwarka_hydraulic_formula_surrogate_demo.pkl"))
+    artifact_path = os.path.join(models_dir, artifact_name)
+    joblib.dump(model, artifact_path, compress=3 if compact_demo else 0)
     with open(os.path.join(models_dir, "training_feature_ranges_demo.json"), "w") as f:
         json.dump(training_range, f, indent=2)
     provenance = {
@@ -377,11 +392,13 @@ def train_dwarka_flood_model(workspace_dir, allow_formula_surrogate_demo=False):
         "inputs": "Historical workbook time series of unverified provenance plus synthetic rain/geometry augmentation",
         "independent_observed_depth_validation": False,
         "metrics_semantics": "Fit to formula-generated labels only; not real-world flood accuracy",
+        "artifact_profile": "compact_demo_32_trees_max_depth_14_max_leaf_nodes_1024_min_samples_leaf_10" if compact_demo else "unbounded_150_tree_demo",
+        "artifact_compression": "joblib_compress_3" if compact_demo else "none",
     }
     with open(os.path.join(models_dir, "model_provenance_demo.json"), "w", encoding="utf-8") as f:
         json.dump(provenance, f, indent=2)
 
-    print(f"   Saved separate demo artifacts to {models_dir}/")
+    print(f"   Saved separate demo artifact to {artifact_path} ({os.path.getsize(artifact_path):,} bytes)")
     print("\n[COMPLETE] Formula surrogate demo built; runtime model was not modified and no flood validation was performed.")
 
 
@@ -392,6 +409,15 @@ if __name__ == "__main__":
         action="store_true",
         help="Explicitly build a non-runtime demo model from formula-generated labels",
     )
+    parser.add_argument(
+        "--compact-demo",
+        action="store_true",
+        help="Bound tree count/size and compress the separate demo artifact; not validated for deployment",
+    )
     args = parser.parse_args()
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    train_dwarka_flood_model(current_dir, allow_formula_surrogate_demo=args.allow_formula_surrogate_demo)
+    train_dwarka_flood_model(
+        current_dir,
+        allow_formula_surrogate_demo=args.allow_formula_surrogate_demo,
+        compact_demo=args.compact_demo,
+    )
