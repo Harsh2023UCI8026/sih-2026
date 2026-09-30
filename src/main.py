@@ -40,10 +40,19 @@ def get_drainage_graph():
 
 
 def has_loopback_outbound_proxy():
-    """Return whether Python is configured to route HTTP through loopback."""
+    """Return whether urllib's HTTP(S) requests use a loopback proxy.
+
+    ``urllib.request.getproxies()`` may also return unrelated environment
+    entries such as ``git_http`` and ``git_https``. Those do not control this
+    module's urllib forecast request and must not be treated as active proxies.
+    """
     import urllib.request
 
-    for value in urllib.request.getproxies().values():
+    proxies = urllib.request.getproxies()
+    for scheme in ("http", "https"):
+        value = proxies.get(scheme)
+        if not value:
+            continue
         try:
             proxy_url = value if "://" in value else f"http://{value}"
             if urlparse(proxy_url).hostname in {"127.0.0.1", "localhost", "::1"}:

@@ -1,0 +1,357 @@
+============================================================
+SIH 2026 REST API Backend Server Running on http://localhost:8084/
+Swagger API Documentation available at: http://localhost:8084/docs
+GET  /api/v1/nowcast?lead_time_mins=60
+GET  /api/v1/data-readiness
+GET  /api/v1/drainage-network
+POST /api/v1/route/flood-safe
+============================================================
+
+============================================================
+EXTRAPOLATION CHECK: Test Zone vs. Pilot Training Range
+============================================================
+
+Training Feature Ranges (from pilot edges):
+   mannings_n                    : [0.012401, 0.023162]
+   slope                         : [0.000010, 0.014432]
+   cross_sectional_area_sqm      : [0.329447, 29.192258]
+   catchment_sqm                 : [110000.000000, 1941425.350765]
+   effective_capacity_mmhr       : [1.676529, 733.740441]
+
+Test Zone Edge Geometry Ranges:
+   mannings_n                    : [0.013000, 0.018000]
+   slope                         : [0.000010, 0.007049]
+   cross_sectional_area_sqm      : [1.767146, 13.500000]
+   catchment_sqm                 : [110000.000000, 650000.000000]
+   effective_capacity_mmhr       : [1.676529, 261.881265]
+
+   Edges WITHIN training range : 5
+   Edges OUTSIDE training range: 0
+============================================================
+[ERROR] Nowcast calculation failed: [WinError 10053] An established connection was aborted by the software in your host machine
+
+============================================================
+EXTRAPOLATION CHECK: Test Zone vs. Pilot Training Range
+============================================================
+
+Training Feature Ranges (from pilot edges):
+   mannings_n                    : [0.012401, 0.023162]
+   slope                         : [0.000010, 0.014432]
+   cross_sectional_area_sqm      : [0.329447, 29.192258]
+   catchment_sqm                 : [110000.000000, 1941425.350765]
+   effective_capacity_mmhr       : [1.676529, 733.740441]
+
+Test Zone Edge Geometry Ranges:
+   mannings_n                    : [0.013000, 0.018000]
+   slope                         : [0.000010, 0.007049]
+   cross_sectional_area_sqm      : [1.767146, 13.500000]
+   catchment_sqm                 : [110000.000000, 650000.000000]
+   effective_capacity_mmhr       : [1.676529, 261.881265]
+
+   Edges WITHIN training range : 5
+   Edges OUTSIDE training range: 0
+============================================================
+
+============================================================
+EXTRAPOLATION CHECK: Test Zone vs. Pilot Training Range
+============================================================
+
+Training Feature Ranges (from pilot edges):
+   mannings_n                    : [0.012401, 0.023162]
+   slope                         : [0.000010, 0.014432]
+   cross_sectional_area_sqm      : [0.329447, 29.192258]
+   catchment_sqm                 : [110000.000000, 1941425.350765]
+   effective_capacity_mmhr       : [1.676529, 733.740441]
+
+Test Zone Edge Geometry Ranges:
+   mannings_n                    : [0.013000, 0.018000]
+   slope                         : [0.000010, 0.007049]
+   cross_sectional_area_sqm      : [1.767146, 13.500000]
+   catchment_sqm                 : [110000.000000, 650000.000000]
+   effective_capacity_mmhr       : [1.676529, 261.881265]
+
+   Edges WITHIN training range : 5
+   Edges OUTSIDE training range: 0
+============================================================
+
+============================================================
+EXTRAPOLATION CHECK: Test Zone vs. Pilot Training Range
+============================================================
+
+Training Feature Ranges (from pilot edges):
+   mannings_n                    : [0.012401, 0.023162]
+   slope                         : [0.000010, 0.014432]
+   cross_sectional_area_sqm      : [0.329447, 29.192258]
+   catchment_sqm                 : [110000.000000, 1941425.350765]
+   effective_capacity_mmhr       : [1.676529, 733.740441]
+
+Test Zone Edge Geometry Ranges:
+   mannings_n                    : [0.013000, 0.018000]
+   slope                         : [0.000010, 0.007049]
+   cross_sectional_area_sqm      : [1.767146, 13.500000]
+   catchment_sqm                 : [110000.000000, 650000.000000]
+   effective_capacity_mmhr       : [1.676529, 261.881265]
+
+   Edges WITHIN training range : 5
+   Edges OUTSIDE training range: 0
+============================================================
+
+============================================================
+EXTRAPOLATION CHECK: Test Zone vs. Pilot Training Range
+============================================================
+
+Training Feature Ranges (from pilot edges):
+   mannings_n                    : [0.012401, 0.023162]
+   slope                         : [0.000010, 0.014432]
+   cross_sectional_area_sqm      : [0.329447, 29.192258]
+   catchment_sqm                 : [110000.000000, 1941425.350765]
+   effective_capacity_mmhr       : [1.676529, 733.740441]
+
+Test Zone Edge Geometry Ranges:
+   mannings_n                    : [0.013000, 0.018000]
+   slope                         : [0.000010, 0.007049]
+   cross_sectional_area_sqm      : [1.767146, 13.500000]
+   catchment_sqm                 : [110000.000000, 650000.000000]
+   effective_capacity_mmhr       : [1.676529, 261.881265]
+
+   Edges WITHIN training range : 5
+   Edges OUTSIDE training range: 0
+============================================================
+
+============================================================
+EXTRAPOLATION CHECK: Test Zone vs. Pilot Training Range
+============================================================
+
+Training Feature Ranges (from pilot edges):
+   mannings_n                    : [0.012401, 0.023162]
+   slope                         : [0.000010, 0.014432]
+   cross_sectional_area_sqm      : [0.329447, 29.192258]
+   catchment_sqm                 : [110000.000000, 1941425.350765]
+   effective_capacity_mmhr       : [1.676529, 733.740441]
+
+Test Zone Edge Geometry Ranges:
+   mannings_n                    : [0.013000, 0.018000]
+   slope                         : [0.000010, 0.007049]
+   cross_sectional_area_sqm      : [1.767146, 13.500000]
+   catchment_sqm                 : [110000.000000, 650000.000000]
+   effective_capacity_mmhr       : [1.676529, 261.881265]
+
+   Edges WITHIN training range : 5
+   Edges OUTSIDE training range: 0
+============================================================
+
+============================================================
+EXTRAPOLATION CHECK: Test Zone vs. Pilot Training Range
+============================================================
+
+Training Feature Ranges (from pilot edges):
+   mannings_n                    : [0.012401, 0.023162]
+   slope                         : [0.000010, 0.014432]
+   cross_sectional_area_sqm      : [0.329447, 29.192258]
+   catchment_sqm                 : [110000.000000, 1941425.350765]
+   effective_capacity_mmhr       : [1.676529, 733.740441]
+
+Test Zone Edge Geometry Ranges:
+   mannings_n                    : [0.013000, 0.018000]
+   slope                         : [0.000010, 0.007049]
+   cross_sectional_area_sqm      : [1.767146, 13.500000]
+   catchment_sqm                 : [110000.000000, 650000.000000]
+   effective_capacity_mmhr       : [1.676529, 261.881265]
+
+   Edges WITHIN training range : 5
+   Edges OUTSIDE training range: 0
+============================================================
+
+============================================================
+EXTRAPOLATION CHECK: Test Zone vs. Pilot Training Range
+============================================================
+
+Training Feature Ranges (from pilot edges):
+   mannings_n                    : [0.012401, 0.023162]
+   slope                         : [0.000010, 0.014432]
+   cross_sectional_area_sqm      : [0.329447, 29.192258]
+   catchment_sqm                 : [110000.000000, 1941425.350765]
+   effective_capacity_mmhr       : [1.676529, 733.740441]
+
+Test Zone Edge Geometry Ranges:
+   mannings_n                    : [0.013000, 0.018000]
+   slope                         : [0.000010, 0.007049]
+   cross_sectional_area_sqm      : [1.767146, 13.500000]
+   catchment_sqm                 : [110000.000000, 650000.000000]
+   effective_capacity_mmhr       : [1.676529, 261.881265]
+
+   Edges WITHIN training range : 5
+   Edges OUTSIDE training range: 0
+============================================================
+
+============================================================
+EXTRAPOLATION CHECK: Test Zone vs. Pilot Training Range
+============================================================
+
+Training Feature Ranges (from pilot edges):
+   mannings_n                    : [0.012401, 0.023162]
+   slope                         : [0.000010, 0.014432]
+   cross_sectional_area_sqm      : [0.329447, 29.192258]
+   catchment_sqm                 : [110000.000000, 1941425.350765]
+   effective_capacity_mmhr       : [1.676529, 733.740441]
+
+Test Zone Edge Geometry Ranges:
+   mannings_n                    : [0.013000, 0.018000]
+   slope                         : [0.000010, 0.007049]
+   cross_sectional_area_sqm      : [1.767146, 13.500000]
+   catchment_sqm                 : [110000.000000, 650000.000000]
+   effective_capacity_mmhr       : [1.676529, 261.881265]
+
+   Edges WITHIN training range : 5
+   Edges OUTSIDE training range: 0
+============================================================
+
+============================================================
+EXTRAPOLATION CHECK: Test Zone vs. Pilot Training Range
+============================================================
+
+Training Feature Ranges (from pilot edges):
+   mannings_n                    : [0.012401, 0.023162]
+   slope                         : [0.000010, 0.014432]
+   cross_sectional_area_sqm      : [0.329447, 29.192258]
+   catchment_sqm                 : [110000.000000, 1941425.350765]
+   effective_capacity_mmhr       : [1.676529, 733.740441]
+
+Test Zone Edge Geometry Ranges:
+   mannings_n                    : [0.013000, 0.018000]
+   slope                         : [0.000010, 0.007049]
+   cross_sectional_area_sqm      : [1.767146, 13.500000]
+   catchment_sqm                 : [110000.000000, 650000.000000]
+   effective_capacity_mmhr       : [1.676529, 261.881265]
+
+   Edges WITHIN training range : 5
+   Edges OUTSIDE training range: 0
+============================================================
+[inference_api] Pre-computed 5 DEMO scenarios, 5 edge predictions each.
+
+============================================================
+EXTRAPOLATION CHECK: Test Zone vs. Pilot Training Range
+============================================================
+
+Training Feature Ranges (from pilot edges):
+   mannings_n                    : [0.012401, 0.023162]
+   slope                         : [0.000010, 0.014432]
+   cross_sectional_area_sqm      : [0.329447, 29.192258]
+   catchment_sqm                 : [110000.000000, 1941425.350765]
+   effective_capacity_mmhr       : [1.676529, 733.740441]
+
+Test Zone Edge Geometry Ranges:
+   mannings_n                    : [0.013000, 0.018000]
+   slope                         : [0.000010, 0.007049]
+   cross_sectional_area_sqm      : [1.767146, 13.500000]
+   catchment_sqm                 : [110000.000000, 650000.000000]
+   effective_capacity_mmhr       : [1.676529, 261.881265]
+
+   Edges WITHIN training range : 5
+   Edges OUTSIDE training range: 0
+============================================================
+
+============================================================
+EXTRAPOLATION CHECK: Test Zone vs. Pilot Training Range
+============================================================
+
+Training Feature Ranges (from pilot edges):
+   mannings_n                    : [0.012401, 0.023162]
+   slope                         : [0.000010, 0.014432]
+   cross_sectional_area_sqm      : [0.329447, 29.192258]
+   catchment_sqm                 : [110000.000000, 1941425.350765]
+   effective_capacity_mmhr       : [1.676529, 733.740441]
+
+Test Zone Edge Geometry Ranges:
+   mannings_n                    : [0.013000, 0.018000]
+   slope                         : [0.000010, 0.007049]
+   cross_sectional_area_sqm      : [1.767146, 13.500000]
+   catchment_sqm                 : [110000.000000, 650000.000000]
+   effective_capacity_mmhr       : [1.676529, 261.881265]
+
+   Edges WITHIN training range : 5
+   Edges OUTSIDE training range: 0
+============================================================
+
+============================================================
+EXTRAPOLATION CHECK: Test Zone vs. Pilot Training Range
+============================================================
+
+Training Feature Ranges (from pilot edges):
+   mannings_n                    : [0.012401, 0.023162]
+   slope                         : [0.000010, 0.014432]
+   cross_sectional_area_sqm      : [0.329447, 29.192258]
+   catchment_sqm                 : [110000.000000, 1941425.350765]
+   effective_capacity_mmhr       : [1.676529, 733.740441]
+
+Test Zone Edge Geometry Ranges:
+   mannings_n                    : [0.013000, 0.018000]
+   slope                         : [0.000010, 0.007049]
+   cross_sectional_area_sqm      : [1.767146, 13.500000]
+   catchment_sqm                 : [110000.000000, 650000.000000]
+   effective_capacity_mmhr       : [1.676529, 261.881265]
+
+   Edges WITHIN training range : 5
+   Edges OUTSIDE training range: 0
+============================================================
+
+============================================================
+EXTRAPOLATION CHECK: Test Zone vs. Pilot Training Range
+============================================================
+
+Training Feature Ranges (from pilot edges):
+   mannings_n                    : [0.012401, 0.023162]
+   slope                         : [0.000010, 0.014432]
+   cross_sectional_area_sqm      : [0.329447, 29.192258]
+   catchment_sqm                 : [110000.000000, 1941425.350765]
+   effective_capacity_mmhr       : [1.676529, 733.740441]
+
+Test Zone Edge Geometry Ranges:
+   mannings_n                    : [0.013000, 0.018000]
+   slope                         : [0.000010, 0.007049]
+   cross_sectional_area_sqm      : [1.767146, 13.500000]
+   catchment_sqm                 : [110000.000000, 650000.000000]
+   effective_capacity_mmhr       : [1.676529, 261.881265]
+
+   Edges WITHIN training range : 5
+   Edges OUTSIDE training range: 0
+============================================================
+
+============================================================
+EXTRAPOLATION CHECK: Test Zone vs. Pilot Training Range
+============================================================
+
+Training Feature Ranges (from pilot edges):
+   mannings_n                    : [0.012401, 0.023162]
+   slope                         : [0.000010, 0.014432]
+   cross_sectional_area_sqm      : [0.329447, 29.192258]
+   catchment_sqm                 : [110000.000000, 1941425.350765]
+   effective_capacity_mmhr       : [1.676529, 733.740441]
+
+Test Zone Edge Geometry Ranges:
+   mannings_n                    : [0.013000, 0.018000]
+   slope                         : [0.000010, 0.007049]
+   cross_sectional_area_sqm      : [1.767146, 13.500000]
+   catchment_sqm                 : [110000.000000, 650000.000000]
+   effective_capacity_mmhr       : [1.676529, 261.881265]
+
+   Edges WITHIN training range : 5
+   Edges OUTSIDE training range: 0
+============================================================
+
+============================================================
+EXTRAPOLATION CHECK: Test Zone vs. Pilot Training Range
+============================================================
+
+Training Feature Ranges (from pilot edges):
+   mannings_n                    : [0.012401, 0.023162]
+   slope                         : [0.000010, 0.014432]
+   cross_sectional_area_sqm      : [0.329447, 29.192258]
+   catchment_sqm                 : [110000.000000, 1941425.350765]
+   effective_capacity_mmhr       : [1.676529, 733.740441]
+
+Test Zone Edge Geometry Ranges:
+   mannings_n                    : [0.013000, 0.018000]
+   slope                         : [0.000010, 0.007049]
+   cross_sectional_area_sqm      : [1.767146, 13.500000]
+   catchment_sqm                 : [110000.000000, 650000.000000]
