@@ -13,7 +13,7 @@ from urllib.parse import parse_qs, urlparse
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
 API_DIR = os.path.abspath(os.path.join(WORKSPACE_DIR, "..", "api"))
 GRAPH_FILE = os.path.join(WORKSPACE_DIR, "dwarka_drainage_graph.json")
-API_CONTRACT_VERSION = "1.1.0"
+API_CONTRACT_VERSION = "1.2.0"
 # Request handlers import sibling modules after the server starts. Keep the
 # script directory importable even when main.py is launched through runpy.
 if WORKSPACE_DIR not in sys.path:

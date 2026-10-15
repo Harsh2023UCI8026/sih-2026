@@ -18,7 +18,7 @@ Implements:
    A 50% blockage factor is a conservative mid-range assumption pending
    actual blockage-survey data.
 3. Depth conversion using a contributing_fraction (default 0.15) and a
-   ponding area (default 140 m²).  Not all of the upstream catchment's
+   ponding area (default 5,000 m²).  Not all of the upstream catchment's
    excess runoff concentrates at the ponding point within the same hour —
    the rest drains via alternate paths/nodes or takes longer than one hour.
    The formula is:
@@ -26,13 +26,18 @@ Implements:
                 / ponding_area_sqm * 100
    This keeps the calculation physically meaningful (volume ÷ area = depth)
    while avoiding the unrealistic assumption that the entire catchment's
-   excess instantaneously concentrates at a single 140 m² spot.
-4. Formula-only estimate bands: LOW_ESTIMATE ≤ 2 cm | CAUTION 2–5 cm | HIGH 5–10 cm |
-   SEVERE > 10 cm.
+   excess instantaneously concentrates at a single point.
+4. Shared depth estimate bands: <5 cm | 5–<15 cm | 15–<30 cm |
+   30–<50 cm | >=50 cm. These are not road-safety thresholds.
 """
 
 import json, math, os
 from typing import Dict, Tuple, Any
+
+try:
+    from risk_bands import classify_depth_cm
+except ModuleNotFoundError:  # Supports imports as ``src.hydraulic_model`` too.
+    from .risk_bands import classify_depth_cm
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 GRAPH_PATH = os.path.join(BASE_DIR, "src", "dwarka_drainage_graph.json")
@@ -159,16 +164,7 @@ def estimate_edge_depths(rain_mm: float, imperviousness_ratio: float = 0.85) -> 
             _DEFAULT_CONTRIBUTING_FRACTION,
         )
 
-        if depth_cm >= 50:
-            hazard_level = "CRITICAL"
-        elif depth_cm >= 30:
-            hazard_level = "SEVERE"
-        elif depth_cm >= 15:
-            hazard_level = "MODERATE"
-        elif depth_cm >= 5:
-            hazard_level = "CAUTION"
-        else:
-            hazard_level = "LOW_ESTIMATE"
+        hazard_level = classify_depth_cm(depth_cm)
 
         results.append({
             "edge_id": edge_id,
@@ -199,19 +195,10 @@ def compute_water_depth(row: Dict[str, str]) -> Tuple[float, int, str]:
     excess = max(runoff - cap, 0.0)
     depth_cm = _depth_from_excess_mm(excess, _DEFAULT_PONDING_AREA_SQM, catch_sqm)
 
-    # Hazard thresholds and binary surcharge flag
-    if depth_cm <= 2:
-        level = "LOW_ESTIMATE"
-        flag = 0
-    elif depth_cm <= 5:
-        level = "CAUTION"
-        flag = 1
-    elif depth_cm <= 10:
-        level = "HIGH"
-        flag = 1
-    else:
-        level = "SEVERE"
-        flag = 1
+    # Keep the legacy flag separate from the shared depth category. This is
+    # only a >15 cm depth proxy for surcharge, not a hydraulic surcharge test.
+    level = classify_depth_cm(depth_cm)
+    flag = int(depth_cm > 15.0)
 
     return depth_cm, flag, level
 

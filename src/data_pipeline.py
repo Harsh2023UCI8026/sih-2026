@@ -43,6 +43,11 @@ def parse_excel_zip(path):
 
 import math
 
+try:
+    from risk_bands import classify_depth_cm
+except ModuleNotFoundError:  # Supports imports as ``src.data_pipeline`` too.
+    from .risk_bands import classify_depth_cm
+
 def calculate_advanced_ps_features(rain_3h_accum, peak_1h, elev_m=211.2, drain_cap_mmhr=45.0, impervious_ratio=0.92):
     """Create illustrative formula-derived features, not observed flood data.
 
@@ -78,29 +83,18 @@ def calculate_advanced_ps_features(rain_3h_accum, peak_1h, elev_m=211.2, drain_c
     depth_cm = round((excess_runoff * 0.55 + peak_excess * 0.45) * elevation_factor, 1)
     depth_cm = min(150.0, depth_cm)
     
-    surcharge_flag = 1 if pipe_fullness_ratio >= 1.0 or depth_cm >= 15.0 else 0
+    surcharge_flag = 1 if pipe_fullness_ratio >= 1.0 or depth_cm > 15.0 else 0
     
-    # Feature 5: Flood Hazard Index (0-4 Rating)
-    if depth_cm < 5.0:
-        hazard_level = "LOW_ESTIMATE"
-        hazard_code = 0
-        penalty_weight = 1.0
-    elif depth_cm < 15.0:
-        hazard_level = "CAUTION"
-        hazard_code = 1
-        penalty_weight = 1.5
-    elif depth_cm < 30.0:
-        hazard_level = "MODERATE"
-        hazard_code = 2
-        penalty_weight = 3.5
-    elif depth_cm < 50.0:
-        hazard_level = "SEVERE"
-        hazard_code = 3
-        penalty_weight = 10.0
-    else:
-        hazard_level = "CRITICAL"
-        hazard_code = 4
-        penalty_weight = 999.0 # Road Impassable
+    # Formula-estimate category code (not a validated road-safety score).
+    hazard_level = classify_depth_cm(depth_cm)
+    penalty_weights = {
+        "LOW_ESTIMATE": 1.0,
+        "CAUTION": 1.5,
+        "MODERATE": 3.5,
+        "SEVERE": 10.0,
+        "CRITICAL": 999.0,
+    }
+    penalty_weight = penalty_weights[hazard_level]
         
     return radar_dbz, soil_infiltration_mmhr, surface_runoff_mm, pipe_fullness_ratio, depth_cm, surcharge_flag, hazard_level, penalty_weight
 

@@ -16,6 +16,11 @@ import pandas as pd
 import joblib
 from typing import Dict, List, Any
 
+try:
+    from risk_bands import classify_depth_cm
+except ModuleNotFoundError:  # Supports imports as ``src.model_inference`` too.
+    from .risk_bands import classify_depth_cm
+
 
 # ── Feature columns (must match model_train.py) ─────────────────────────
 GEOMETRY_FEATURES = [
@@ -250,15 +255,7 @@ def run_inference(
             pred = model.predict(X_row)[0]
             pred = max(pred, 0.0)  # clip negatives
 
-            # Hazard level
-            if pred <= 2:
-                hazard = "LOW_ESTIMATE"
-            elif pred <= 5:
-                hazard = "CAUTION"
-            elif pred <= 10:
-                hazard = "HIGH"
-            else:
-                hazard = "SEVERE"
+            hazard = classify_depth_cm(pred)
 
             results.append({
                 "edge_id": edge_id,

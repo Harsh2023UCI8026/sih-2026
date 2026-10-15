@@ -3067,11 +3067,11 @@
         <div class="map-legend-body" id="mapLegendDetails" hidden>
           <div class="legend-title">Pilot depth bands (cm)</div>
           <div class="legend-line"><div class="color-box" style="background:#7c3aed;border:1px solid #4c1d95;"></div><span>Historical report location (not live)</span></div>
-          <div class="legend-line"><div class="color-box" style="background:#64748b;"></div><span>Low band (0–5 cm)</span></div>
-          <div class="legend-line"><div class="color-box" style="background:var(--caution-yellow);"></div><span>5–15 cm band</span></div>
-          <div class="legend-line"><div class="color-box" style="background:var(--moderate-orange);"></div><span>15–30 cm band</span></div>
-          <div class="legend-line"><div class="color-box" style="background:var(--severe-red);"></div><span>30–50 cm band</span></div>
-          <div class="legend-line"><div class="color-box" style="background:var(--critical-dark);"></div><span>≥ 50 cm band</span></div>
+          <div class="legend-line"><div class="color-box" style="background:#64748b;"></div><span>Low estimate (&lt;5 cm)</span></div>
+          <div class="legend-line"><div class="color-box" style="background:var(--caution-yellow);"></div><span>Caution (5–&lt;15 cm)</span></div>
+          <div class="legend-line"><div class="color-box" style="background:var(--moderate-orange);"></div><span>Moderate (15–&lt;30 cm)</span></div>
+          <div class="legend-line"><div class="color-box" style="background:var(--severe-red);"></div><span>Severe (30–&lt;50 cm)</span></div>
+          <div class="legend-line"><div class="color-box" style="background:var(--critical-dark);"></div><span>Critical (&gt;=50 cm)</span></div>
           <p class="map-legend-note">Base map: OpenStreetMap. Drain links follow approximate road geometry; line colors use the depth bands above.</p>
         </div>
       `;
@@ -4086,11 +4086,11 @@
     function depthBandLabel(depthCm) {
       const depth = Number(depthCm);
       if (!Number.isFinite(depth)) return 'No depth band';
-      if (depth < 5) return 'Low (0–5 cm)';
-      if (depth < 15) return '5–15 cm';
-      if (depth < 30) return '15–30 cm';
-      if (depth < 50) return '30–50 cm';
-      return '≥50 cm';
+      if (depth < 5) return 'Low estimate (<5 cm)';
+      if (depth < 15) return 'Caution (5–<15 cm)';
+      if (depth < 30) return 'Moderate (15–<30 cm)';
+      if (depth < 50) return 'Severe (30–<50 cm)';
+      return 'Critical (≥50 cm)';
     }
 
     function classifyDashboardResult(depthCm, rain3hMm, coverageMessage = '') {
@@ -4396,7 +4396,7 @@
       button.textContent = isBusy ? '↻ Refreshing…' : '↻ Refresh forecast';
     }
 
-    const EXPECTED_API_CONTRACT_VERSION = '1.1.0';
+    const EXPECTED_API_CONTRACT_VERSION = '1.2.0';
 
     function updateTechnicalInferenceMethod(quality) {
       const badge = document.getElementById('technicalMethodBadge');
@@ -4413,7 +4413,7 @@
         badge.textContent = isDemo ? 'Formula · demo only' : 'Formula estimate · Dwarka pilot';
         overview.textContent = 'For each forecast lead, the API applies a runoff and drain-capacity formula to estimate depths on five mapped drainage edges. The map displays those estimates as depth bands.';
         hydraulicCopy.textContent = 'This deployment calculates Manning capacity and converts runoff above that assumed capacity into ponding depth. The values use a 15% contributing fraction and 5,000 m² ponding area.';
-        inferenceCopy.textContent = 'The API computes each edge depth directly, clips negative excess to zero, then groups estimates into 0–5, 5–15, 15–30, 30–50, or ≥50 cm bands. This deployment does not load or run the RandomForest artifact.';
+        inferenceCopy.textContent = 'The API computes each edge depth directly, clips negative excess to zero, then classifies estimates as Low (<5), Caution (5–<15), Moderate (15–<30), Severe (30–<50), or Critical (≥50 cm). This deployment does not load or run the RandomForest artifact.';
         validationNote.textContent = isDemo
           ? 'Rainfall is a fixed synthetic demo input. Depth bands are unvalidated formula estimates, not measurements.'
           : 'Rainfall comes from the Open-Meteo forecast model. Depth bands use unvalidated formula estimates and assumed drainage properties, not water-level measurements.';
@@ -4421,7 +4421,7 @@
         badge.textContent = 'RandomForest · Dwarka pilot';
           overview.textContent = 'For each forecast lead, a RandomForest regressor predicts depth on the five mapped drainage edges. Road directions are supplied separately and do not certify flood safety.';
         hydraulicCopy.textContent = 'Manning capacity is adjusted for assumed blockage; runoff above capacity is converted to ponding depth using a 15% contributing fraction and 5,000 m² ponding area. These formula-derived labels train the surrogate.';
-        inferenceCopy.textContent = 'The RandomForest predicts each edge depth, clips negative output to zero, then groups it into 0–5, 5–15, 15–30, 30–50, or ≥50 cm bands.';
+        inferenceCopy.textContent = 'The RandomForest predicts each edge depth, clips negative output to zero, then uses the same Low (<5), Caution (5–<15), Moderate (15–<30), Severe (30–<50), or Critical (≥50 cm) categories.';
         validationNote.textContent = 'Rainfall is the forecast input; depth bands are the model output. Training labels are formula-derived and have not been validated against observed street depths.';
       } else {
         badge.textContent = 'Awaiting forecast · Dwarka pilot';
@@ -4744,11 +4744,11 @@
     }
 
     function getDepthStatus(depth) {
-      if (depth >= 50) return { label: '🔴 EXTREME BAND', color: '#991b1b' };
-      if (depth >= 30) return { label: '🔴 VERY HIGH BAND', color: '#dc2626' };
-      if (depth >= 15) return { label: '🟠 HIGH BAND', color: '#ea580c' };
-      if (depth >= 5) return { label: '🟡 ELEVATED BAND', color: '#d97706' };
-      return { label: '⚪ LOW BAND', color: '#64748b' };
+      if (depth >= 50) return { label: 'CRITICAL', color: '#991b1b' };
+      if (depth >= 30) return { label: 'SEVERE', color: '#dc2626' };
+      if (depth >= 15) return { label: 'MODERATE', color: '#ea580c' };
+      if (depth >= 5) return { label: 'CAUTION', color: '#d97706' };
+      return { label: 'LOW_ESTIMATE', color: '#64748b' };
     }
 
     function edgeLatLngs(edge) {

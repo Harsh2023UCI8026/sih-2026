@@ -56,6 +56,7 @@ def extract_pothole_depression_data():
                 "coordinate_precision_as_listed": row.get("coordinate_precision"),
                 "source_confidence_as_listed": row.get("source_confidence"),
                 "registry_depth_estimate_cm": listed_depth,
+                "depth_verification_status_as_listed": row.get("depth_verification_status", "NOT_MARKED"),
                 "severity_as_listed": row.get("severity"),
                 "source_type": row.get("source_type"),
                 "source_url": row.get("source_url"),

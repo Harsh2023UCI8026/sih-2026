@@ -21,6 +21,7 @@ if SRC_DIR not in sys.path:
 
 from fetch_live_radar import fetch_live_radar_nowcast
 from hydraulic_model import estimate_edge_depths, get_drainage_graph
+from risk_bands import classify_depth_cm
 
 
 TRAINING_MAX_RAIN_MM = 150.0
@@ -74,15 +75,7 @@ NODE_EDGE_MAP = {
 
 
 def _depth_band(depth_cm):
-    if depth_cm >= 50:
-        return "CRITICAL"
-    if depth_cm >= 30:
-        return "SEVERE"
-    if depth_cm >= 15:
-        return "MODERATE"
-    if depth_cm >= 5:
-        return "CAUTION"
-    return "LOW_ESTIMATE"
+    return classify_depth_cm(depth_cm)
 
 
 def _valid_forecast(payload):

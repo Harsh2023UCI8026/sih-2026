@@ -96,7 +96,7 @@ def main():
     # Report
     print(f"Total rows processed: {total}")
     print(f"\nFormula estimate category distribution (not safety labels):")
-    for lvl in ["LOW_ESTIMATE", "CAUTION", "HIGH", "SEVERE"]:
+    for lvl in ["LOW_ESTIMATE", "CAUTION", "MODERATE", "SEVERE", "CRITICAL"]:
         c = hazard_counts.get(lvl, 0)
         print(f"  {lvl:8s}: {c:6d}  ({100*c/total:.2f}%)")
     print(f"\nRows with drain_surcharge_flag=1: {surcharge_count} ({100*surcharge_count/total:.2f}%)")

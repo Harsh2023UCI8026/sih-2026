@@ -17,7 +17,7 @@ if src_path not in sys.path:
 from hydraulic_model import get_drainage_graph
 from lightweight_nowcast import calculate_lightweight_nowcast
 
-API_CONTRACT_VERSION = "1.1.0"
+API_CONTRACT_VERSION = "1.2.0"
 
 class handler(BaseHTTPRequestHandler):
     def _send_json(self, data, status_code=200):

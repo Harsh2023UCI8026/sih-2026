@@ -12,6 +12,11 @@ import json, os, math, time
 from typing import Dict, List, Any, Optional
 import pandas as pd
 
+try:
+    from risk_bands import classify_depth_cm
+except ModuleNotFoundError:  # Supports imports as ``src.inference_api`` too.
+    from .risk_bands import classify_depth_cm
+
 # ── Paths ────────────────────────────────────────────────────────────────
 SRC_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.join(SRC_DIR, "..")
@@ -291,18 +296,7 @@ def get_node_summary(
 
         # These are estimate bands, not road-safety statuses. No contributing
         # graph edge means no model coverage, not a zero-depth reading.
-        if max_depth is None:
-            hazard = "NO_MODEL_COVERAGE"
-        elif max_depth > 50:
-            hazard = "CRITICAL"
-        elif max_depth > 30:
-            hazard = "SEVERE"
-        elif max_depth > 15:
-            hazard = "MODERATE"
-        elif max_depth > 5:
-            hazard = "CAUTION"
-        else:
-            hazard = "LOW_ESTIMATE"
+        hazard = "NO_MODEL_COVERAGE" if max_depth is None else classify_depth_cm(max_depth)
 
         nodes.append({
             "id": node_id,
@@ -359,11 +353,11 @@ def get_system_status(
         "mean_depth_cm": round(sum(depths) / len(depths), 2),
         "rain_mm": rain_mm,
         "radar_dbz": radar_dbz,
-        "edges_low_estimate": sum(1 for d in depths if d <= 2),
-        "edges_caution": sum(1 for d in depths if 2 < d <= 5),
-        "edges_moderate": sum(1 for d in depths if 5 < d <= 15),
-        "edges_severe": sum(1 for d in depths if 15 < d <= 50),
-        "edges_critical": sum(1 for d in depths if d > 50),
+        "edges_low_estimate": sum(1 for d in depths if d < 5),
+        "edges_caution": sum(1 for d in depths if 5 <= d < 15),
+        "edges_moderate": sum(1 for d in depths if 15 <= d < 30),
+        "edges_severe": sum(1 for d in depths if 30 <= d < 50),
+        "edges_critical": sum(1 for d in depths if d >= 50),
         "total_edges": len(depths),
         "scenario_label": label,
         "rain_rate_mm_hr": rain_mm,

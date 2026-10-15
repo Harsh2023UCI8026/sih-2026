@@ -22,6 +22,7 @@ from src.hydraulic_model import (
     _DEFAULT_PONDING_AREA_SQM, _DEFAULT_BLOCKAGE_FACTOR,
     _DEFAULT_CONTRIBUTING_FRACTION,
 )
+from src.risk_bands import classify_depth_cm
 
 INPUT_CSV = os.path.join(WORKSPACE, "archive", "training_data",
                          "processed_dwarka_hourly_rainfall.csv")
@@ -39,14 +40,7 @@ OUT_FIELDS = [
 
 
 def _hazard(depth_cm):
-    if depth_cm <= 2:
-        return 0, "LOW_ESTIMATE"
-    elif depth_cm <= 5:
-        return 1, "CAUTION"
-    elif depth_cm <= 10:
-        return 1, "HIGH"
-    else:
-        return 1, "SEVERE"
+    return int(depth_cm > 15.0), classify_depth_cm(depth_cm)
 
 
 def main():
@@ -125,7 +119,7 @@ def main():
         print("-" * 70)
         print("EDGE: %s  (cap=%.2f mm/hr, catch=%d, bf=%.1f)" % (eid, cap, catch, bf))
         hc = per_edge_hazard[eid]
-        for lvl in ["LOW_ESTIMATE", "CAUTION", "HIGH", "SEVERE"]:
+        for lvl in ["LOW_ESTIMATE", "CAUTION", "MODERATE", "SEVERE", "CRITICAL"]:
             c = hc.get(lvl, 0)
             print("  %-8s: %6d  (%.2f%%)" % (lvl, c, 100 * c / total_rows_in))
         sc = per_edge_surcharge[eid]

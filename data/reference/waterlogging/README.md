@@ -21,6 +21,22 @@ An additional 2021 source extract is in [`delhi_traffic_police_2021_dwarka_najaf
 3. Obtain measured water depths (with timestamp, units, and method) and observed-dry controls. A reported waterlogging occurrence is not a depth label, and no report is not a dry observation.
 4. Keep all observations from the same storm event in one evaluation split to avoid event leakage.
 
+## Separate measured-observation worksheet
+
+[`measured_observations_template.csv`](measured_observations_template.csv) is a
+blank schema for new measurements. It is intentionally separate from the
+incident candidates above. Do not copy a reported incident into it as a depth
+observation unless a source gives a quantified depth, timestamp, and method.
+For a reported-but-unmeasured event, keep it in the occurrence files and leave
+the depth blank. A location with no report is not a dry control; record a dry
+control only when someone observed it and recorded the time and method.
+
+The older project-entered [`src/data/vashu.csv`](../../../src/data/vashu.csv)
+has numeric depth claims, but every row is marked
+`depth_verification_status=UNVERIFIED_PROJECT_ENTRY` until the original source
+is checked. Do not promote those numbers into the worksheet or training labels
+based only on the current notes.
+
 [`fco_2025_dwarka_najafgarh_2022_2023_attached_extract.csv`](fco_2025_dwarka_najafgarh_2022_2023_attached_extract.csv) preserves the user's filtered attachment as one row per listed date: 42 occurrence-date candidates from 33 source serial rows. The attachment's non-event note row was excluded. This separate filtered transcription overlaps the broader curated FCO candidate file above and must not be counted as an independent event source. It has no coordinates or depths and is not wired into the application or model runtime.
 
 The FCO 2025 index says the 2024 section contains 194 locations, while the heading on the actual 2024 table says 165. The supplied summary uses 165; treat the count as an internal source inconsistency and verify the current official table before relying on it. The 2022/2023 filtered extract above does not resolve this 2024 discrepancy.

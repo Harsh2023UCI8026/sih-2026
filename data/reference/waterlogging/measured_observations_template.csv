@@ -1,0 +1,1 @@
+observation_id,event_id,observation_time_utc,latitude,longitude,depth_cm,wet_dry,measurement_method,source_id,source_url_or_file,coordinate_method,coordinate_confidence,validation_status,observer_or_agency,notes
